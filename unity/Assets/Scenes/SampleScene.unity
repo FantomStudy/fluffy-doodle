@@ -1839,9 +1839,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 817283963039527456, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: Priority.Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 817283963039527456, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: Priority.m_Value
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 817283963039527456, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: m_LegacyPriority
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 817283963039527456, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: m_StreamingVersion
+      value: 20241001
+      objectReference: {fileID: 0}
+    - target: {fileID: 817283963039527456, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: Target.TrackingTarget
+      value: 
+      objectReference: {fileID: 1440586205}
+    - target: {fileID: 817283963039527456, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: Target.CustomLookAtTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4511306410783907255, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5163535761140070082, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: m_Name
+      value: PlayerFollowCamera
       objectReference: {fileID: 0}
     - target: {fileID: 5163535761140070205, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1907,7 +1935,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5163535761140070204, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+    - {fileID: 6280042972329704149, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1915,6 +1945,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 184977814}
   m_SourcePrefab: {fileID: 100100000, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+--- !u!4 &1440586205 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1379012722553670261, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+  m_PrefabInstance: {fileID: 1440586204}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1475886365
 GameObject:
   m_ObjectHideFlags: 0
