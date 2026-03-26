@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "vite": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "computedHash": "1cdc4bbecaa89544e6ef92566b015db989994bf90c4472683ac64f7a114dc3af"
+    }
+  }
+}

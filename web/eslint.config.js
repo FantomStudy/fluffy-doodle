@@ -16,6 +16,7 @@ const eslintConfig = antfu(
       "react/no-array-index-key": "off",
       "react-hooks/exhaustive-deps": "off",
       "react-refresh/only-export-components": "off",
+      "eslint-comments/no-unlimited-disable": "off",
     },
   },
   {
