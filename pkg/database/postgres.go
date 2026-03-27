@@ -51,7 +51,14 @@ func NewPostgresDB(cfg *config.Config) (*gorm.DB, error) {
 }
 
 func AutoMigrate(connection *gorm.DB) {
-	connection.AutoMigrate(&models.User{}, &models.Role{}, &models.CourseCategory{}, &models.Achievement{})
+	connection.AutoMigrate(
+		&models.User{},
+		&models.Role{},
+		&models.CourseCategory{},
+		&models.Course{},
+		&models.Lesson{},
+		&models.Achievement{},
+	)
 
 	// createDefaultRoles(connection)
 	// fixOldUsers(connection)

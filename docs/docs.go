@@ -181,6 +181,286 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/courses": {
+            "post": {
+                "description": "Creates a new course with image, category and level",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Create course",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Course title",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Course category ID",
+                        "name": "categoryId",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course level: beginner|intermediate|advanced",
+                        "name": "level",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Course hours",
+                        "name": "hours",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Course image",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/courses/{id}": {
+            "put": {
+                "description": "Updates existing course",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Update course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course title",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Course category ID",
+                        "name": "categoryId",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course level: beginner|intermediate|advanced",
+                        "name": "level",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Course hours",
+                        "name": "hours",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Course image",
+                        "name": "image",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes course by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Delete course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/courses/{id}/lessons": {
+            "post": {
+                "description": "Creates lesson for selected course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Create lesson in course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Lesson payload",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.CreateLessonRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/is-admin": {
             "get": {
                 "description": "Проверяет пользователя на роль администратора",
@@ -469,9 +749,129 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses": {
+            "get": {
+                "description": "Returns all courses",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "List courses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}": {
+            "get": {
+                "description": "Returns course detail by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Get course by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}/lessons": {
+            "get": {
+                "description": "Returns ordered lessons for course",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "List course lessons",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/avatar": {
             "post": {
-                "description": "Загрузка аватарки пользователя в S3",
+                "description": "Upload user avatar to S3",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -485,7 +885,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "file",
-                        "description": "Файл аватарки",
+                        "description": "Avatar file",
                         "name": "avatar",
                         "in": "formData",
                         "required": true
@@ -495,19 +895,115 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/parent-sign-up": {
+            "post": {
+                "description": "Parent creates account and links to student using student code",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Parent registration by student code",
+                "parameters": [
+                    {
+                        "description": "Parent registration data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ParentSignUpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/parent/child-progress": {
+            "get": {
+                "description": "Returns current child progress for authenticated parent",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Parent child progress",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ParentChildProgressResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -527,25 +1023,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.User"
+                            "$ref": "#/definitions/presenter.UserProfileResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -553,7 +1049,7 @@ const docTemplate = `{
         },
         "/user/student-invitation": {
             "post": {
-                "description": "Регистрация студента",
+                "description": "Teacher creates student account and receives student code",
                 "consumes": [
                     "application/json"
                 ],
@@ -566,7 +1062,7 @@ const docTemplate = `{
                 "summary": "Invite student",
                 "parameters": [
                     {
-                        "description": "Данные для регистрации ученика",
+                        "description": "Student registration data",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -579,7 +1075,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.StudentInviteResponse"
                         }
                     },
                     "400": {
@@ -588,14 +1084,14 @@ const docTemplate = `{
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
@@ -629,6 +1125,31 @@ const docTemplate = `{
                 }
             }
         },
+        "presenter.CreateLessonRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Первый урок курса"
+                },
+                "estimatedMinutes": {
+                    "type": "integer",
+                    "example": 25
+                },
+                "isFreePreview": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Знакомство с Python"
+                }
+            }
+        },
         "presenter.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -652,6 +1173,60 @@ const docTemplate = `{
                     "description": "Название категории",
                     "type": "string",
                     "example": "Веб-разработка"
+                }
+            }
+        },
+        "presenter.ParentChildProgressResponse": {
+            "type": "object",
+            "properties": {
+                "achievements": {
+                    "type": "integer",
+                    "example": 4
+                },
+                "stars": {
+                    "type": "integer",
+                    "example": 18
+                },
+                "studentCode": {
+                    "type": "string",
+                    "example": "STU-8A7KQ21M"
+                },
+                "studentId": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "studentLogin": {
+                    "type": "string",
+                    "example": "petya_ivanov"
+                },
+                "studentName": {
+                    "type": "string",
+                    "example": "Петя Иванов"
+                }
+            }
+        },
+        "presenter.ParentSignUpRequest": {
+            "type": "object",
+            "properties": {
+                "fullName": {
+                    "type": "string",
+                    "example": "Мария Иванова"
+                },
+                "login": {
+                    "type": "string",
+                    "example": "parent01"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "superSecret123"
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "example": "+79001234567"
+                },
+                "studentCode": {
+                    "type": "string",
+                    "example": "STU-8A7KQ21M"
                 }
             }
         },
@@ -683,6 +1258,15 @@ const docTemplate = `{
                 }
             }
         },
+        "presenter.StudentInviteResponse": {
+            "type": "object",
+            "properties": {
+                "studentCode": {
+                    "type": "string",
+                    "example": "STU-8A7KQ21M"
+                }
+            }
+        },
         "presenter.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -707,113 +1291,35 @@ const docTemplate = `{
                     "description": "Новое название категории",
                     "type": "string",
                     "example": "Frontend разработка"
-        "github_com_FantomStudy_fluffy-doodle_internal_models.Achievement": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "deletedAt": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "icon": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_models.Role": {
+        "presenter.UserProfileResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "deletedAt": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.User"
-                    }
-                }
-            }
-        },
-        "github_com_FantomStudy_fluffy-doodle_internal_models.User": {
-            "type": "object",
-            "properties": {
-                "achievements": {
-                    "description": "Достижения",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.Achievement"
-                    }
-                },
                 "avatar": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "deletedAt": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
+                    "type": "string",
+                    "example": "https://minio.local/avatar_1.png"
                 },
                 "fullName": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Иван Иванов"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "login": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "teacher01"
                 },
                 "phoneNumber": {
-                    "type": "string"
-                },
-                "role": {
-                    "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.Role"
+                    "type": "string",
+                    "example": "+79001234567"
                 },
                 "roleId": {
-                    "description": "Роль",
-                    "type": "integer"
-                },
-                "stars": {
-                    "type": "integer"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
-        },
-        "gorm.DeletedAt": {
-            "type": "object",
-            "properties": {
-                "time": {
-                    "type": "string"
-                },
-                "valid": {
-                    "description": "Valid is true if Time is not NULL",
-                    "type": "boolean"
+                    "type": "integer",
+                    "example": 2
                 }
             }
         }
