@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   BookOpenIcon,
   ClipboardListIcon,
@@ -10,12 +10,12 @@ import {
 import styles from "./route.module.css";
 
 const NAV = [
-  { icon: <HomeIcon size={16} />, label: "Главная" },
-  { icon: <MapIcon size={16} />, label: "Путь" },
-  { icon: <BookOpenIcon size={16} />, label: "Уроки" },
-  { icon: <ClipboardListIcon size={16} />, label: "Задания", active: true },
-  { icon: <TrophyIcon size={16} />, label: "Достижения" },
-  { icon: <UserIcon size={16} />, label: "Профиль" },
+  { icon: <HomeIcon size={16} />, label: "Главная", to: "/" },
+  { icon: <MapIcon size={16} />, label: "Путь", href: "/map" },
+  { icon: <BookOpenIcon size={16} />, label: "Уроки", href: "/knowledge" },
+  { icon: <ClipboardListIcon size={16} />, label: "Задания", href: "/challenge" },
+  { icon: <TrophyIcon size={16} />, label: "Достижения", href: "/achievements" },
+  { icon: <UserIcon size={16} />, label: "Профиль", href: "/profile" },
 ];
 
 const RouteComponent = () => {
@@ -29,14 +29,10 @@ const RouteComponent = () => {
 
         <nav className={styles.nav}>
           {NAV.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              className={`${styles.navItem} ${item.active ? styles.navItemActive : ``}`}
-            >
+            <Link key={item.label} to={item.href} className={styles.navItem}>
               {item.icon}
-              {item.label}
-            </button>
+              <p>{item.label}</p>
+            </Link>
           ))}
         </nav>
       </aside>

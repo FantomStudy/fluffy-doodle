@@ -73,12 +73,12 @@
   color: var(--primary);
 }
 
-.navItemActive {
+.navItem[data-status="active"] {
   background: var(--primary);
   color: var(--color-white);
-}
 
-.navItemActive:hover {
-  background: var(--primary-hover);
-  color: var(--color-white);
+  &:hover {
+    background: var(--primary-hover);
+    color: var(--color-white);
+  }
 }
