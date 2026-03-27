@@ -20,9 +20,8 @@ public class RotationPlatformController : MonoBehaviour
         }
 
         baseEulerAngles = platformTransform.localEulerAngles;
-        currentAngle = ResolveAngle(0);
+        currentAngle = baseEulerAngles.y;
         targetAngle = currentAngle;
-        ApplyAngle(currentAngle);
     }
 
     private void Update()

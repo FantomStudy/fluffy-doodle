@@ -39,9 +39,9 @@ public class VariableLevelController : MonoBehaviour
 
     private void Start()
     {
-        SetBridgeLength(defaultBridgeLength, true);
-        SetPlatformHeight(defaultPlatformHeight, true);
-        SetPlatformAngle(defaultPlatformAngle, true);
+        bridgeLength = Mathf.Clamp(defaultBridgeLength, 1, 3);
+        platformHeight = Mathf.Clamp(defaultPlatformHeight, 1, 3);
+        platformAngle = ClampPlatformAngle(defaultPlatformAngle);
         terminalUI?.RefreshActiveDisplay();
     }
 

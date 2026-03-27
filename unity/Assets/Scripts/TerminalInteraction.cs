@@ -1,7 +1,4 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 public class TerminalInteraction : MonoBehaviour
 {
@@ -18,30 +15,6 @@ public class TerminalInteraction : MonoBehaviour
         SetPromptVisible(false);
     }
 
-    private void Update()
-    {
-        if (!playerInRange || terminalUI == null)
-        {
-            return;
-        }
-
-        if (WasInteractPressed())
-        {
-            if (terminalUI.IsVisible && terminalUI.ActiveTerminal == this)
-            {
-                terminalUI.Hide();
-            }
-            else
-            {
-                terminalUI.ShowFor(this);
-            }
-        }
-        else if (terminalUI.IsVisible && terminalUI.ActiveTerminal == this && WasCancelPressed())
-        {
-            terminalUI.Hide();
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (!IsPlayer(other))
@@ -50,7 +23,8 @@ public class TerminalInteraction : MonoBehaviour
         }
 
         playerInRange = true;
-        SetPromptVisible(terminalUI == null || !terminalUI.IsVisible);
+        SetPromptVisible(false);
+        terminalUI?.ShowFor(this);
     }
 
     private void OnTriggerExit(Collider other)
@@ -71,7 +45,7 @@ public class TerminalInteraction : MonoBehaviour
 
     public void NotifyTerminalVisibilityChanged(bool visible)
     {
-        SetPromptVisible(playerInRange && !visible);
+        SetPromptVisible(false);
     }
 
     private void SetPromptVisible(bool visible)
@@ -85,23 +59,5 @@ public class TerminalInteraction : MonoBehaviour
     private static bool IsPlayer(Collider other)
     {
         return other.GetComponentInParent<CharacterController>() != null;
-    }
-
-    private static bool WasInteractPressed()
-    {
-#if ENABLE_INPUT_SYSTEM
-        return Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
-#else
-        return Input.GetKeyDown(KeyCode.E);
-#endif
-    }
-
-    private static bool WasCancelPressed()
-    {
-#if ENABLE_INPUT_SYSTEM
-        return Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
-#else
-        return Input.GetKeyDown(KeyCode.Escape);
-#endif
     }
 }
