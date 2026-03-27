@@ -9,91 +9,82 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as KnowledgeRouteImport } from './routes/knowledge'
-import { Route as AlgorithmRouteImport } from './routes/algorithm'
 import { Route as SidebarRouteRouteImport } from './routes/_sidebar/route'
+import { Route as SidebarKnowledgeRouteImport } from './routes/_sidebar/knowledge'
 import { Route as SidebarChallengeRouteImport } from './routes/_sidebar/challenge'
+import { Route as SidebarAlgorithmRouteImport } from './routes/_sidebar/algorithm'
 
-const KnowledgeRoute = KnowledgeRouteImport.update({
-  id: '/knowledge',
-  path: '/knowledge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AlgorithmRoute = AlgorithmRouteImport.update({
-  id: '/algorithm',
-  path: '/algorithm',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SidebarRouteRoute = SidebarRouteRouteImport.update({
   id: '/_sidebar',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SidebarKnowledgeRoute = SidebarKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
+  getParentRoute: () => SidebarRouteRoute,
 } as any)
 const SidebarChallengeRoute = SidebarChallengeRouteImport.update({
   id: '/challenge',
   path: '/challenge',
   getParentRoute: () => SidebarRouteRoute,
 } as any)
+const SidebarAlgorithmRoute = SidebarAlgorithmRouteImport.update({
+  id: '/algorithm',
+  path: '/algorithm',
+  getParentRoute: () => SidebarRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SidebarRouteRouteWithChildren
-  '/algorithm': typeof AlgorithmRoute
-  '/knowledge': typeof KnowledgeRoute
+  '/algorithm': typeof SidebarAlgorithmRoute
   '/challenge': typeof SidebarChallengeRoute
+  '/knowledge': typeof SidebarKnowledgeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof SidebarRouteRouteWithChildren
-  '/algorithm': typeof AlgorithmRoute
-  '/knowledge': typeof KnowledgeRoute
+  '/algorithm': typeof SidebarAlgorithmRoute
   '/challenge': typeof SidebarChallengeRoute
+  '/knowledge': typeof SidebarKnowledgeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_sidebar': typeof SidebarRouteRouteWithChildren
-  '/algorithm': typeof AlgorithmRoute
-  '/knowledge': typeof KnowledgeRoute
+  '/_sidebar/algorithm': typeof SidebarAlgorithmRoute
   '/_sidebar/challenge': typeof SidebarChallengeRoute
+  '/_sidebar/knowledge': typeof SidebarKnowledgeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/algorithm' | '/knowledge' | '/challenge'
+  fullPaths: '/' | '/algorithm' | '/challenge' | '/knowledge'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/algorithm' | '/knowledge' | '/challenge'
+  to: '/' | '/algorithm' | '/challenge' | '/knowledge'
   id:
     | '__root__'
     | '/_sidebar'
-    | '/algorithm'
-    | '/knowledge'
+    | '/_sidebar/algorithm'
     | '/_sidebar/challenge'
+    | '/_sidebar/knowledge'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   SidebarRouteRoute: typeof SidebarRouteRouteWithChildren
-  AlgorithmRoute: typeof AlgorithmRoute
-  KnowledgeRoute: typeof KnowledgeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/knowledge': {
-      id: '/knowledge'
-      path: '/knowledge'
-      fullPath: '/knowledge'
-      preLoaderRoute: typeof KnowledgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/algorithm': {
-      id: '/algorithm'
-      path: '/algorithm'
-      fullPath: '/algorithm'
-      preLoaderRoute: typeof AlgorithmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_sidebar': {
       id: '/_sidebar'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof SidebarRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_sidebar/knowledge': {
+      id: '/_sidebar/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof SidebarKnowledgeRouteImport
+      parentRoute: typeof SidebarRouteRoute
     }
     '/_sidebar/challenge': {
       id: '/_sidebar/challenge'
@@ -102,15 +93,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SidebarChallengeRouteImport
       parentRoute: typeof SidebarRouteRoute
     }
+    '/_sidebar/algorithm': {
+      id: '/_sidebar/algorithm'
+      path: '/algorithm'
+      fullPath: '/algorithm'
+      preLoaderRoute: typeof SidebarAlgorithmRouteImport
+      parentRoute: typeof SidebarRouteRoute
+    }
   }
 }
 
 interface SidebarRouteRouteChildren {
+  SidebarAlgorithmRoute: typeof SidebarAlgorithmRoute
   SidebarChallengeRoute: typeof SidebarChallengeRoute
+  SidebarKnowledgeRoute: typeof SidebarKnowledgeRoute
 }
 
 const SidebarRouteRouteChildren: SidebarRouteRouteChildren = {
+  SidebarAlgorithmRoute: SidebarAlgorithmRoute,
   SidebarChallengeRoute: SidebarChallengeRoute,
+  SidebarKnowledgeRoute: SidebarKnowledgeRoute,
 }
 
 const SidebarRouteRouteWithChildren = SidebarRouteRoute._addFileChildren(
@@ -119,8 +121,6 @@ const SidebarRouteRouteWithChildren = SidebarRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   SidebarRouteRoute: SidebarRouteRouteWithChildren,
-  AlgorithmRoute: AlgorithmRoute,
-  KnowledgeRoute: KnowledgeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

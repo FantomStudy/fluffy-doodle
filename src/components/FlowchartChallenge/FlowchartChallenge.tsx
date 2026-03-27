@@ -1,15 +1,4 @@
-import {
-  BookOpen,
-  CheckCheck,
-  ChevronLeft,
-  ChevronRight,
-  ClipboardList,
-  Home,
-  Map,
-  RotateCcw,
-  Trophy,
-  User,
-} from "lucide-react";
+import { CheckCheck, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import s from "./FlowchartChallenge.module.css";
 
@@ -54,22 +43,30 @@ const THEORY_SLIDES = [
 ];
 
 const ALL_BLOCKS: FlowBlock[] = [
-  { id: "start",  shape: "oval", label: "Начало",            color: "green"  },
-  { id: "input",  shape: "para", label: "Ввести число N",    color: "blue"   },
-  { id: "calc",   shape: "rect", label: "N × 2 = результат", color: "purple" },
+  { id: "start", shape: "oval", label: "Начало", color: "green" },
+  { id: "input", shape: "para", label: "Ввести число N", color: "blue" },
+  { id: "calc", shape: "rect", label: "N × 2 = результат", color: "purple" },
   { id: "output", shape: "para", label: "Вывести результат", color: "orange" },
-  { id: "end",    shape: "oval", label: "Конец",             color: "red"    },
+  { id: "end", shape: "oval", label: "Конец", color: "red" },
 ];
 
 const PALETTE_BLOCKS = ["calc", "start", "output", "end", "input"].map(
-  id => ALL_BLOCKS.find(b => b.id === id)!,
+  (id) => ALL_BLOCKS.find((b) => b.id === id)!,
 );
 
 const CORRECT_ORDER = ["start", "input", "calc", "output", "end"];
 
 // ─── Mini-visual components ──────────────────────────────────────────────────
 
-function MiniBlock({ shape, color, children }: { shape: BlockShape; color: BlockColor; children: string }) {
+function MiniBlock({
+  shape,
+  color,
+  children,
+}: {
+  shape: BlockShape;
+  color: BlockColor;
+  children: string;
+}) {
   return (
     <div className={`${s.miniBlock} ${s[`miniShape_${shape}`]} ${s[`miniColor_${color}`]}`}>
       <span>{children}</span>
@@ -85,13 +82,21 @@ function TheoryVisual({ visual }: { visual: "recipe" | "legend" | "arrows" }) {
   if (visual === "recipe") {
     return (
       <div className={s.miniFlow}>
-        <MiniBlock shape="oval" color="green">Начало</MiniBlock>
+        <MiniBlock shape="oval" color="green">
+          Начало
+        </MiniBlock>
         <MiniArrow />
-        <MiniBlock shape="rect" color="blue">Смешать тесто</MiniBlock>
+        <MiniBlock shape="rect" color="blue">
+          Смешать тесто
+        </MiniBlock>
         <MiniArrow />
-        <MiniBlock shape="rect" color="purple">Испечь</MiniBlock>
+        <MiniBlock shape="rect" color="purple">
+          Испечь
+        </MiniBlock>
         <MiniArrow />
-        <MiniBlock shape="oval" color="red">Конец</MiniBlock>
+        <MiniBlock shape="oval" color="red">
+          Конец
+        </MiniBlock>
       </div>
     );
   }
@@ -100,15 +105,21 @@ function TheoryVisual({ visual }: { visual: "recipe" | "legend" | "arrows" }) {
     return (
       <div className={s.legendGrid}>
         <div className={s.legendItem}>
-          <MiniBlock shape="oval" color="green">Начало / Конец</MiniBlock>
+          <MiniBlock shape="oval" color="green">
+            Начало / Конец
+          </MiniBlock>
           <span className={s.legendItemLabel}>Начало или конец программы</span>
         </div>
         <div className={s.legendItem}>
-          <MiniBlock shape="rect" color="purple">Действие</MiniBlock>
+          <MiniBlock shape="rect" color="purple">
+            Действие
+          </MiniBlock>
           <span className={s.legendItemLabel}>Вычисление или операция</span>
         </div>
         <div className={s.legendItem}>
-          <MiniBlock shape="para" color="orange">Ввод / Вывод</MiniBlock>
+          <MiniBlock shape="para" color="orange">
+            Ввод / Вывод
+          </MiniBlock>
           <span className={s.legendItemLabel}>Получить или показать данные</span>
         </div>
       </div>
@@ -118,25 +129,33 @@ function TheoryVisual({ visual }: { visual: "recipe" | "legend" | "arrows" }) {
   // arrows
   return (
     <div className={s.miniFlow}>
-      <MiniBlock shape="oval" color="green">Начало</MiniBlock>
+      <MiniBlock shape="oval" color="green">
+        Начало
+      </MiniBlock>
       <div className={s.miniArrowLabeled}>
         <div className={s.miniArrowLine} />
         <span className={s.miniArrowTag}>шаг 1</span>
         <div className={s.miniArrow} />
       </div>
-      <MiniBlock shape="rect" color="blue">Взять число</MiniBlock>
+      <MiniBlock shape="rect" color="blue">
+        Взять число
+      </MiniBlock>
       <div className={s.miniArrowLabeled}>
         <div className={s.miniArrowLine} />
         <span className={s.miniArrowTag}>шаг 2</span>
         <div className={s.miniArrow} />
       </div>
-      <MiniBlock shape="para" color="orange">Вывести результат</MiniBlock>
+      <MiniBlock shape="para" color="orange">
+        Вывести результат
+      </MiniBlock>
       <div className={s.miniArrowLabeled}>
         <div className={s.miniArrowLine} />
         <span className={s.miniArrowTag}>шаг 3</span>
         <div className={s.miniArrow} />
       </div>
-      <MiniBlock shape="oval" color="red">Конец</MiniBlock>
+      <MiniBlock shape="oval" color="red">
+        Конец
+      </MiniBlock>
     </div>
   );
 }
@@ -161,44 +180,10 @@ function DropZone({
   return (
     <div
       className={`${s.dropZone} ${show ? s.dropZoneShow : ""} ${active ? s.dropZoneActive : ""}`}
-      onDragOver={e => onOver(e, idx)}
+      onDragOver={(e) => onOver(e, idx)}
       onDragLeave={onLeave}
-      onDrop={e => onDrop(e, idx)}
+      onDrop={(e) => onDrop(e, idx)}
     />
-  );
-}
-
-// ─── Sidebar ─────────────────────────────────────────────────────────────────
-
-const NAV = [
-  { icon: <Home size={16} />, label: "Главная" },
-  { icon: <Map size={16} />, label: "Путь" },
-  { icon: <BookOpen size={16} />, label: "Уроки" },
-  { icon: <ClipboardList size={16} />, label: "Задания", active: true },
-  { icon: <Trophy size={16} />, label: "Достижения" },
-  { icon: <User size={16} />, label: "Профиль" },
-];
-
-function Sidebar() {
-  return (
-    <aside className={s.sidebar}>
-      <div className={s.sidebarTop}>
-        <div className={s.avatar} />
-        <span className={s.brand}>Orbita Kids</span>
-      </div>
-      <nav className={s.nav}>
-        {NAV.map(item => (
-          <button
-            key={item.label}
-            type="button"
-            className={`${s.navItem} ${item.active ? s.navItemActive : ""}`}
-          >
-            {item.icon}
-            {item.label}
-          </button>
-        ))}
-      </nav>
-    </aside>
   );
 }
 
@@ -221,7 +206,9 @@ function TheoryPhase({ onFinish }: { onFinish: () => void }) {
       <div className={s.theoryBody}>
         <div className={s.theoryCard} key={idx}>
           <div className={s.theoryCardIcon}>{slide.icon}</div>
-          <p className={s.theoryCardStep}>Шаг {idx + 1} из {THEORY_SLIDES.length}</p>
+          <p className={s.theoryCardStep}>
+            Шаг {idx + 1} из {THEORY_SLIDES.length}
+          </p>
           <h2 className={s.theoryCardTitle}>{slide.title}</h2>
           <p className={s.theoryCardText}>{slide.text}</p>
           {"visual" in slide && slide.visual && (
@@ -236,7 +223,7 @@ function TheoryPhase({ onFinish }: { onFinish: () => void }) {
         <button
           type="button"
           className={`${s.btnNav} ${s.btnNavBack}`}
-          onClick={() => setIdx(i => Math.max(0, i - 1))}
+          onClick={() => setIdx((i) => Math.max(0, i - 1))}
           style={{ visibility: idx === 0 ? "hidden" : "visible" }}
         >
           <ChevronLeft size={15} /> Назад
@@ -248,21 +235,19 @@ function TheoryPhase({ onFinish }: { onFinish: () => void }) {
           ))}
         </div>
 
-        {isLast
-          ? (
-              <button type="button" className={`${s.btnNav} ${s.btnNavStart}`} onClick={onFinish}>
-                Начать задание 🚀
-              </button>
-            )
-          : (
-              <button
-                type="button"
-                className={`${s.btnNav} ${s.btnNavNext}`}
-                onClick={() => setIdx(i => i + 1)}
-              >
-                Далее <ChevronRight size={15} />
-              </button>
-            )}
+        {isLast ? (
+          <button type="button" className={`${s.btnNav} ${s.btnNavStart}`} onClick={onFinish}>
+            Начать задание 🚀
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${s.btnNav} ${s.btnNavNext}`}
+            onClick={() => setIdx((i) => i + 1)}
+          >
+            Далее <ChevronRight size={15} />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -277,8 +262,8 @@ function FlowchartTask() {
   const [hoverZone, setHoverZone] = useState<number | null>(null);
   const [result, setResult] = useState<"idle" | "correct" | "wrong">("idle");
 
-  const inWs = (id: string) => workspace.some(b => b.id === id);
-  const available = PALETTE_BLOCKS.filter(b => !inWs(b.id));
+  const inWs = (id: string) => workspace.some((b) => b.id === id);
+  const available = PALETTE_BLOCKS.filter((b) => !inWs(b.id));
 
   const onPaletteDragStart = (e: React.DragEvent<HTMLDivElement>, block: FlowBlock) => {
     setDragId(block.id);
@@ -308,18 +293,18 @@ function FlowchartTask() {
   const onZoneDrop = (e: React.DragEvent<HTMLDivElement>, zoneIdx: number) => {
     e.preventDefault();
     if (!dragId) return;
-    const block = ALL_BLOCKS.find(b => b.id === dragId)!;
+    const block = ALL_BLOCKS.find((b) => b.id === dragId)!;
 
     if (dragFrom === "palette") {
       if (inWs(dragId)) return;
-      setWorkspace(prev => {
+      setWorkspace((prev) => {
         const next = [...prev];
         next.splice(zoneIdx, 0, block);
         return next;
       });
     } else {
-      setWorkspace(prev => {
-        const fromIdx = prev.findIndex(b => b.id === dragId);
+      setWorkspace((prev) => {
+        const fromIdx = prev.findIndex((b) => b.id === dragId);
         if (fromIdx === -1) return prev;
         const next = [...prev];
         next.splice(fromIdx, 1);
@@ -338,19 +323,22 @@ function FlowchartTask() {
   const onPaletteDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (dragFrom !== "workspace" || !dragId) return;
-    setWorkspace(prev => prev.filter(b => b.id !== dragId));
+    setWorkspace((prev) => prev.filter((b) => b.id !== dragId));
     setDragId(null);
     setDragFrom(null);
     setResult("idle");
   };
 
   const removeFromWs = (id: string) => {
-    setWorkspace(prev => prev.filter(b => b.id !== id));
+    setWorkspace((prev) => prev.filter((b) => b.id !== id));
     setResult("idle");
   };
 
   const check = () => {
-    if (workspace.length !== CORRECT_ORDER.length) { setResult("wrong"); return; }
+    if (workspace.length !== CORRECT_ORDER.length) {
+      setResult("wrong");
+      return;
+    }
     const ok = CORRECT_ORDER.every((id, i) => workspace[i].id === id);
     setResult(ok ? "correct" : "wrong");
   };
@@ -374,19 +362,15 @@ function FlowchartTask() {
 
       <div className={s.taskBody}>
         {/* Palette */}
-        <div
-          className={s.palette}
-          onDragOver={e => e.preventDefault()}
-          onDrop={onPaletteDrop}
-        >
+        <div className={s.palette} onDragOver={(e) => e.preventDefault()} onDrop={onPaletteDrop}>
           <h3 className={s.panelTitle}>Палитра блоков</h3>
           <div className={s.paletteList}>
-            {available.map(block => (
+            {available.map((block) => (
               <div
                 key={block.id}
                 className={`${s.flowBlock} ${s[`shape_${block.shape}`]} ${s[`color_${block.color}`]}`}
                 draggable
-                onDragStart={e => onPaletteDragStart(e, block)}
+                onDragStart={(e) => onPaletteDragStart(e, block)}
                 onDragEnd={onDragEnd}
                 style={{
                   opacity: dragId === block.id && dragFrom === "palette" ? 0.35 : 1,
@@ -396,9 +380,7 @@ function FlowchartTask() {
                 <span>{block.label}</span>
               </div>
             ))}
-            {available.length === 0 && (
-              <p className={s.emptyMsg}>Все блоки добавлены!</p>
-            )}
+            {available.length === 0 && <p className={s.emptyMsg}>Все блоки добавлены!</p>}
           </div>
 
           <div className={s.shapeLegend}>
@@ -445,7 +427,7 @@ function FlowchartTask() {
                   <div
                     className={`${s.flowBlock} ${s[`shape_${block.shape}`]} ${s[`color_${block.color}`]} ${s.wsBlock} ${dragId === block.id && dragFrom === "workspace" ? s.blockDragging : ""}`}
                     draggable
-                    onDragStart={e => onWorkspaceDragStart(e, block)}
+                    onDragStart={(e) => onWorkspaceDragStart(e, block)}
                     onDragEnd={onDragEnd}
                     style={{ cursor: "grab" }}
                   >
@@ -477,10 +459,14 @@ function FlowchartTask() {
 
           <div className={s.wsFooter}>
             {result === "correct" && (
-              <div className={s.successBanner}>✅ Отлично! Блок-схема составлена правильно! +10 XP</div>
+              <div className={s.successBanner}>
+                ✅ Отлично! Блок-схема составлена правильно! +10 XP
+              </div>
             )}
             {result === "wrong" && (
-              <div className={s.errorBanner}>❌ Порядок неверный. Проверь последовательность и попробуй снова!</div>
+              <div className={s.errorBanner}>
+                ❌ Порядок неверный. Проверь последовательность и попробуй снова!
+              </div>
             )}
             <div className={s.footerBtns}>
               <button type="button" className={s.btnReset} onClick={reset}>
@@ -518,13 +504,8 @@ export function FlowchartChallenge() {
   }, []);
 
   return (
-    <div className={s.shell}>
-      <Sidebar />
-      <main className={s.main}>
-        {phase === "theory"
-          ? <TheoryPhase onFinish={() => setPhase("task")} />
-          : <FlowchartTask />}
-      </main>
-    </div>
+    <main className={s.main}>
+      {phase === "theory" ? <TheoryPhase onFinish={() => setPhase("task")} /> : <FlowchartTask />}
+    </main>
   );
 }

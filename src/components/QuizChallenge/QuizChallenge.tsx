@@ -1,14 +1,4 @@
-import {
-  BookOpen,
-  CheckCheck,
-  ChevronRight,
-  ClipboardList,
-  Home,
-  Map,
-  RotateCcw,
-  Trophy,
-  User,
-} from "lucide-react";
+import { BookOpen, CheckCheck, ChevronRight, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import s from "./QuizChallenge.module.css";
 
@@ -71,7 +61,8 @@ const QUESTIONS: Question[] = [
       "Способ остановить программу",
     ],
     correct: [1],
-    explanation: "Переменная — это именованное место в памяти для хранения значения: числа, текста, списка и т. д.",
+    explanation:
+      "Переменная — это именованное место в памяти для хранения значения: числа, текста, списка и т. д.",
   },
   {
     id: 2,
@@ -105,7 +96,8 @@ const QUESTIONS: Question[] = [
     text: "Какие из этих значений являются «ложными» (falsy) в JavaScript?",
     options: ["0", '""', "null", "1", '"false"'],
     correct: [0, 1, 2],
-    explanation: 'Falsy-значения: 0, "" (пустая строка), null, undefined, false, NaN. Строка "false" — непустая, она истинна. 1 тоже истинна.',
+    explanation:
+      'Falsy-значения: 0, "" (пустая строка), null, undefined, false, NaN. Строка "false" — непустая, она истинна. 1 тоже истинна.',
   },
   {
     id: 6,
@@ -114,7 +106,8 @@ const QUESTIONS: Question[] = [
     code: `for (let i = 0; i < 4; i++) {\n  console.log(i);\n}`,
     options: ["3 раза", "4 раза", "5 раз", "0 раз"],
     correct: [1],
-    explanation: "i принимает значения 0, 1, 2, 3 — 4 итерации. Когда i === 4, условие i < 4 ложно, цикл завершается.",
+    explanation:
+      "i принимает значения 0, 1, 2, 3 — 4 итерации. Когда i === 4, условие i < 4 ложно, цикл завершается.",
   },
   {
     id: 7,
@@ -127,7 +120,8 @@ const QUESTIONS: Question[] = [
       "Содержимое массива внутри const можно менять",
     ],
     correct: [0, 1, 3],
-    explanation: "const нельзя переназначить и нужно сразу присвоить значение. Но содержимое объектов и массивов менять можно — сама ссылка не меняется.",
+    explanation:
+      "const нельзя переназначить и нужно сразу присвоить значение. Но содержимое объектов и массивов менять можно — сама ссылка не меняется.",
   },
   {
     id: 8,
@@ -140,7 +134,8 @@ const QUESTIONS: Question[] = [
       "Выводит значение в консоль",
     ],
     correct: [1],
-    explanation: "return отправляет значение обратно туда, откуда функция была вызвана, и немедленно завершает её работу.",
+    explanation:
+      "return отправляет значение обратно туда, откуда функция была вызвана, и немедленно завершает её работу.",
   },
 ];
 
@@ -163,40 +158,6 @@ function getOptionState(
   return "idle";
 }
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
-
-const NAV = [
-  { icon: <Home size={16} />, label: "Главная" },
-  { icon: <Map size={16} />, label: "Путь" },
-  { icon: <BookOpen size={16} />, label: "Уроки" },
-  { icon: <ClipboardList size={16} />, label: "Задания", active: true },
-  { icon: <Trophy size={16} />, label: "Достижения" },
-  { icon: <User size={16} />, label: "Профиль" },
-];
-
-function Sidebar() {
-  return (
-    <aside className={s.sidebar}>
-      <div className={s.sidebarTop}>
-        <div className={s.avatar} />
-        <span className={s.brand}>Orbita Kids</span>
-      </div>
-      <nav className={s.nav}>
-        {NAV.map(item => (
-          <button
-            key={item.label}
-            type="button"
-            className={`${s.navItem} ${item.active ? s.navItemActive : ""}`}
-          >
-            {item.icon}
-            {item.label}
-          </button>
-        ))}
-      </nav>
-    </aside>
-  );
-}
-
 // ─── Theory Phase ─────────────────────────────────────────────────────────────
 
 function TheoryPhase({ onFinish }: { onFinish: () => void }) {
@@ -216,7 +177,9 @@ function TheoryPhase({ onFinish }: { onFinish: () => void }) {
       <div className={s.theoryBody}>
         <div className={s.theoryCard} key={idx}>
           <div className={s.theoryCardIcon}>{slide.icon}</div>
-          <p className={s.theoryCardStep}>Слайд {idx + 1} из {THEORY_SLIDES.length}</p>
+          <p className={s.theoryCardStep}>
+            Слайд {idx + 1} из {THEORY_SLIDES.length}
+          </p>
           <h2 className={s.theoryCardTitle}>{slide.title}</h2>
           <p className={s.theoryCardText}>{slide.text}</p>
           {"code" in slide && slide.code && (
@@ -234,7 +197,7 @@ function TheoryPhase({ onFinish }: { onFinish: () => void }) {
         <button
           type="button"
           className={`${s.btnNav} ${s.btnNavBack}`}
-          onClick={() => setIdx(i => Math.max(0, i - 1))}
+          onClick={() => setIdx((i) => Math.max(0, i - 1))}
           style={{ visibility: idx === 0 ? "hidden" : "visible" }}
         >
           Назад
@@ -246,21 +209,19 @@ function TheoryPhase({ onFinish }: { onFinish: () => void }) {
           ))}
         </div>
 
-        {isLast
-          ? (
-              <button type="button" className={`${s.btnNav} ${s.btnNavStart}`} onClick={onFinish}>
-                Начать тест 📝
-              </button>
-            )
-          : (
-              <button
-                type="button"
-                className={`${s.btnNav} ${s.btnNavNext}`}
-                onClick={() => setIdx(i => i + 1)}
-              >
-                Далее
-              </button>
-            )}
+        {isLast ? (
+          <button type="button" className={`${s.btnNav} ${s.btnNavStart}`} onClick={onFinish}>
+            Начать тест 📝
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${s.btnNav} ${s.btnNavNext}`}
+            onClick={() => setIdx((i) => i + 1)}
+          >
+            Далее
+          </button>
+        )}
       </div>
     </div>
   );
@@ -283,8 +244,8 @@ function ResultsScreen({
   const xp = Math.round(pct / 10) * 5;
 
   const emoji = pct === 100 ? "🏆" : pct >= 75 ? "🎉" : pct >= 50 ? "👍" : "💪";
-  const msg
-    = pct === 100
+  const msg =
+    pct === 100
       ? "Идеальный результат! Ты настоящий программист!"
       : pct >= 75
         ? "Отличная работа! Ещё чуть-чуть — и будет идеал."
@@ -340,15 +301,14 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
   const q = QUESTIONS[qIdx];
   const total = QUESTIONS.length;
 
-  const isAnswerCorrect
-    = selected.size === q.correct.length && q.correct.every(i => selected.has(i));
+  const isAnswerCorrect =
+    selected.size === q.correct.length && q.correct.every((i) => selected.has(i));
 
   const toggle = (i: number) => {
     if (checked) return;
     if (q.type === "single") {
       setSelected(new Set([i]));
-    }
-    else {
+    } else {
       setSelected((prev) => {
         const next = new Set(prev);
         if (next.has(i)) next.delete(i);
@@ -360,16 +320,15 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
 
   const check = () => {
     if (selected.size === 0) return;
-    if (isAnswerCorrect) setCorrectCount(c => c + 1);
+    if (isAnswerCorrect) setCorrectCount((c) => c + 1);
     setChecked(true);
   };
 
   const next = () => {
     if (qIdx === total - 1) {
       setFinished(true);
-    }
-    else {
-      setQIdx(i => i + 1);
+    } else {
+      setQIdx((i) => i + 1);
       setSelected(new Set());
       setChecked(false);
     }
@@ -398,12 +357,11 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
     <div className={s.quizShell}>
       {/* Header */}
       <div className={s.quizHeader}>
-        <span className={s.qCounter}>Вопрос {qIdx + 1} из {total}</span>
+        <span className={s.qCounter}>
+          Вопрос {qIdx + 1} из {total}
+        </span>
         <div className={s.qProgressBar}>
-          <div
-            className={s.qProgressFill}
-            style={{ width: `${((qIdx + 1) / total) * 100}%` }}
-          />
+          <div className={s.qProgressFill} style={{ width: `${((qIdx + 1) / total) * 100}%` }} />
         </div>
         <span className={s.qScore}>✅ {correctCount}</span>
       </div>
@@ -428,9 +386,11 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
                   type="button"
                   className={`${s.option} ${s[`option_${state}`]}`}
                   onClick={() => toggle(i)}
-                  disabled={checked && (state === "idle")}
+                  disabled={checked && state === "idle"}
                 >
-                  <span className={`${s.optionMarker} ${q.type === "multiple" ? s.optionMarkerCheck : s.optionMarkerRadio}`}>
+                  <span
+                    className={`${s.optionMarker} ${q.type === "multiple" ? s.optionMarkerCheck : s.optionMarkerRadio}`}
+                  >
                     {state === "correct" && "✓"}
                     {state === "wrong" && "✗"}
                     {state === "missed" && "○"}
@@ -442,7 +402,9 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
           </div>
 
           {checked && (
-            <div className={`${s.explanation} ${isAnswerCorrect ? s.explanationGood : s.explanationBad}`}>
+            <div
+              className={`${s.explanation} ${isAnswerCorrect ? s.explanationGood : s.explanationBad}`}
+            >
               <span className={s.explanationBadge}>
                 {isAnswerCorrect ? "✅ Верно!" : "❌ Не совсем..."}
               </span>
@@ -454,23 +416,21 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
 
       {/* Footer */}
       <div className={s.quizFooter}>
-        {!checked
-          ? (
-              <button
-                type="button"
-                className={s.btnCheck}
-                onClick={check}
-                disabled={selected.size === 0}
-              >
-                <CheckCheck size={15} /> Проверить
-              </button>
-            )
-          : (
-              <button type="button" className={s.btnNext} onClick={next}>
-                {qIdx === total - 1 ? "Посмотреть результат 🏆" : "Следующий вопрос"}
-                <ChevronRight size={15} />
-              </button>
-            )}
+        {!checked ? (
+          <button
+            type="button"
+            className={s.btnCheck}
+            onClick={check}
+            disabled={selected.size === 0}
+          >
+            <CheckCheck size={15} /> Проверить
+          </button>
+        ) : (
+          <button type="button" className={s.btnNext} onClick={next}>
+            {qIdx === total - 1 ? "Посмотреть результат 🏆" : "Следующий вопрос"}
+            <ChevronRight size={15} />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -492,13 +452,12 @@ export function QuizChallenge() {
   }, []);
 
   return (
-    <div className={s.shell}>
-      <Sidebar />
-      <main className={s.main}>
-        {phase === "theory"
-          ? <TheoryPhase onFinish={() => setPhase("quiz")} />
-          : <QuizPhase onBackToTheory={() => setPhase("theory")} />}
-      </main>
-    </div>
+    <main className={s.main}>
+      {phase === "theory" ? (
+        <TheoryPhase onFinish={() => setPhase("quiz")} />
+      ) : (
+        <QuizPhase onBackToTheory={() => setPhase("theory")} />
+      )}
+    </main>
   );
 }
