@@ -1,6 +1,10 @@
 services:
   web:
-    build: ./web
-    restart: always
+    build: .
     ports:
-      - "5173:80"
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
