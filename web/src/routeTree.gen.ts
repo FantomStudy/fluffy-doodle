@@ -32,6 +32,7 @@ import { Route as ModuleRouteImport } from './routes/module'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LessonRouteImport } from './routes/lesson'
+import { Route as KnowledgeRouteImport } from './routes/knowledge'
 import { Route as GamesRouteImport } from './routes/games'
 import { Route as ControlRouteImport } from './routes/control'
 import { Route as ChallengeRouteImport } from './routes/challenge'
@@ -155,6 +156,11 @@ const LessonRoute = LessonRouteImport.update({
   path: '/lesson',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KnowledgeRoute = KnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GamesRoute = GamesRouteImport.update({
   id: '/games',
   path: '/games',
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
   '/games': typeof GamesRoute
+  '/knowledge': typeof KnowledgeRoute
   '/lesson': typeof LessonRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
   '/games': typeof GamesRoute
+  '/knowledge': typeof KnowledgeRoute
   '/lesson': typeof LessonRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
@@ -264,6 +272,7 @@ export interface FileRoutesById {
   '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
   '/games': typeof GamesRoute
+  '/knowledge': typeof KnowledgeRoute
   '/lesson': typeof LessonRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/challenge'
     | '/control'
     | '/games'
+    | '/knowledge'
     | '/lesson'
     | '/login'
     | '/map'
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/challenge'
     | '/control'
     | '/games'
+    | '/knowledge'
     | '/lesson'
     | '/login'
     | '/map'
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/challenge'
     | '/control'
     | '/games'
+    | '/knowledge'
     | '/lesson'
     | '/login'
     | '/map'
@@ -395,6 +407,7 @@ export interface RootRouteChildren {
   ChallengeRoute: typeof ChallengeRoute
   ControlRoute: typeof ControlRoute
   GamesRoute: typeof GamesRoute
+  KnowledgeRoute: typeof KnowledgeRoute
   LessonRoute: typeof LessonRoute
   LoginRoute: typeof LoginRoute
   MapRoute: typeof MapRoute
@@ -583,6 +596,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/knowledge': {
+      id: '/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof KnowledgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/games': {
       id: '/games'
       path: '/games'
@@ -643,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChallengeRoute: ChallengeRoute,
   ControlRoute: ControlRoute,
   GamesRoute: GamesRoute,
+  KnowledgeRoute: KnowledgeRoute,
   LessonRoute: LessonRoute,
   LoginRoute: LoginRoute,
   MapRoute: MapRoute,
