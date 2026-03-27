@@ -3,15 +3,10 @@ import {
   BookOpen,
   ChevronLeft,
   ChevronRight,
-  ClipboardList,
   FileText,
   FlaskConical,
-  Home,
-  Map,
   Play,
   RotateCcw,
-  Trophy,
-  User,
   Users,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -73,8 +68,8 @@ export const DEFAULT_CHALLENGE: ChallengeData = {
       text: "Функция — это маленькая машинка. Ты даёшь ей число на входе, она что-то делает и отдаёт результат.",
       code: {
         label: "Так выглядит функция",
-        line: "function hello() {\n  return \"Привет!\";\n}",
-        result: "→ \"Привет!\"",
+        line: 'function hello() {\n  return "Привет!";\n}',
+        result: '→ "Привет!"',
       },
     },
     {
@@ -158,11 +153,17 @@ function runTests(code: string, testCases: TestCase[]): TestResult[] {
       const fn = new Function(`${code}; return ${tc.input};`);
       got = String(fn());
       passed = got === tc.expected;
-    }
-    catch (err) {
+    } catch (err) {
       got = err instanceof Error ? err.message : String(err);
     }
-    return { id: tc.id, description: tc.description, input: tc.input, expected: tc.expected, got, passed };
+    return {
+      id: tc.id,
+      description: tc.description,
+      input: tc.input,
+      expected: tc.expected,
+      got,
+      passed,
+    };
   });
 }
 
@@ -170,55 +171,17 @@ function Stars({ count, total = 5 }: { count: number; total?: number }) {
   return (
     <span className={s.stars}>
       {Array.from({ length: total }, (_, i) => (
-        <span key={i} className={i < count ? s.starOn : s.starOff}>★</span>
+        <span key={i} className={i < count ? s.starOn : s.starOff}>
+          ★
+        </span>
       ))}
     </span>
   );
 }
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
-
-const NAV = [
-  { icon: <Home size={16} />, label: "Главная" },
-  { icon: <Map size={16} />, label: "Путь" },
-  { icon: <BookOpen size={16} />, label: "Уроки" },
-  { icon: <ClipboardList size={16} />, label: "Задания", active: true },
-  { icon: <Trophy size={16} />, label: "Достижения" },
-  { icon: <User size={16} />, label: "Профиль" },
-];
-
-function Sidebar() {
-  return (
-    <aside className={s.sidebar}>
-      <div className={s.sidebarTop}>
-        <div className={s.avatar} />
-        <span className={s.brand}>Orbita Kids</span>
-      </div>
-      <nav className={s.nav}>
-        {NAV.map(item => (
-          <button
-            key={item.label}
-            type="button"
-            className={`${s.navItem} ${item.active ? s.navItemActive : ""}`}
-          >
-            {item.icon}
-            {item.label}
-          </button>
-        ))}
-      </nav>
-    </aside>
-  );
-}
-
 // ─── Theory phase ─────────────────────────────────────────────────────────────
 
-function TheoryPhase({
-  slides,
-  onFinish,
-}: {
-  slides: TheorySlide[];
-  onFinish: () => void;
-}) {
+function TheoryPhase({ slides, onFinish }: { slides: TheorySlide[]; onFinish: () => void }) {
   const [idx, setIdx] = useState(0);
   const slide = slides[idx];
   const isLast = idx === slides.length - 1;
@@ -237,16 +200,16 @@ function TheoryPhase({
       <div className={s.theoryBody}>
         <div className={s.theoryCard} key={idx}>
           <div className={s.theoryCardIcon}>{slide.icon}</div>
-          <p className={s.theoryCardStep}>Шаг {idx + 1} из {slides.length}</p>
+          <p className={s.theoryCardStep}>
+            Шаг {idx + 1} из {slides.length}
+          </p>
           <h2 className={s.theoryCardTitle}>{slide.title}</h2>
           <p className={s.theoryCardText}>{slide.text}</p>
           {slide.code && (
             <div className={s.theoryCode}>
               <span className={s.theoryCodeLabel}>{slide.code.label}</span>
               <pre className={s.theoryCodeLine}>{slide.code.line}</pre>
-              {slide.code.result && (
-                <pre className={s.theoryCodeResult}>{slide.code.result}</pre>
-              )}
+              {slide.code.result && <pre className={s.theoryCodeResult}>{slide.code.result}</pre>}
             </div>
           )}
         </div>
@@ -257,7 +220,7 @@ function TheoryPhase({
         <button
           type="button"
           className={`${s.btnNav} ${s.btnNavBack}`}
-          onClick={() => setIdx(i => Math.max(0, i - 1))}
+          onClick={() => setIdx((i) => Math.max(0, i - 1))}
           disabled={idx === 0}
           style={{ visibility: idx === 0 ? "hidden" : "visible" }}
         >
@@ -267,29 +230,24 @@ function TheoryPhase({
 
         <div className={s.theoryDots}>
           {slides.map((_, i) => (
-            <div
-              key={i}
-              className={`${s.theoryDot} ${i === idx ? s.theoryDotActive : ""}`}
-            />
+            <div key={i} className={`${s.theoryDot} ${i === idx ? s.theoryDotActive : ""}`} />
           ))}
         </div>
 
-        {isLast
-          ? (
-              <button type="button" className={`${s.btnNav} ${s.btnNavStart}`} onClick={onFinish}>
-                Начать задание 🚀
-              </button>
-            )
-          : (
-              <button
-                type="button"
-                className={`${s.btnNav} ${s.btnNavNext}`}
-                onClick={() => setIdx(i => i + 1)}
-              >
-                Далее
-                <ChevronRight size={15} />
-              </button>
-            )}
+        {isLast ? (
+          <button type="button" className={`${s.btnNav} ${s.btnNavStart}`} onClick={onFinish}>
+            Начать задание 🚀
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${s.btnNav} ${s.btnNavNext}`}
+            onClick={() => setIdx((i) => i + 1)}
+          >
+            Далее
+            <ChevronRight size={15} />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -305,7 +263,7 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
   const [results, setResults] = useState<TestResult[] | null>(null);
   const [running, setRunning] = useState(false);
 
-  const passed = results?.filter(r => r.passed).length ?? 0;
+  const passed = results?.filter((r) => r.passed).length ?? 0;
   const total = challenge.testCases.length;
   const allPassed = results !== null && passed === total;
 
@@ -343,7 +301,7 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
         </div>
 
         <div className={s.tabBar}>
-          {tabs.map(t => (
+          {tabs.map((t) => (
             <button
               key={t.id}
               type="button"
@@ -374,7 +332,9 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
 
           {tab === "theory" && (
             <>
-              <p className={s.sectionLabel} style={{ marginBottom: "12px" }}>Что мы узнали</p>
+              <p className={s.sectionLabel} style={{ marginBottom: "12px" }}>
+                Что мы узнали
+              </p>
               <div className={s.reviewList}>
                 {challenge.theorySlides.slice(0, -1).map((sl, i) => (
                   <div key={i} className={s.reviewItem}>
@@ -389,7 +349,9 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
               {challenge.theorySlides[2]?.code && (
                 <div className={s.reviewCode}>
                   <span>{challenge.theorySlides[2].code.line}</span>
-                  <span className={s.reviewCodeResult}>{challenge.theorySlides[2].code.result}</span>
+                  <span className={s.reviewCodeResult}>
+                    {challenge.theorySlides[2].code.result}
+                  </span>
                 </div>
               )}
             </>
@@ -433,7 +395,7 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
             height="100%"
             language={challenge.language}
             value={code}
-            onChange={v => setCode(v ?? "")}
+            onChange={(v) => setCode(v ?? "")}
             theme="vs-dark"
             options={{
               fontSize: 14,
@@ -454,7 +416,9 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
             <FlaskConical size={13} color="#565f89" />
             <span className={s.resultsPanelTitle}>Тесты</span>
             {results && (
-              <span className={s.resultsPanelScore}>{passed}/{total} пройдено</span>
+              <span className={s.resultsPanelScore}>
+                {passed}/{total} пройдено
+              </span>
             )}
           </div>
 
@@ -463,26 +427,28 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
           )}
 
           <div className={s.resultsPanelBody}>
-            {!results
-              ? <span className={s.resultEmpty}>Нажми «Запустить» чтобы проверить…</span>
-              : results.map(r => (
-                  <div
-                    key={r.id}
-                    className={`${s.resultItem} ${r.passed ? s.resultItemPass : s.resultItemFail}`}
-                  >
-                    <span className={s.resultIcon}>{r.passed ? "✅" : "❌"}</span>
-                    <div>
-                      <div className={s.resultDesc}>{r.description}</div>
-                      <div className={s.resultCode}>{r.input}</div>
-                      {!r.passed && (
-                        <>
-                          <div className={s.resultExpected}>Ожидалось: {r.expected}</div>
-                          <div className={s.resultGot}>Получено: {r.got}</div>
-                        </>
-                      )}
-                    </div>
+            {!results ? (
+              <span className={s.resultEmpty}>Нажми «Запустить» чтобы проверить…</span>
+            ) : (
+              results.map((r) => (
+                <div
+                  key={r.id}
+                  className={`${s.resultItem} ${r.passed ? s.resultItemPass : s.resultItemFail}`}
+                >
+                  <span className={s.resultIcon}>{r.passed ? "✅" : "❌"}</span>
+                  <div>
+                    <div className={s.resultDesc}>{r.description}</div>
+                    <div className={s.resultCode}>{r.input}</div>
+                    {!r.passed && (
+                      <>
+                        <div className={s.resultExpected}>Ожидалось: {r.expected}</div>
+                        <div className={s.resultGot}>Получено: {r.got}</div>
+                      </>
+                    )}
                   </div>
-                ))}
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -510,12 +476,9 @@ export function CodingChallenge({ challenge = DEFAULT_CHALLENGE }: CodingChallen
     };
   }, []);
 
-  return (
-    <div className={s.page}>
-      <Sidebar />
-      {phase === "theory"
-        ? <TheoryPhase slides={challenge.theorySlides} onFinish={() => setPhase("task")} />
-        : <TaskPhase challenge={challenge} />}
-    </div>
+  return phase === "theory" ? (
+    <TheoryPhase slides={challenge.theorySlides} onFinish={() => setPhase("task")} />
+  ) : (
+    <TaskPhase challenge={challenge} />
   );
 }

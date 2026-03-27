@@ -9,176 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VideoLessonsRouteImport } from './routes/video-lessons'
-import { Route as TheoryRouteImport } from './routes/theory'
-import { Route as TasksRouteImport } from './routes/tasks'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ResultRouteImport } from './routes/result'
-import { Route as ReportsRouteImport } from './routes/reports'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as RatingRouteImport } from './routes/rating'
-import { Route as QuizRouteImport } from './routes/quiz'
-import { Route as QuestionOrderRouteImport } from './routes/question-order'
-import { Route as QuestionMatchRouteImport } from './routes/question-match'
-import { Route as QuestionFillRouteImport } from './routes/question-fill'
-import { Route as QuestionCodeRouteImport } from './routes/question-code'
-import { Route as QuestionChoiceRouteImport } from './routes/question-choice'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as PracticeRouteImport } from './routes/practice'
-import { Route as ParentRouteImport } from './routes/parent'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as ModulesRouteImport } from './routes/modules'
-import { Route as ModuleRouteImport } from './routes/module'
-import { Route as MapRouteImport } from './routes/map'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LessonRouteImport } from './routes/lesson'
 import { Route as KnowledgeRouteImport } from './routes/knowledge'
-import { Route as GamesRouteImport } from './routes/games'
-import { Route as ControlRouteImport } from './routes/control'
-import { Route as ChallengeRouteImport } from './routes/challenge'
-import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AlgorithmRouteImport } from './routes/algorithm'
-import { Route as AchievementsRouteImport } from './routes/achievements'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as SidebarRouteRouteImport } from './routes/_sidebar/route'
+import { Route as SidebarChallengeRouteImport } from './routes/_sidebar/challenge'
 
-const VideoLessonsRoute = VideoLessonsRouteImport.update({
-  id: '/video-lessons',
-  path: '/video-lessons',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TheoryRoute = TheoryRouteImport.update({
-  id: '/theory',
-  path: '/theory',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TasksRoute = TasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResultRoute = ResultRouteImport.update({
-  id: '/result',
-  path: '/result',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportsRoute = ReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RatingRoute = RatingRouteImport.update({
-  id: '/rating',
-  path: '/rating',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizRoute = QuizRouteImport.update({
-  id: '/quiz',
-  path: '/quiz',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuestionOrderRoute = QuestionOrderRouteImport.update({
-  id: '/question-order',
-  path: '/question-order',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuestionMatchRoute = QuestionMatchRouteImport.update({
-  id: '/question-match',
-  path: '/question-match',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuestionFillRoute = QuestionFillRouteImport.update({
-  id: '/question-fill',
-  path: '/question-fill',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuestionCodeRoute = QuestionCodeRouteImport.update({
-  id: '/question-code',
-  path: '/question-code',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuestionChoiceRoute = QuestionChoiceRouteImport.update({
-  id: '/question-choice',
-  path: '/question-choice',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PracticeRoute = PracticeRouteImport.update({
-  id: '/practice',
-  path: '/practice',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ParentRoute = ParentRouteImport.update({
-  id: '/parent',
-  path: '/parent',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ModulesRoute = ModulesRouteImport.update({
-  id: '/modules',
-  path: '/modules',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ModuleRoute = ModuleRouteImport.update({
-  id: '/module',
-  path: '/module',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MapRoute = MapRouteImport.update({
-  id: '/map',
-  path: '/map',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LessonRoute = LessonRouteImport.update({
-  id: '/lesson',
-  path: '/lesson',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const KnowledgeRoute = KnowledgeRouteImport.update({
   id: '/knowledge',
   path: '/knowledge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GamesRoute = GamesRouteImport.update({
-  id: '/games',
-  path: '/games',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ControlRoute = ControlRouteImport.update({
-  id: '/control',
-  path: '/control',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChallengeRoute = ChallengeRouteImport.update({
-  id: '/challenge',
-  path: '/challenge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AnalyticsRoute = AnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlgorithmRoute = AlgorithmRouteImport.update({
@@ -186,449 +24,61 @@ const AlgorithmRoute = AlgorithmRouteImport.update({
   path: '/algorithm',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AchievementsRoute = AchievementsRouteImport.update({
-  id: '/achievements',
-  path: '/achievements',
+const SidebarRouteRoute = SidebarRouteRouteImport.update({
+  id: '/_sidebar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
+const SidebarChallengeRoute = SidebarChallengeRouteImport.update({
+  id: '/challenge',
+  path: '/challenge',
+  getParentRoute: () => SidebarRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
+  '/': typeof SidebarRouteRouteWithChildren
   '/algorithm': typeof AlgorithmRoute
-  '/analytics': typeof AnalyticsRoute
-  '/challenge': typeof ChallengeRoute
-  '/control': typeof ControlRoute
-  '/games': typeof GamesRoute
   '/knowledge': typeof KnowledgeRoute
-  '/lesson': typeof LessonRoute
-  '/login': typeof LoginRoute
-  '/map': typeof MapRoute
-  '/module': typeof ModuleRoute
-  '/modules': typeof ModulesRoute
-  '/onboarding': typeof OnboardingRoute
-  '/parent': typeof ParentRoute
-  '/practice': typeof PracticeRoute
-  '/profile': typeof ProfileRoute
-  '/question-choice': typeof QuestionChoiceRoute
-  '/question-code': typeof QuestionCodeRoute
-  '/question-fill': typeof QuestionFillRoute
-  '/question-match': typeof QuestionMatchRoute
-  '/question-order': typeof QuestionOrderRoute
-  '/quiz': typeof QuizRoute
-  '/rating': typeof RatingRoute
-  '/register': typeof RegisterRoute
-  '/reports': typeof ReportsRoute
-  '/result': typeof ResultRoute
-  '/settings': typeof SettingsRoute
-  '/tasks': typeof TasksRoute
-  '/theory': typeof TheoryRoute
-  '/video-lessons': typeof VideoLessonsRoute
+  '/challenge': typeof SidebarChallengeRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
+  '/': typeof SidebarRouteRouteWithChildren
   '/algorithm': typeof AlgorithmRoute
-  '/analytics': typeof AnalyticsRoute
-  '/challenge': typeof ChallengeRoute
-  '/control': typeof ControlRoute
-  '/games': typeof GamesRoute
   '/knowledge': typeof KnowledgeRoute
-  '/lesson': typeof LessonRoute
-  '/login': typeof LoginRoute
-  '/map': typeof MapRoute
-  '/module': typeof ModuleRoute
-  '/modules': typeof ModulesRoute
-  '/onboarding': typeof OnboardingRoute
-  '/parent': typeof ParentRoute
-  '/practice': typeof PracticeRoute
-  '/profile': typeof ProfileRoute
-  '/question-choice': typeof QuestionChoiceRoute
-  '/question-code': typeof QuestionCodeRoute
-  '/question-fill': typeof QuestionFillRoute
-  '/question-match': typeof QuestionMatchRoute
-  '/question-order': typeof QuestionOrderRoute
-  '/quiz': typeof QuizRoute
-  '/rating': typeof RatingRoute
-  '/register': typeof RegisterRoute
-  '/reports': typeof ReportsRoute
-  '/result': typeof ResultRoute
-  '/settings': typeof SettingsRoute
-  '/tasks': typeof TasksRoute
-  '/theory': typeof TheoryRoute
-  '/video-lessons': typeof VideoLessonsRoute
+  '/challenge': typeof SidebarChallengeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
+  '/_sidebar': typeof SidebarRouteRouteWithChildren
   '/algorithm': typeof AlgorithmRoute
-  '/analytics': typeof AnalyticsRoute
-  '/challenge': typeof ChallengeRoute
-  '/control': typeof ControlRoute
-  '/games': typeof GamesRoute
   '/knowledge': typeof KnowledgeRoute
-  '/lesson': typeof LessonRoute
-  '/login': typeof LoginRoute
-  '/map': typeof MapRoute
-  '/module': typeof ModuleRoute
-  '/modules': typeof ModulesRoute
-  '/onboarding': typeof OnboardingRoute
-  '/parent': typeof ParentRoute
-  '/practice': typeof PracticeRoute
-  '/profile': typeof ProfileRoute
-  '/question-choice': typeof QuestionChoiceRoute
-  '/question-code': typeof QuestionCodeRoute
-  '/question-fill': typeof QuestionFillRoute
-  '/question-match': typeof QuestionMatchRoute
-  '/question-order': typeof QuestionOrderRoute
-  '/quiz': typeof QuizRoute
-  '/rating': typeof RatingRoute
-  '/register': typeof RegisterRoute
-  '/reports': typeof ReportsRoute
-  '/result': typeof ResultRoute
-  '/settings': typeof SettingsRoute
-  '/tasks': typeof TasksRoute
-  '/theory': typeof TheoryRoute
-  '/video-lessons': typeof VideoLessonsRoute
+  '/_sidebar/challenge': typeof SidebarChallengeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/achievements'
-    | '/algorithm'
-    | '/analytics'
-    | '/challenge'
-    | '/control'
-    | '/games'
-    | '/knowledge'
-    | '/lesson'
-    | '/login'
-    | '/map'
-    | '/module'
-    | '/modules'
-    | '/onboarding'
-    | '/parent'
-    | '/practice'
-    | '/profile'
-    | '/question-choice'
-    | '/question-code'
-    | '/question-fill'
-    | '/question-match'
-    | '/question-order'
-    | '/quiz'
-    | '/rating'
-    | '/register'
-    | '/reports'
-    | '/result'
-    | '/settings'
-    | '/tasks'
-    | '/theory'
-    | '/video-lessons'
+  fullPaths: '/' | '/algorithm' | '/knowledge' | '/challenge'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/achievements'
-    | '/algorithm'
-    | '/analytics'
-    | '/challenge'
-    | '/control'
-    | '/games'
-    | '/knowledge'
-    | '/lesson'
-    | '/login'
-    | '/map'
-    | '/module'
-    | '/modules'
-    | '/onboarding'
-    | '/parent'
-    | '/practice'
-    | '/profile'
-    | '/question-choice'
-    | '/question-code'
-    | '/question-fill'
-    | '/question-match'
-    | '/question-order'
-    | '/quiz'
-    | '/rating'
-    | '/register'
-    | '/reports'
-    | '/result'
-    | '/settings'
-    | '/tasks'
-    | '/theory'
-    | '/video-lessons'
+  to: '/' | '/algorithm' | '/knowledge' | '/challenge'
   id:
     | '__root__'
-    | '/'
-    | '/achievements'
+    | '/_sidebar'
     | '/algorithm'
-    | '/analytics'
-    | '/challenge'
-    | '/control'
-    | '/games'
     | '/knowledge'
-    | '/lesson'
-    | '/login'
-    | '/map'
-    | '/module'
-    | '/modules'
-    | '/onboarding'
-    | '/parent'
-    | '/practice'
-    | '/profile'
-    | '/question-choice'
-    | '/question-code'
-    | '/question-fill'
-    | '/question-match'
-    | '/question-order'
-    | '/quiz'
-    | '/rating'
-    | '/register'
-    | '/reports'
-    | '/result'
-    | '/settings'
-    | '/tasks'
-    | '/theory'
-    | '/video-lessons'
+    | '/_sidebar/challenge'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AchievementsRoute: typeof AchievementsRoute
+  SidebarRouteRoute: typeof SidebarRouteRouteWithChildren
   AlgorithmRoute: typeof AlgorithmRoute
-  AnalyticsRoute: typeof AnalyticsRoute
-  ChallengeRoute: typeof ChallengeRoute
-  ControlRoute: typeof ControlRoute
-  GamesRoute: typeof GamesRoute
   KnowledgeRoute: typeof KnowledgeRoute
-  LessonRoute: typeof LessonRoute
-  LoginRoute: typeof LoginRoute
-  MapRoute: typeof MapRoute
-  ModuleRoute: typeof ModuleRoute
-  ModulesRoute: typeof ModulesRoute
-  OnboardingRoute: typeof OnboardingRoute
-  ParentRoute: typeof ParentRoute
-  PracticeRoute: typeof PracticeRoute
-  ProfileRoute: typeof ProfileRoute
-  QuestionChoiceRoute: typeof QuestionChoiceRoute
-  QuestionCodeRoute: typeof QuestionCodeRoute
-  QuestionFillRoute: typeof QuestionFillRoute
-  QuestionMatchRoute: typeof QuestionMatchRoute
-  QuestionOrderRoute: typeof QuestionOrderRoute
-  QuizRoute: typeof QuizRoute
-  RatingRoute: typeof RatingRoute
-  RegisterRoute: typeof RegisterRoute
-  ReportsRoute: typeof ReportsRoute
-  ResultRoute: typeof ResultRoute
-  SettingsRoute: typeof SettingsRoute
-  TasksRoute: typeof TasksRoute
-  TheoryRoute: typeof TheoryRoute
-  VideoLessonsRoute: typeof VideoLessonsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/video-lessons': {
-      id: '/video-lessons'
-      path: '/video-lessons'
-      fullPath: '/video-lessons'
-      preLoaderRoute: typeof VideoLessonsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/theory': {
-      id: '/theory'
-      path: '/theory'
-      fullPath: '/theory'
-      preLoaderRoute: typeof TheoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tasks': {
-      id: '/tasks'
-      path: '/tasks'
-      fullPath: '/tasks'
-      preLoaderRoute: typeof TasksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/result': {
-      id: '/result'
-      path: '/result'
-      fullPath: '/result'
-      preLoaderRoute: typeof ResultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reports': {
-      id: '/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof ReportsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rating': {
-      id: '/rating'
-      path: '/rating'
-      fullPath: '/rating'
-      preLoaderRoute: typeof RatingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz': {
-      id: '/quiz'
-      path: '/quiz'
-      fullPath: '/quiz'
-      preLoaderRoute: typeof QuizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/question-order': {
-      id: '/question-order'
-      path: '/question-order'
-      fullPath: '/question-order'
-      preLoaderRoute: typeof QuestionOrderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/question-match': {
-      id: '/question-match'
-      path: '/question-match'
-      fullPath: '/question-match'
-      preLoaderRoute: typeof QuestionMatchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/question-fill': {
-      id: '/question-fill'
-      path: '/question-fill'
-      fullPath: '/question-fill'
-      preLoaderRoute: typeof QuestionFillRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/question-code': {
-      id: '/question-code'
-      path: '/question-code'
-      fullPath: '/question-code'
-      preLoaderRoute: typeof QuestionCodeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/question-choice': {
-      id: '/question-choice'
-      path: '/question-choice'
-      fullPath: '/question-choice'
-      preLoaderRoute: typeof QuestionChoiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/practice': {
-      id: '/practice'
-      path: '/practice'
-      fullPath: '/practice'
-      preLoaderRoute: typeof PracticeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/parent': {
-      id: '/parent'
-      path: '/parent'
-      fullPath: '/parent'
-      preLoaderRoute: typeof ParentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/modules': {
-      id: '/modules'
-      path: '/modules'
-      fullPath: '/modules'
-      preLoaderRoute: typeof ModulesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/module': {
-      id: '/module'
-      path: '/module'
-      fullPath: '/module'
-      preLoaderRoute: typeof ModuleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/map': {
-      id: '/map'
-      path: '/map'
-      fullPath: '/map'
-      preLoaderRoute: typeof MapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lesson': {
-      id: '/lesson'
-      path: '/lesson'
-      fullPath: '/lesson'
-      preLoaderRoute: typeof LessonRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/knowledge': {
       id: '/knowledge'
       path: '/knowledge'
       fullPath: '/knowledge'
       preLoaderRoute: typeof KnowledgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/games': {
-      id: '/games'
-      path: '/games'
-      fullPath: '/games'
-      preLoaderRoute: typeof GamesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/control': {
-      id: '/control'
-      path: '/control'
-      fullPath: '/control'
-      preLoaderRoute: typeof ControlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/challenge': {
-      id: '/challenge'
-      path: '/challenge'
-      fullPath: '/challenge'
-      preLoaderRoute: typeof ChallengeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/analytics': {
-      id: '/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/algorithm': {
@@ -638,55 +88,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlgorithmRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/achievements': {
-      id: '/achievements'
-      path: '/achievements'
-      fullPath: '/achievements'
-      preLoaderRoute: typeof AchievementsRouteImport
+    '/_sidebar': {
+      id: '/_sidebar'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof SidebarRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_sidebar/challenge': {
+      id: '/_sidebar/challenge'
+      path: '/challenge'
+      fullPath: '/challenge'
+      preLoaderRoute: typeof SidebarChallengeRouteImport
+      parentRoute: typeof SidebarRouteRoute
     }
   }
 }
 
+interface SidebarRouteRouteChildren {
+  SidebarChallengeRoute: typeof SidebarChallengeRoute
+}
+
+const SidebarRouteRouteChildren: SidebarRouteRouteChildren = {
+  SidebarChallengeRoute: SidebarChallengeRoute,
+}
+
+const SidebarRouteRouteWithChildren = SidebarRouteRoute._addFileChildren(
+  SidebarRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AchievementsRoute: AchievementsRoute,
+  SidebarRouteRoute: SidebarRouteRouteWithChildren,
   AlgorithmRoute: AlgorithmRoute,
-  AnalyticsRoute: AnalyticsRoute,
-  ChallengeRoute: ChallengeRoute,
-  ControlRoute: ControlRoute,
-  GamesRoute: GamesRoute,
   KnowledgeRoute: KnowledgeRoute,
-  LessonRoute: LessonRoute,
-  LoginRoute: LoginRoute,
-  MapRoute: MapRoute,
-  ModuleRoute: ModuleRoute,
-  ModulesRoute: ModulesRoute,
-  OnboardingRoute: OnboardingRoute,
-  ParentRoute: ParentRoute,
-  PracticeRoute: PracticeRoute,
-  ProfileRoute: ProfileRoute,
-  QuestionChoiceRoute: QuestionChoiceRoute,
-  QuestionCodeRoute: QuestionCodeRoute,
-  QuestionFillRoute: QuestionFillRoute,
-  QuestionMatchRoute: QuestionMatchRoute,
-  QuestionOrderRoute: QuestionOrderRoute,
-  QuizRoute: QuizRoute,
-  RatingRoute: RatingRoute,
-  RegisterRoute: RegisterRoute,
-  ReportsRoute: ReportsRoute,
-  ResultRoute: ResultRoute,
-  SettingsRoute: SettingsRoute,
-  TasksRoute: TasksRoute,
-  TheoryRoute: TheoryRoute,
-  VideoLessonsRoute: VideoLessonsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

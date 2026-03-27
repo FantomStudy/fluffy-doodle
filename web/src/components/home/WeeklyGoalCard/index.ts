@@ -1,1 +1,0 @@
-export { WeeklyGoalCard } from "./WeeklyGoalCard";
