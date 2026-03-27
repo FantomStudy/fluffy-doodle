@@ -26,6 +26,15 @@ type SignInRequest struct {
 	Password string `json:"password"`
 }
 
+type UserProfileResponse struct {
+	ID          uint   `json:"id" example:"1"`
+	Login       string `json:"login" example:"teacher01"`
+	FullName    string `json:"fullName" example:"Иван Иванов"`
+	PhoneNumber string `json:"phoneNumber" example:"+79001234567"`
+	Avatar      string `json:"avatar" example:"https://minio.local/avatar_1.png"`
+	RoleID      uint   `json:"roleId" example:"2"`
+}
+
 func AuthErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
 		"success": false,

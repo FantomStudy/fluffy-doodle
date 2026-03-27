@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
-	_ "github.com/FantomStudy/fluffy-doodle/internal/models"
 	"github.com/FantomStudy/fluffy-doodle/internal/service"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -16,7 +15,7 @@ import (
 // @Description Получение профиля текущего пользователя
 // @Produce json
 // @Tags user
-// @Success 200 {object} models.User
+// @Success 200 {object} presenter.UserProfileResponse
 // @Failure 401 {object} presenter.AuthSwaggerErrorResponse
 // @Failure 404 {object} presenter.AuthSwaggerErrorResponse
 // @Failure 500 {object} presenter.AuthSwaggerErrorResponse
@@ -65,7 +64,7 @@ func UploadAvatar(s service.UserService) fiber.Handler {
 
 		// Создаем уникальное имя файла
 		filename := fmt.Sprintf("avatar_%d%s", userId, filepath.Ext(file.Filename))
-		
+
 		// Загружаем в S3 через сервис
 		url, err := s.UploadAvatar(c.Context(), filename, src, file.Size, file.Header.Get("Content-Type"))
 		if err != nil {

@@ -12,6 +12,24 @@ definitions:
       status:
         type: boolean
     type: object
+  presenter.CreateLessonRequest:
+    properties:
+      description:
+        example: Первый урок курса
+        type: string
+      estimatedMinutes:
+        example: 25
+        type: integer
+      isFreePreview:
+        example: true
+        type: boolean
+      order:
+        example: 1
+        type: integer
+      title:
+        example: Знакомство с Python
+        type: string
+    type: object
   presenter.ErrorResponse:
     properties:
       error:
@@ -67,80 +85,27 @@ definitions:
     required:
     - name
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_models.Achievement:
+  presenter.UserProfileResponse:
     properties:
-      createdAt:
-        type: string
-      deletedAt:
-        $ref: '#/definitions/gorm.DeletedAt'
-      description:
-        type: string
-      icon:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updatedAt:
-        type: string
-    type: object
-  github_com_FantomStudy_fluffy-doodle_internal_models.Role:
-    properties:
-      createdAt:
-        type: string
-      deletedAt:
-        $ref: '#/definitions/gorm.DeletedAt'
-      id:
-        type: integer
-      name:
-        type: string
-      updatedAt:
-        type: string
-      users:
-        items:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.User'
-        type: array
-    type: object
-  github_com_FantomStudy_fluffy-doodle_internal_models.User:
-    properties:
-      achievements:
-        description: Достижения
-        items:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.Achievement'
-        type: array
       avatar:
+        example: https://minio.local/avatar_1.png
         type: string
-      createdAt:
-        type: string
-      deletedAt:
-        $ref: '#/definitions/gorm.DeletedAt'
       fullName:
+        example: Иван Иванов
         type: string
       id:
+        example: 1
         type: integer
       login:
+        example: teacher01
         type: string
       phoneNumber:
+        example: "+79001234567"
         type: string
-      role:
-        $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.Role'
       roleId:
-        description: Роль
+        example: 2
         type: integer
-      stars:
-        type: integer
-      updatedAt:
-        type: string
     type: object
-  gorm.DeletedAt:
-    properties:
-      time:
-        type: string
-      valid:
-        description: Valid is true if Time is not NULL
-        type: boolean
-    type: object
-
 host: localhost:3000
 info:
   contact: {}
@@ -148,7 +113,6 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Fluffy Doodle REST API
   version: "1.0"
-
 paths:
   /admin/categories:
     post:
@@ -184,7 +148,6 @@ paths:
       summary: Create course category
       tags:
       - course-categories
-
   /admin/categories/{id}:
     delete:
       consumes:
@@ -218,7 +181,6 @@ paths:
       summary: Delete course category
       tags:
       - course-categories
-
     put:
       consumes:
       - application/json
@@ -261,7 +223,195 @@ paths:
       summary: Update course category
       tags:
       - course-categories
-
+  /admin/courses:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creates a new course with image, category and level
+      parameters:
+      - description: Course title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Course description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Course category ID
+        in: formData
+        name: categoryId
+        required: true
+        type: integer
+      - description: 'Course level: beginner|intermediate|advanced'
+        in: formData
+        name: level
+        required: true
+        type: string
+      - description: Course hours
+        in: formData
+        name: hours
+        required: true
+        type: integer
+      - description: Course image
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create course
+      tags:
+      - courses
+  /admin/courses/{id}:
+    delete:
+      description: Deletes course by ID
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Delete course
+      tags:
+      - courses
+    put:
+      consumes:
+      - multipart/form-data
+      description: Updates existing course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Course title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Course description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Course category ID
+        in: formData
+        name: categoryId
+        required: true
+        type: integer
+      - description: 'Course level: beginner|intermediate|advanced'
+        in: formData
+        name: level
+        required: true
+        type: string
+      - description: Course hours
+        in: formData
+        name: hours
+        required: true
+        type: integer
+      - description: Course image
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Update course
+      tags:
+      - courses
+  /admin/courses/{id}/lessons:
+    post:
+      consumes:
+      - application/json
+      description: Creates lesson for selected course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Lesson payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.CreateLessonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create lesson in course
+      tags:
+      - courses
   /auth/is-admin:
     get:
       consumes:
@@ -277,7 +427,6 @@ paths:
       summary: Check role
       tags:
       - auth
-
   /auth/logout:
     post:
       consumes:
@@ -293,7 +442,6 @@ paths:
       summary: Exit
       tags:
       - auth
-
   /auth/refresh:
     post:
       consumes:
@@ -325,7 +473,6 @@ paths:
       summary: Update tokens
       tags:
       - auth
-
   /auth/sign-in:
     post:
       consumes:
@@ -364,7 +511,6 @@ paths:
       summary: Login
       tags:
       - auth
-
   /auth/sign-up:
     post:
       consumes:
@@ -403,7 +549,6 @@ paths:
       summary: Registration
       tags:
       - auth
-
   /categories:
     get:
       consumes:
@@ -423,7 +568,6 @@ paths:
       summary: List course categories
       tags:
       - course-categories
-
   /categories/{id}:
     get:
       consumes:
@@ -457,7 +601,85 @@ paths:
       summary: Get course category by id
       tags:
       - course-categories
-
+  /courses:
+    get:
+      description: Returns all courses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: List courses
+      tags:
+      - courses
+  /courses/{id}:
+    get:
+      description: Returns course detail by id
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Get course by ID
+      tags:
+      - courses
+  /courses/{id}/lessons:
+    get:
+      description: Returns ordered lessons for course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: List course lessons
+      tags:
+      - courses
   /user/avatar:
     post:
       consumes:
@@ -487,7 +709,6 @@ paths:
       summary: Upload avatar
       tags:
       - user
-
   /user/profile:
     get:
       description: Получение профиля текущего пользователя
@@ -497,7 +718,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.User'
+            $ref: '#/definitions/presenter.UserProfileResponse'
         "401":
           description: Unauthorized
           schema:
@@ -513,7 +734,6 @@ paths:
       summary: Get user profile
       tags:
       - user
-
   /user/student-invitation:
     post:
       consumes:
@@ -552,5 +772,4 @@ paths:
       summary: Invite student
       tags:
       - user
-
 swagger: "2.0"

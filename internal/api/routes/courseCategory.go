@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func CourseRoutes(app *fiber.App, categoryService service.CourseCategoryService, db *gorm.DB) {
+func CourseCategoryRoutes(app *fiber.App, categoryService service.CourseCategoryService, db *gorm.DB) {
 	app.Get("/categories", handlers.GetCourseCategories(categoryService))
 	app.Get("/categories/:id", handlers.GetCourseCategoryById(categoryService))
 
