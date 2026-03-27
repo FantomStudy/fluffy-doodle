@@ -1,0 +1,668 @@
+/* ─── Shell ──────────────────────────────────────────────────────────────── */
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────────────────── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebarTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+.brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 8px;
+}
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--foreground-muted);
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+.navItem:hover {
+  background: var(--border-subtle);
+  color: var(--foreground);
+}
+.navItemActive {
+  background: var(--primary-bg) !important;
+  color: var(--primary) !important;
+  font-weight: 600;
+}
+
+/* ─── Main ───────────────────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ─── Theory Phase ───────────────────────────────────────────────────────── */
+.theoryShell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.theoryProgress {
+  height: 4px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.theoryProgressFill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.4s ease;
+}
+.theoryBody {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+.theoryCard {
+  background: var(--surface);
+  border-radius: var(--radius-3xl);
+  padding: 40px;
+  max-width: 640px;
+  width: 100%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.35s ease;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.theoryCardIcon {
+  font-size: 52px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.theoryCardStep {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--foreground-subtle);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.theoryCardTitle {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0 0 14px;
+}
+.theoryCardText {
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-gray-600);
+  margin: 0 0 22px;
+}
+.theoryCodeBlock {
+  background: var(--editor-bg);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+.theoryCodeLabel {
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(124, 58, 237, 0.08);
+  border-bottom: 1px solid var(--editor-border);
+  letter-spacing: 0.3px;
+}
+.theoryCode {
+  margin: 0;
+  padding: 16px;
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--editor-text);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* ─── Theory nav ─────────────────────────────────────────────────────────── */
+.theoryNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-top: 1px solid var(--border-light);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.theoryDots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.theoryDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.2s;
+}
+.theoryDotActive {
+  width: 24px;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+}
+.btnNav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-lg);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnNavBack {
+  background: var(--border-subtle);
+  color: var(--foreground-strong);
+}
+.btnNavBack:hover {
+  background: var(--border);
+}
+.btnNavNext {
+  background: var(--primary);
+  color: var(--color-white);
+}
+.btnNavNext:hover {
+  background: var(--primary-hover);
+}
+.btnNavStart {
+  background: var(--primary);
+  color: var(--color-white);
+  padding: 10px 24px;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+.btnNavStart:hover {
+  opacity: 0.9;
+}
+
+/* ─── Quiz Shell ─────────────────────────────────────────────────────────── */
+.quizShell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── Quiz Header ────────────────────────────────────────────────────────── */
+.quizHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.qCounter {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground-strong);
+  white-space: nowrap;
+}
+.qProgressBar {
+  flex: 1;
+  height: 6px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.qProgressFill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+.qScore {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--success);
+  white-space: nowrap;
+}
+
+/* ─── Quiz Body ──────────────────────────────────────────────────────────── */
+.quizBody {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 24px;
+}
+.qCard {
+  background: var(--surface);
+  border-radius: var(--radius-3xl);
+  padding: 36px;
+  max-width: 680px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  animation: fadeUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── Type badge ─────────────────────────────────────────────────────────── */
+.qTypeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--primary-bg);
+  color: var(--primary);
+  letter-spacing: 0.2px;
+  align-self: flex-start;
+}
+.qTypeBadgeMulti {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+/* ─── Question text & code ───────────────────────────────────────────────── */
+.qText {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+  line-height: 1.45;
+}
+.qCode {
+  margin: 0;
+  padding: 16px;
+  background: var(--editor-bg);
+  border-radius: var(--radius-xl);
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--editor-text);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* ─── Options ────────────────────────────────────────────────────────────── */
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.1s;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground-strong);
+}
+.option:hover:not(:disabled) {
+  border-color: var(--primary-border);
+  background: var(--primary-bg);
+  transform: translateX(2px);
+}
+
+/* Marker shape */
+.optionMarker {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  transition: all 0.15s;
+}
+.optionMarkerCheck {
+  border-radius: var(--radius-md);
+}
+
+/* Option states */
+.option_selected {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+  color: var(--color-purple-700);
+}
+.option_selected .optionMarker {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--color-white);
+}
+.option_correct {
+  border-color: var(--success);
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--success);
+}
+.option_correct .optionMarker {
+  border-color: var(--success);
+  background: var(--success);
+  color: var(--color-white);
+}
+.option_wrong {
+  border-color: var(--danger);
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--danger);
+}
+.option_wrong .optionMarker {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: var(--color-white);
+}
+.option_missed {
+  border-color: var(--success);
+  background: var(--success-bg);
+  color: var(--success);
+}
+.option_missed .optionMarker {
+  border-color: var(--success);
+  color: var(--success);
+  font-size: 13px;
+}
+.option_idle:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.optionText {
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* ─── Explanation ────────────────────────────────────────────────────────── */
+.explanation {
+  padding: 14px 16px;
+  border-radius: var(--radius-xl);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--foreground-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.explanationGood {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: var(--success-accent);
+}
+.explanationBad {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+}
+.explanationBadge {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ─── Quiz Footer ────────────────────────────────────────────────────────── */
+.quizFooter {
+  padding: 16px 32px;
+  border-top: 1px solid var(--border-light);
+  background: var(--surface);
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.btnCheck {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 24px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: var(--primary);
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35);
+  transition: all 0.15s;
+}
+.btnCheck:hover {
+  background: var(--primary-hover);
+}
+.btnCheck:disabled {
+  background: var(--border);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btnNext {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 24px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: var(--primary);
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35);
+  transition: all 0.15s;
+}
+.btnNext:hover {
+  opacity: 0.9;
+}
+
+/* ─── Results ────────────────────────────────────────────────────────────── */
+.resultsShell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+.resultsCard {
+  background: var(--surface);
+  border-radius: var(--radius-3xl);
+  padding: 48px 40px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: fadeUp 0.4s ease;
+}
+.resultsEmoji {
+  font-size: 64px;
+}
+.resultsTitle {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0;
+}
+.resultsScoreRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.scoreNum {
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1;
+}
+.scoreSep {
+  font-size: 32px;
+  color: var(--border);
+  font-weight: 300;
+}
+.scoreTotal {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--foreground-subtle);
+}
+
+.resultBar {
+  width: 100%;
+  height: 10px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.resultBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.resultBarGreen {
+  background: linear-gradient(90deg, #059669, #34d399);
+}
+.resultBarYellow {
+  background: linear-gradient(90deg, #d97706, #fbbf24);
+}
+.resultBarRed {
+  background: linear-gradient(90deg, #dc2626, #f87171);
+}
+
+.resultPct {
+  font-size: 13px;
+  color: var(--foreground-muted);
+  margin-top: -8px;
+  font-weight: 600;
+}
+.resultsMsg {
+  font-size: 15px;
+  color: var(--color-gray-600);
+  line-height: 1.6;
+  margin: 0;
+}
+.xpBadge {
+  padding: 8px 20px;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--warning-text);
+}
+.resultsBtns {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+.btnTheory {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 16px;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnTheory:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.btnRetry {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 16px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-white);
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+.btnRetry:hover {
+  background: var(--primary-hover);
+}

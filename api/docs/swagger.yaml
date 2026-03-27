@@ -1,0 +1,216 @@
+basePath: /
+definitions:
+  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse:
+    properties:
+      error: {}
+      status:
+        type: boolean
+    type: object
+  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse:
+    properties:
+      error: {}
+      status:
+        type: boolean
+    type: object
+  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest:
+    properties:
+      fullName:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: This is Rest Api for Fluffy Doodle
+  termsOfService: http://swagger.io/terms/
+  title: Fluffy Doodle REST API
+  version: "1.0"
+paths:
+  /auth/is-admin:
+    get:
+      consumes:
+      - application/json
+      description: Проверяет пользователя на роль администратора
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+      summary: Check role
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Выход пользователя из системы
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+      summary: Exit
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Обновление токенов
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+      summary: Update tokens
+      tags:
+      - auth
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация пользователя
+      parameters:
+      - description: Данные для авторизации
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+      summary: Login
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация пользователя
+      parameters:
+      - description: Данные для регистрации
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+      summary: Registration
+      tags:
+      - auth
+  /user/student-invitation:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация студента
+      parameters:
+      - description: Данные для регистрации ученика
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+      summary: Invite student
+      tags:
+      - user
+swagger: "2.0"

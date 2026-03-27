@@ -1,0 +1,667 @@
+﻿/* ═══════════════════════════════════════
+   THEORY PHASE
+═══════════════════════════════════════ */
+
+.theoryShell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Progress bar at top */
+.theoryProgress {
+  height: 4px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.theoryProgressFill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.35s ease;
+}
+
+.theoryBody {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 40px 60px;
+}
+
+.theoryCard {
+  max-width: 560px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  animation: fadeSlide 0.3s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.theoryCardIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-3xl);
+  background: var(--primary-bg);
+  border: 1px solid var(--primary-border);
+  display: grid;
+  place-items: center;
+  font-size: 36px;
+}
+
+.theoryCardStep {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.theoryCardTitle {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.theoryCardText {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+/* Code example inside theory */
+.theoryCode {
+  background: var(--editor-bg);
+  border-radius: var(--radius-2xl);
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.theoryCodeLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--editor-text-subtle);
+}
+
+.theoryCodeLine {
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+  font-size: 15px;
+  color: var(--editor-text);
+  margin: 0;
+  white-space: pre;
+}
+
+.theoryCodeResult {
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+  font-size: 15px;
+  color: var(--success-accent);
+  margin: 0;
+}
+
+/* Navigation row */
+.theoryNav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 60px 28px;
+  border-top: 1px solid var(--border-light);
+  background: var(--surface);
+}
+
+.theoryDots {
+  display: flex;
+  gap: 6px;
+}
+
+.theoryDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition:
+    background 0.2s,
+    width 0.2s;
+}
+
+.theoryDotActive {
+  background: var(--primary);
+  width: 22px;
+  border-radius: var(--radius-sm);
+}
+
+.btnNav {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    background 0.14s,
+    transform 0.1s;
+}
+
+.btnNavBack {
+  background: var(--surface-muted);
+  color: var(--foreground-muted);
+  border: 1px solid var(--border);
+}
+
+.btnNavBack:hover {
+  background: var(--border-subtle);
+}
+
+.btnNavNext {
+  background: var(--primary);
+  color: var(--color-white);
+}
+
+.btnNavNext:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btnNavStart {
+  background: var(--success);
+  color: var(--color-white);
+  padding: 10px 28px;
+}
+
+.btnNavStart:hover {
+  background: var(--success-hover);
+  transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════
+   TASK PHASE
+═══════════════════════════════════════ */
+
+.taskShell {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 42% 1fr;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Left panel ── */
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  border-right: 1px solid var(--border-light);
+}
+
+.leftHeader {
+  padding: 20px 22px 0;
+  flex-shrink: 0;
+}
+
+.leftTitle {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  margin: 0 0 8px;
+}
+
+.leftMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-badge);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pillPurple {
+  background: var(--primary-bg);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
+
+.pillGreen {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+
+.pillGray {
+  background: var(--surface-muted);
+  color: var(--foreground-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.starOn {
+  color: var(--warning-icon);
+  font-size: 12px;
+}
+.starOff {
+  color: var(--border);
+  font-size: 12px;
+}
+
+/* Tab bar */
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 22px;
+  flex-shrink: 0;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 0;
+  margin-right: 22px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground-subtle);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.14s;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--foreground-strong);
+}
+
+.tabActive {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.tabContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 22px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Description */
+.descText {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--color-gray-600);
+  margin: 0 0 20px;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--foreground-subtle);
+  margin: 0 0 8px;
+}
+
+.exampleBlock {
+  background: var(--editor-bg);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  margin-bottom: 6px;
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+  font-size: 13px;
+  color: var(--editor-text);
+}
+
+.exampleComment {
+  color: var(--editor-text-subtle);
+}
+
+.hintPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  padding: 8px 14px;
+  border-radius: var(--radius-badge);
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  font-size: 12px;
+  color: var(--warning-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Теория review inside task panel */
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reviewItem {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-xl);
+  background: var(--surface-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.reviewNum {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--color-white);
+  font-size: 11px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+
+.reviewItemTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0 0 3px;
+}
+
+.reviewItemText {
+  font-size: 12px;
+  color: var(--foreground-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.reviewCode {
+  background: var(--editor-bg);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 13px;
+  color: var(--editor-text);
+}
+
+.reviewCodeResult {
+  color: var(--success-accent);
+  display: block;
+  margin-top: 4px;
+}
+
+/* Solutions */
+.solutionCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.solutionMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  background: var(--surface-muted);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--foreground-muted);
+}
+
+.solutionAuthor {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.solutionCode {
+  background: var(--editor-bg);
+  padding: 14px 18px;
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 12px;
+  color: var(--editor-text);
+  white-space: pre;
+  overflow-x: auto;
+  margin: 0;
+}
+
+/* ── Right panel (editor) ── */
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--editor-bg);
+}
+
+.editorBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--editor-bg-dark);
+  border-bottom: 1px solid var(--editor-border);
+  flex-shrink: 0;
+}
+
+.editorBarTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text-muted);
+  font-family: "Fira Code", "Consolas", monospace;
+}
+
+.editorBarActions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.btnRun {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--color-white);
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    background 0.14s,
+    transform 0.1s;
+}
+
+.btnRun:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+.btnRun:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnReset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--editor-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--editor-border);
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    background 0.14s,
+    color 0.14s;
+}
+
+.btnReset:hover {
+  background: var(--editor-border);
+  color: var(--editor-text);
+}
+
+.editorWrap {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Results */
+.resultsPanel {
+  height: 195px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--editor-border);
+  background: var(--editor-bg-dark);
+  overflow: hidden;
+}
+
+.resultsPanelBar {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--editor-border);
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.resultsPanelTitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--editor-text-subtle);
+}
+
+.resultsPanelScore {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--success-accent);
+  margin-left: auto;
+}
+
+.resultsPanelBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--editor-border) transparent;
+}
+
+.resultEmpty {
+  font-size: 13px;
+  color: var(--editor-text-subtle);
+  font-style: italic;
+  padding: 4px;
+}
+
+.resultItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--editor-border);
+  background: var(--editor-bg);
+}
+
+.resultItemPass {
+  border-color: rgba(74, 222, 128, 0.25);
+  background: rgba(74, 222, 128, 0.05);
+}
+.resultItemFail {
+  border-color: rgba(248, 113, 113, 0.25);
+  background: rgba(248, 113, 113, 0.05);
+}
+
+.resultIcon {
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.resultDesc {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--editor-text);
+}
+.resultCode {
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 11px;
+  color: var(--editor-accent);
+  margin-top: 2px;
+}
+.resultExpected {
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 11px;
+  color: var(--success-accent);
+  margin-top: 1px;
+}
+.resultGot {
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 1px;
+}
+
+.successBanner {
+  margin: 6px 12px 6px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--success-accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}

@@ -1,0 +1,86 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:focus-visible {
+  border: 1px solid var(--muted);
+  box-shadow: 0 0 0 3px color-mix(var(--muted) 20%, transparent);
+}
+
+.button > svg {
+  pointer-events: none;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.md {
+  height: 42px;
+  padding: 16px;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-sm {
+  width: 28px;
+  height: 28px;
+}
+
+.icon-sm > svg {
+  width: 16px;
+  height: 16px;
+}
+
+.primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.primary:hover {
+  background-color: color-mix(in srgb, var(--primary), #000 10%);
+}
+
+.danger {
+  background-color: var(--danger);
+  color: white;
+}
+.danger:hover {
+  background-color: color-mix(in srgb, var(--danger), #000 10%);
+}
+
+.ghost {
+  background: transparent;
+  color: inherit;
+}
+.ghost:hover {
+  background-color: color-mix(in srgb, transparent, #000 5%);
+}
+
+.link {
+  padding: 0;
+  height: auto;
+  background: transparent;
+  color: inherit;
+}

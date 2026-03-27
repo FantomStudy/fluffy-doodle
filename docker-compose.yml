@@ -1,0 +1,15 @@
+services:
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+  web:
+    build: ./web
+    ports:
+      - "5173:80"
+    restart: unless-stopped

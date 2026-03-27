@@ -1,0 +1,677 @@
+/* ─── Shell ──────────────────────────────────────────────────────────────── */
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────────────────── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebarTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+.brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 8px;
+}
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--foreground-muted);
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+.navItem:hover {
+  background: var(--border-subtle);
+  color: var(--foreground);
+}
+.navItemActive {
+  background: var(--primary-bg) !important;
+  color: var(--primary) !important;
+  font-weight: 600;
+}
+
+/* ─── Main ───────────────────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ─── Theory Phase ───────────────────────────────────────────────────────── */
+.theoryShell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.theoryProgress {
+  height: 4px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.theoryProgressFill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.4s ease;
+}
+.theoryBody {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+.theoryCard {
+  background: var(--surface);
+  border-radius: var(--radius-3xl);
+  padding: 40px;
+  max-width: 680px;
+  width: 100%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  animation: fadeSlide 0.35s ease;
+}
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.theoryCardIcon {
+  font-size: 52px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.theoryCardStep {
+  text-align: center;
+  font-size: 12px;
+  color: var(--foreground-subtle);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.theoryCardTitle {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0 0 16px;
+}
+.theoryCardText {
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-gray-600);
+  margin: 0 0 24px;
+}
+.theoryVisualWrap {
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 24px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ─── Mini-flow (theory visuals) ─────────────────────────────────────────── */
+.miniFlow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.miniBlock {
+  padding: 7px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 140px;
+  border: 2px solid transparent;
+}
+.miniShape_oval {
+  border-radius: var(--radius-full);
+}
+.miniShape_rect {
+  border-radius: var(--radius-md);
+}
+.miniShape_para {
+  transform: skewX(-12deg);
+}
+.miniShape_para > span {
+  display: block;
+  transform: skewX(12deg);
+}
+
+.miniColor_green {
+  background: #d1fae5;
+  border-color: #059669;
+  color: #065f46;
+}
+.miniColor_blue {
+  background: #dbeafe;
+  border-color: #2563eb;
+  color: #1e40af;
+}
+.miniColor_purple {
+  background: #ede9fe;
+  border-color: #7c3aed;
+  color: #4c1d95;
+}
+.miniColor_orange {
+  background: #ffedd5;
+  border-color: #ea580c;
+  color: #9a3412;
+}
+.miniColor_red {
+  background: #fee2e2;
+  border-color: #dc2626;
+  color: #991b1b;
+}
+
+.miniArrow {
+  width: 2px;
+  height: 14px;
+  background: var(--foreground-subtle);
+  position: relative;
+}
+.miniArrow::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--foreground-subtle);
+}
+
+/* Labeled arrow (slide 3) */
+.miniArrowLabeled {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.miniArrowLine {
+  width: 2px;
+  height: 10px;
+  background: var(--foreground-subtle);
+}
+.miniArrowTag {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-bg);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  margin: 2px 0;
+}
+
+/* ─── Legend grid (slide 2) ──────────────────────────────────────────────── */
+.legendGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.legendItemLabel {
+  font-size: 13px;
+  color: var(--color-gray-600);
+}
+
+/* ─── Theory nav ─────────────────────────────────────────────────────────── */
+.theoryNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-top: 1px solid var(--border-light);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.theoryDots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.theoryDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.2s;
+}
+.theoryDotActive {
+  width: 24px;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+}
+.btnNav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-lg);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnNavBack {
+  background: var(--border-subtle);
+  color: var(--foreground-strong);
+}
+.btnNavBack:hover {
+  background: var(--border);
+}
+.btnNavNext {
+  background: var(--primary);
+  color: var(--color-white);
+}
+.btnNavNext:hover {
+  background: var(--primary-hover);
+}
+.btnNavStart {
+  background: var(--primary);
+  color: var(--color-white);
+  padding: 10px 24px;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+.btnNavStart:hover {
+  opacity: 0.9;
+}
+
+/* ─── Task Shell ─────────────────────────────────────────────────────────── */
+.taskShell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.taskHeader {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 28px;
+  flex-shrink: 0;
+}
+.taskTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0 0 4px;
+}
+.taskDesc {
+  font-size: 13px;
+  color: var(--foreground-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.taskBody {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ─── Palette ────────────────────────────────────────────────────────────── */
+.palette {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+.panelTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--foreground-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0;
+}
+.paletteList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100px;
+}
+.emptyMsg {
+  font-size: 13px;
+  color: var(--foreground-subtle);
+  text-align: center;
+  margin: 12px 0;
+}
+
+/* ─── Shape legend (palette footer) ─────────────────────────────────────── */
+.shapeLegend {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+.legendTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--foreground-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--foreground-muted);
+  margin-bottom: 7px;
+}
+.legendIcon {
+  width: 44px;
+  height: 18px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.legendIconOval {
+  border-radius: 50px;
+}
+.legendIconRect {
+  border-radius: 3px;
+}
+.legendIconPara {
+  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+}
+
+/* ─── Flow blocks ────────────────────────────────────────────────────────── */
+.flowBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 2px solid transparent;
+  text-align: center;
+  user-select: none;
+  min-height: 44px;
+  line-height: 1.3;
+}
+.shape_oval {
+  border-radius: var(--radius-full);
+}
+.shape_rect {
+  border-radius: var(--radius-md);
+}
+.shape_para {
+  transform: skewX(-12deg);
+}
+.shape_para > span {
+  display: block;
+  transform: skewX(12deg);
+}
+
+.color_green {
+  background: #d1fae5;
+  border-color: #059669;
+  color: #065f46;
+}
+.color_blue {
+  background: #dbeafe;
+  border-color: #2563eb;
+  color: #1e40af;
+}
+.color_purple {
+  background: #ede9fe;
+  border-color: #7c3aed;
+  color: #4c1d95;
+}
+.color_orange {
+  background: #ffedd5;
+  border-color: #ea580c;
+  color: #9a3412;
+}
+.color_red {
+  background: #fee2e2;
+  border-color: #dc2626;
+  color: #991b1b;
+}
+
+/* Workspace block */
+.wsBlock {
+  width: 210px;
+}
+.blockDragging {
+  opacity: 0.25;
+}
+
+/* ─── Workspace ──────────────────────────────────────────────────────────── */
+.workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 28px;
+  overflow-y: auto;
+  gap: 14px;
+}
+.flow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12px;
+  min-height: 280px;
+}
+.flowEmpty {
+  margin: auto;
+  text-align: center;
+  color: var(--foreground-subtle);
+  font-size: 14px;
+}
+.flowEmptyIcon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+/* Workspace block wrapper */
+.wsBlockWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wsBlockRow {
+  position: relative;
+  width: 210px;
+}
+.removeBtn {
+  position: absolute;
+  right: -32px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--border-subtle);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--foreground-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s;
+}
+.removeBtn:hover {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.5);
+  color: var(--danger);
+}
+
+/* Connecting arrow */
+.connArrow {
+  width: 2px;
+  height: 24px;
+  background: var(--border);
+  position: relative;
+}
+.connArrow::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid var(--border);
+}
+
+/* ─── Drop zones ─────────────────────────────────────────────────────────── */
+.dropZone {
+  width: 210px;
+  height: 4px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  margin: 1px 0;
+}
+.dropZoneShow {
+  height: 36px;
+  background: var(--primary-bg);
+  border: 2px dashed var(--primary-border);
+  border-radius: var(--radius-lg);
+}
+.dropZoneActive {
+  background: var(--primary-bg);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25);
+}
+
+/* ─── Workspace footer ───────────────────────────────────────────────────── */
+.wsFooter {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.successBanner {
+  padding: 12px 16px;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--success-accent);
+  text-align: center;
+}
+.errorBanner {
+  padding: 12px 16px;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+  text-align: center;
+}
+.footerBtns {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+.btnReset {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnReset:hover {
+  background: var(--surface-muted);
+  border-color: var(--foreground-subtle);
+}
+.btnCheck {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 22px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-white);
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+.btnCheck:hover {
+  background: var(--primary-hover);
+}
+.btnCheck:disabled {
+  background: var(--border);
+  box-shadow: none;
+  cursor: not-allowed;
+}
