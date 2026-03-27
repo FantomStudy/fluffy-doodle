@@ -67,6 +67,80 @@ definitions:
     required:
     - name
     type: object
+  github_com_FantomStudy_fluffy-doodle_internal_models.Achievement:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_FantomStudy_fluffy-doodle_internal_models.Role:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.User'
+        type: array
+    type: object
+  github_com_FantomStudy_fluffy-doodle_internal_models.User:
+    properties:
+      achievements:
+        description: Достижения
+        items:
+          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.Achievement'
+        type: array
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      fullName:
+        type: string
+      id:
+        type: integer
+      login:
+        type: string
+      phoneNumber:
+        type: string
+      role:
+        $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.Role'
+      roleId:
+        description: Роль
+        type: integer
+      stars:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+
 host: localhost:3000
 info:
   contact: {}
@@ -74,6 +148,7 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Fluffy Doodle REST API
   version: "1.0"
+
 paths:
   /admin/categories:
     post:
@@ -109,6 +184,7 @@ paths:
       summary: Create course category
       tags:
       - course-categories
+
   /admin/categories/{id}:
     delete:
       consumes:
@@ -142,6 +218,7 @@ paths:
       summary: Delete course category
       tags:
       - course-categories
+
     put:
       consumes:
       - application/json
@@ -184,6 +261,7 @@ paths:
       summary: Update course category
       tags:
       - course-categories
+
   /auth/is-admin:
     get:
       consumes:
@@ -199,6 +277,7 @@ paths:
       summary: Check role
       tags:
       - auth
+
   /auth/logout:
     post:
       consumes:
@@ -214,6 +293,7 @@ paths:
       summary: Exit
       tags:
       - auth
+
   /auth/refresh:
     post:
       consumes:
@@ -245,6 +325,7 @@ paths:
       summary: Update tokens
       tags:
       - auth
+
   /auth/sign-in:
     post:
       consumes:
@@ -283,6 +364,7 @@ paths:
       summary: Login
       tags:
       - auth
+
   /auth/sign-up:
     post:
       consumes:
@@ -321,6 +403,7 @@ paths:
       summary: Registration
       tags:
       - auth
+
   /categories:
     get:
       consumes:
@@ -340,6 +423,7 @@ paths:
       summary: List course categories
       tags:
       - course-categories
+
   /categories/{id}:
     get:
       consumes:
@@ -373,6 +457,63 @@ paths:
       summary: Get course category by id
       tags:
       - course-categories
+
+  /user/avatar:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Загрузка аватарки пользователя в S3
+      parameters:
+      - description: Файл аватарки
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Upload avatar
+      tags:
+      - user
+
+  /user/profile:
+    get:
+      description: Получение профиля текущего пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_models.User'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get user profile
+      tags:
+      - user
+
   /user/student-invitation:
     post:
       consumes:
@@ -411,4 +552,5 @@ paths:
       summary: Invite student
       tags:
       - user
+
 swagger: "2.0"

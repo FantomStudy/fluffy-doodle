@@ -16,10 +16,15 @@ type Config struct {
 	Cors          string
 	JwtSecret     string
 	RefreshSecret string
+	MinioEndpoint string
+	MinioAccessKey string
+	MinioSecretKey string
+	MinioBucket    string
+	MinioUseSSL    string
 }
 
 func Load() Config {
-	godotenv.Load("../../.env")
+	godotenv.Load(".env")
 
 	return Config{
 		Port:          LoadEnv("PORT", "3000"),
@@ -31,6 +36,11 @@ func Load() Config {
 		Cors:          LoadEnv("CORS", "http://localhost:5173"),
 		JwtSecret:     LoadEnv("JWT_SECRET", ""),
 		RefreshSecret: LoadEnv("REFRESH_SECRET", ""),
+		MinioEndpoint:  LoadEnv("MINIO_ENDPOINT", "localhost:9000"),
+		MinioAccessKey: LoadEnv("MINIO_ACCESS_KEY", "minioadmin"),
+		MinioSecretKey: LoadEnv("MINIO_SECRET_KEY", "minioadmin"),
+		MinioBucket:    LoadEnv("MINIO_BUCKET", "avatars"),
+		MinioUseSSL:    LoadEnv("MINIO_USE_SSL", "false"),
 	}
 }
 

@@ -1,25 +1,46 @@
 package service
 
 import (
+	"context"
+	"io"
+
 	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
 	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"github.com/FantomStudy/fluffy-doodle/internal/repository"
+	"github.com/FantomStudy/fluffy-doodle/pkg/storage"
 )
 
 type UserService interface {
 	InviteUser(req *presenter.SignUpRequest, roleId uint) (*models.User, error)
 	FindRole(role string) (*models.Role, error)
 	GetUser(login string) (*models.User, error)
+	GetUserByID(id uint) (*models.User, error)
+	UpdateUser(user *models.User) (*models.User, error)
 	SetToken(token string, id int) (*models.User, error)
+	UploadAvatar(ctx context.Context, fileName string, reader io.Reader, fileSize int64, contentType string) (string, error)
+}
+
+func (s *userService) GetUserByID(id uint) (*models.User, error) {
+	return s.repository.GetUserByID(id)
+}
+
+func (s *userService) UpdateUser(user *models.User) (*models.User, error) {
+	return s.repository.UpdateUser(user)
+}
+
+func (s *userService) UploadAvatar(ctx context.Context, fileName string, reader io.Reader, fileSize int64, contentType string) (string, error) {
+	return s.storage.UploadFile(ctx, fileName, reader, fileSize, contentType)
 }
 
 type userService struct {
 	repository repository.UserRepository
+	storage    *storage.MinioStorage
 }
 
-func NewUserService(r repository.UserRepository) UserService {
+func NewUserService(r repository.UserRepository, st *storage.MinioStorage) UserService {
 	return &userService{
 		repository: r,
+		storage:    st,
 	}
 }
 
