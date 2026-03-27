@@ -34,6 +34,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LessonRouteImport } from './routes/lesson'
 import { Route as GamesRouteImport } from './routes/games'
 import { Route as ControlRouteImport } from './routes/control'
+import { Route as ChallengeRouteImport } from './routes/challenge'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
@@ -163,6 +164,11 @@ const ControlRoute = ControlRouteImport.update({
   path: '/control',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChallengeRoute = ChallengeRouteImport.update({
+  id: '/challenge',
+  path: '/challenge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -183,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
   '/analytics': typeof AnalyticsRoute
+  '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
   '/games': typeof GamesRoute
   '/lesson': typeof LessonRoute
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
   '/analytics': typeof AnalyticsRoute
+  '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
   '/games': typeof GamesRoute
   '/lesson': typeof LessonRoute
@@ -244,6 +252,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
   '/analytics': typeof AnalyticsRoute
+  '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
   '/games': typeof GamesRoute
   '/lesson': typeof LessonRoute
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/'
     | '/achievements'
     | '/analytics'
+    | '/challenge'
     | '/control'
     | '/games'
     | '/lesson'
@@ -306,6 +316,7 @@ export interface FileRouteTypes {
     | '/'
     | '/achievements'
     | '/analytics'
+    | '/challenge'
     | '/control'
     | '/games'
     | '/lesson'
@@ -336,6 +347,7 @@ export interface FileRouteTypes {
     | '/'
     | '/achievements'
     | '/analytics'
+    | '/challenge'
     | '/control'
     | '/games'
     | '/lesson'
@@ -367,6 +379,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AchievementsRoute: typeof AchievementsRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  ChallengeRoute: typeof ChallengeRoute
   ControlRoute: typeof ControlRoute
   GamesRoute: typeof GamesRoute
   LessonRoute: typeof LessonRoute
@@ -571,6 +584,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/challenge': {
+      id: '/challenge'
+      path: '/challenge'
+      fullPath: '/challenge'
+      preLoaderRoute: typeof ChallengeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/analytics': {
       id: '/analytics'
       path: '/analytics'
@@ -599,6 +619,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
   AnalyticsRoute: AnalyticsRoute,
+  ChallengeRoute: ChallengeRoute,
   ControlRoute: ControlRoute,
   GamesRoute: GamesRoute,
   LessonRoute: LessonRoute,

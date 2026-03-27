@@ -16,4 +16,7 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  optimizeDeps: {
+    include: ["@monaco-editor/react", "@monaco-editor/loader"],
+  },
 });
