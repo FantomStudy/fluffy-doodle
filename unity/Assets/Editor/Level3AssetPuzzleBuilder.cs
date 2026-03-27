@@ -10,6 +10,7 @@ public static class Level3AssetPuzzleBuilder
 {
     private const string GeneratedRootName = "Level3AssetPuzzle";
     private const string LegacyPrimitiveRootName = "Level3Prototype";
+    private const string TemplateRoomName = "PuzzleRoom_1";
     private const string ScenePath = "Assets/Scenes/Level3.unity";
     private const string GlowMaterialPath = "Assets/Materials/BridgeGlow.mat";
     private const string FontAssetPath = "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset";
@@ -42,7 +43,7 @@ public static class Level3AssetPuzzleBuilder
     public static void BuildFivePuzzleRooms()
     {
         EnsureRoomsBuiltInOpenLevel3(true);
-        Debug.Log("Level3 asset puzzle rooms built in the current scene.");
+        Debug.Log("Level3 puzzle rooms built in the current scene.");
     }
 
     [MenuItem("Tools/Level3/Bake 5 Puzzle Rooms Into Level3 Scene Asset")]
@@ -59,11 +60,24 @@ public static class Level3AssetPuzzleBuilder
         Debug.Log("Level3 scene asset was baked and saved.");
     }
 
+    [MenuItem("Tools/Level3/Rebuild Remaining Rooms From Existing PuzzleRoom_1")]
+    public static void RebuildFromExistingTemplateRoom()
+    {
+        EnsureRoomsBuiltInOpenLevel3(true);
+        Debug.Log("Level3 rebuilt remaining rooms from the existing PuzzleRoom_1 template.");
+    }
+
     public static bool NeedsBuildInOpenScene()
     {
         if (!IsLevel3SceneOpen())
         {
             return false;
+        }
+
+        GameObject templateRoom = FindSceneObject(TemplateRoomName);
+        if (templateRoom != null)
+        {
+            return !HasTemplateCloneLayout(templateRoom.transform);
         }
 
         GameObject generatedRoot = FindSceneObject(GeneratedRootName);
@@ -117,6 +131,13 @@ public static class Level3AssetPuzzleBuilder
         ThirdPersonController playerController = FindRequiredObject<ThirdPersonController>("A ThirdPersonController player is required in Level3.");
         GameObject playerRoot = playerController.transform.root.gameObject;
 
+        GameObject templateRoom = FindSceneObject(TemplateRoomName);
+        if (templateRoom != null)
+        {
+            BuildFromTemplateRoom(templateRoom.transform, fontAsset, idleMaterial, successMaterial, errorMaterial, screenFadePlayerLock, playerRoot);
+            return;
+        }
+
         RemoveGeneratedRoot();
 
         GameObject generatedRoot = new GameObject(GeneratedRootName);
@@ -148,6 +169,53 @@ public static class Level3AssetPuzzleBuilder
         CreateTransitionBridges(generatedRoot.transform, rooms);
         ConfigureTerminalLogic(rooms, idleMaterial, successMaterial, errorMaterial);
         CreateFinishZone(generatedRoot.transform, rooms[^1], screenFadePlayerLock, fontAsset);
+    }
+
+    private static void BuildFromTemplateRoom(
+        Transform templateRoom,
+        TMP_FontAsset fontAsset,
+        Material idleMaterial,
+        Material successMaterial,
+        Material errorMaterial,
+        ScreenFadePlayerLock screenFadePlayerLock,
+        GameObject playerRoot)
+    {
+        Transform parent = templateRoom.parent;
+        if (parent == null)
+        {
+            throw new InvalidOperationException("PuzzleRoom_1 must have a parent transform so the duplicated rooms can be organized safely.");
+        }
+
+        CleanupTemplateGeneratedSiblings(parent, templateRoom);
+
+        if (playerRoot != null)
+        {
+            playerRoot.transform.SetPositionAndRotation(templateRoom.TransformPoint(PlayerStartLocalPosition), Quaternion.identity);
+        }
+
+        List<RoomBuildResult> rooms = new List<RoomBuildResult>
+        {
+            CaptureExistingRoom(templateRoom)
+        };
+
+        for (int roomIndex = 1; roomIndex < 5; roomIndex++)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate(templateRoom.gameObject, parent);
+            clone.name = $"PuzzleRoom_{roomIndex + 1}";
+
+            Transform cloneTransform = clone.transform;
+            cloneTransform.localPosition = templateRoom.localPosition + new Vector3(0f, 0f, roomIndex * RoomSpacing);
+            cloneTransform.localRotation = templateRoom.localRotation;
+            cloneTransform.localScale = templateRoom.localScale;
+
+            RoomBuildResult cloneRoom = CaptureExistingRoom(cloneTransform);
+            UpdateRoomLabel(cloneRoom.RoomRoot.transform, roomIndex + 1);
+            rooms.Add(cloneRoom);
+        }
+
+        CreateTransitionBridges(parent, rooms);
+        ConfigureTerminalLogic(rooms, idleMaterial, successMaterial, errorMaterial, preserveFirstRoom: true);
+        CreateFinishZone(parent, rooms[^1], screenFadePlayerLock, fontAsset);
     }
 
     private static GameObject InstantiateModel(string assetPath, Transform parent, string name)
@@ -380,6 +448,43 @@ public static class Level3AssetPuzzleBuilder
         }
     }
 
+    private static void CleanupTemplateGeneratedSiblings(Transform parent, Transform templateRoom)
+    {
+        List<GameObject> toDestroy = new List<GameObject>();
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            Transform child = parent.GetChild(i);
+            if (child == templateRoom)
+            {
+                continue;
+            }
+
+            if (child.name.StartsWith("PuzzleRoom_", StringComparison.Ordinal) ||
+                child.name.StartsWith("Bridge_", StringComparison.Ordinal) ||
+                string.Equals(child.name, "Level3FinishTrigger", StringComparison.Ordinal))
+            {
+                toDestroy.Add(child.gameObject);
+            }
+        }
+
+        foreach (GameObject gameObject in toDestroy)
+        {
+            UnityEngine.Object.DestroyImmediate(gameObject);
+        }
+
+        GameObject existingFinishPanel = FindSceneObject("Level3FinishPanel");
+        if (existingFinishPanel != null)
+        {
+            UnityEngine.Object.DestroyImmediate(existingFinishPanel);
+        }
+
+        GameObject legacyFinishPanel = FindSceneObject("FinishPanel");
+        if (legacyFinishPanel != null)
+        {
+            UnityEngine.Object.DestroyImmediate(legacyFinishPanel);
+        }
+    }
+
     private static GameObject FindSceneObject(string name)
     {
         Transform[] transforms = UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -547,6 +652,40 @@ public static class Level3AssetPuzzleBuilder
         };
     }
 
+    private static RoomBuildResult CaptureExistingRoom(Transform roomRoot)
+    {
+        SelectionManager selectionManager = roomRoot.GetComponentInChildren<SelectionManager>(true);
+        SimpleDoor door = roomRoot.GetComponentInChildren<SimpleDoor>(true);
+        IfLogicTerminal terminal = roomRoot.GetComponentInChildren<IfLogicTerminal>(true);
+
+        if (selectionManager == null || door == null || terminal == null)
+        {
+            throw new InvalidOperationException($"Room '{roomRoot.name}' is missing SelectionManager, SimpleDoor or IfLogicTerminal.");
+        }
+
+        return new RoomBuildResult
+        {
+            RoomRoot = roomRoot.gameObject,
+            SelectionManager = selectionManager,
+            Door = door,
+            Terminal = terminal,
+        };
+    }
+
+    private static void UpdateRoomLabel(Transform roomRoot, int roomNumber)
+    {
+        TMP_Text[] texts = roomRoot.GetComponentsInChildren<TMP_Text>(true);
+        foreach (TMP_Text text in texts)
+        {
+            if (text != null && string.Equals(text.gameObject.name, "RoomLabel", StringComparison.Ordinal))
+            {
+                text.text = $"ROOM {roomNumber}";
+                EditorUtility.SetDirty(text);
+                return;
+            }
+        }
+    }
+
     private static void CreateRoomColliders(Transform roomRoot)
     {
         GameObject colliderRoot = new GameObject("RoomColliders");
@@ -699,9 +838,15 @@ public static class Level3AssetPuzzleBuilder
         return terminal;
     }
 
-    private static void ConfigureTerminalLogic(List<RoomBuildResult> rooms, Material idleMaterial, Material successMaterial, Material errorMaterial)
+    private static void ConfigureTerminalLogic(
+        List<RoomBuildResult> rooms,
+        Material idleMaterial,
+        Material successMaterial,
+        Material errorMaterial,
+        bool preserveFirstRoom = false)
     {
-        for (int i = 0; i < rooms.Count; i++)
+        int startIndex = preserveFirstRoom ? 1 : 0;
+        for (int i = startIndex; i < rooms.Count; i++)
         {
             IfLogicTerminal terminal = rooms[i].Terminal;
             SetObjectReference(terminal, "idleMaterial", idleMaterial);
@@ -710,6 +855,58 @@ public static class Level3AssetPuzzleBuilder
             SetConditionDescription(terminal, GetConditionDescription(i));
             ConfigureConditions(terminal, rooms, i);
         }
+    }
+
+    private static bool HasTemplateCloneLayout(Transform templateRoom)
+    {
+        if (templateRoom.parent == null)
+        {
+            return false;
+        }
+
+        string templateVisualSource = GetRoomVisualSourcePath(templateRoom);
+        if (string.IsNullOrEmpty(templateVisualSource))
+        {
+            return false;
+        }
+
+        for (int roomNumber = 2; roomNumber <= 5; roomNumber++)
+        {
+            GameObject room = FindSceneObject($"PuzzleRoom_{roomNumber}");
+            if (room == null)
+            {
+                return false;
+            }
+
+            string cloneVisualSource = GetRoomVisualSourcePath(room.transform);
+            if (!string.Equals(templateVisualSource, cloneVisualSource, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
+
+        return FindSceneObject("Bridge_1_2") != null &&
+               FindSceneObject("Bridge_2_3") != null &&
+               FindSceneObject("Bridge_3_4") != null &&
+               FindSceneObject("Bridge_4_5") != null &&
+               FindSceneObject("Level3FinishTrigger") != null;
+    }
+
+    private static string GetRoomVisualSourcePath(Transform roomRoot)
+    {
+        Transform roomVisual = roomRoot.Find("RoomVisual");
+        if (roomVisual == null)
+        {
+            return string.Empty;
+        }
+
+        UnityEngine.Object sourceObject = PrefabUtility.GetCorrespondingObjectFromSource(roomVisual.gameObject);
+        if (sourceObject == null)
+        {
+            return string.Empty;
+        }
+
+        return AssetDatabase.GetAssetPath(sourceObject);
     }
 
     private static void CreateTransitionBridges(Transform parent, List<RoomBuildResult> rooms)
