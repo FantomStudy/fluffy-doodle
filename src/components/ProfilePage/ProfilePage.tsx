@@ -54,8 +54,18 @@ const ProfilePage = () => {
     }
   };
 
-  if (loading) return <main className={styles.root}><p>Загрузка...</p></main>;
-  if (error) return <main className={styles.root}><p className={styles.error}>{error}</p></main>;
+  if (loading)
+    return (
+      <main className={styles.root}>
+        <p>Загрузка...</p>
+      </main>
+    );
+  if (error)
+    return (
+      <main className={styles.root}>
+        <p className={styles.error}>{error}</p>
+      </main>
+    );
   if (!profile) return null;
 
   return (
