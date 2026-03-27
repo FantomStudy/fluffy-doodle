@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { RocketIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -14,7 +15,13 @@ export const LoginForm = () => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <h1 className={styles.title}>Вход</h1>
+      <div className={styles.header}>
+        <div className={styles.brand}>
+          <span className={styles.brandPurple}>Fluffy</span>{" "}
+          <span className={styles.brandGold}>Doodle</span>
+        </div>
+      </div>
+
       <div className={styles.fields}>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="login">
@@ -23,6 +30,7 @@ export const LoginForm = () => {
           <Input
             id="login"
             type="text"
+            placeholder="Введи свой логин"
             autoComplete="username"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
@@ -35,14 +43,23 @@ export const LoginForm = () => {
           <Input
             id="password"
             type="password"
+            placeholder="Введи пароль"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
       </div>
-      <Button type="submit">Войти</Button>
-      <Link to="/" className={styles.link}>
+
+      <Button type="submit" className={styles.submitBtn}>
+        Начать обучение
+      </Button>
+
+      <Link to="/register" className={styles.link}>
+        Нет аккаунта? <span>Зарегистрироваться</span>
+      </Link>
+
+      <Link to="/" className={styles.forgotLink}>
         Забыли пароль?
       </Link>
     </form>
