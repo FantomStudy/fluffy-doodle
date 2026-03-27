@@ -5,7 +5,7 @@ public class IfTerminal : MonoBehaviour, IInteractable
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private IfObjectId correctObjectId = IfObjectId.Sphere;
     [SerializeField] private SimpleDoor door;
-    [SerializeField] private string interactionPrompt = "Press E to run if check";
+    [SerializeField] private string interactionPrompt = "Нажмите E, чтобы запустить проверку if";
     [SerializeField] private Renderer screenRenderer;
     [SerializeField] private Material idleScreenMaterial;
     [SerializeField] private Material successScreenMaterial;
@@ -18,6 +18,11 @@ public class IfTerminal : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        if (interactionPrompt == "Press E to run if check")
+        {
+            interactionPrompt = "Нажмите E, чтобы запустить проверку if";
+        }
+
         ApplyState(TerminalState.Idle);
     }
 
@@ -25,7 +30,7 @@ public class IfTerminal : MonoBehaviour, IInteractable
     {
         bool hasCorrectSelection = selectionManager != null
             && selectionManager.HasSelection
-            && selectionManager.CurrentSelectedId == correctObjectId;
+            && selectionManager.HasSelectedId(correctObjectId);
 
         if (hasCorrectSelection)
         {

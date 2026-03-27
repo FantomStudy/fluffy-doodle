@@ -66,7 +66,7 @@ public static class Level3SceneUiTools
         SetLayerMask(interactor, "interactionMask", ~0);
         SetObjectReference(interactor, "promptRoot", promptBundle.Root);
         SetObjectReference(interactor, "promptText", promptBundle.Text);
-        SetString(interactor, "defaultPrompt", "Press E to interact");
+        SetString(interactor, "defaultPrompt", "Нажмите E для взаимодействия");
     }
 
     private static void ConfigureHelpUi(HelpUiBundle helpBundle, ScreenFadePlayerLock screenFadePlayerLock)
@@ -77,15 +77,15 @@ public static class Level3SceneUiTools
         SetObjectReference(helpBundle.HelpUI, "panelCanvasGroup", helpBundle.PanelCanvasGroup);
         SetObjectReference(helpBundle.HelpUI, "titleText", helpBundle.TitleText);
         SetObjectReference(helpBundle.HelpUI, "bodyText", helpBundle.BodyText);
-        SetString(helpBundle.HelpUI, "title", "HOW TO PLAY");
+        SetString(helpBundle.HelpUI, "title", "КАК ИГРАТЬ");
         SetString(
             helpBundle.HelpUI,
             "body",
-            "Choose one block in each room.\n\n" +
-            "Press E at the terminal to check the condition.\n\n" +
-            "The door opens only when the statement is TRUE.\n\n" +
-            "The rooms get harder: first simple if checks, then OR, then AND + OR combinations.\n\n" +
-            "If a condition fails, pick another block and try again.");
+            "В каждой комнате выбери один или несколько блоков.\n\n" +
+            "Нажми E у терминала, чтобы проверить условие.\n\n" +
+            "Дверь откроется только тогда, когда выражение истинно.\n\n" +
+            "Дальше условия усложняются: сначала простой if, потом OR, а затем комбинации AND + OR.\n\n" +
+            "Если условие не выполнено, измени выбор и попробуй снова.");
     }
 
     private static PromptBundle CreateInteractionPrompt(Transform parent, TMP_FontAsset fontAsset)
@@ -95,7 +95,7 @@ public static class Level3SceneUiTools
             parent,
             new Vector2(0.36f, 0.06f),
             new Vector2(0.64f, 0.12f),
-            new Color(0.04f, 0.08f, 0.11f, 0.92f));
+            new Color(0.97f, 0.97f, 0.99f, 0.96f));
 
         TextMeshProUGUI promptText = CreateText(
             "PromptText",
@@ -104,10 +104,10 @@ public static class Level3SceneUiTools
             new Vector2(1f, 1f),
             Vector2.zero,
             Vector2.zero,
-            "Press E to interact",
+            "Нажмите E для взаимодействия",
             fontAsset,
             24,
-            new Color(0.72f, 0.97f, 1f, 1f),
+            new Color(0.18f, 0.17f, 0.24f, 1f),
             TextAlignmentOptions.Center);
 
         promptRoot.gameObject.SetActive(false);
@@ -127,11 +127,11 @@ public static class Level3SceneUiTools
             helpRoot.transform,
             new Vector2(1f, 1f),
             new Vector2(1f, 1f),
-            new Color(1f, 0.64f, 0.25f, 1f),
+            new Color(0.47f, 0.31f, 0.89f, 1f),
             "?",
             fontAsset,
             28,
-            new Color(0.21f, 0.18f, 0.31f, 1f),
+            Color.white,
             out _,
             new Vector2(56f, 56f),
             new Vector2(-42f, -42f),
@@ -142,7 +142,7 @@ public static class Level3SceneUiTools
             helpRoot.transform,
             new Vector2(0.5f, 0.5f),
             new Vector2(0.5f, 0.5f),
-            new Color(0.97f, 0.96f, 1f, 0.97f),
+            new Color(0.975f, 0.974f, 0.988f, 0.985f),
             new Vector2(640f, 360f));
         CanvasGroup panelCanvasGroup = helpPanel.gameObject.AddComponent<CanvasGroup>();
         panelCanvasGroup.alpha = 0f;
@@ -154,7 +154,7 @@ public static class Level3SceneUiTools
             helpPanel,
             new Vector2(0.06f, 0.89f),
             new Vector2(0.94f, 0.94f),
-            new Color(0.93f, 0.9f, 0.99f, 1f));
+            new Color(0.92f, 0.9f, 0.99f, 1f));
 
         TextMeshProUGUI titleText = CreateText(
             "HelpTitle",
@@ -163,10 +163,10 @@ public static class Level3SceneUiTools
             new Vector2(0.78f, 0.88f),
             Vector2.zero,
             Vector2.zero,
-            "HOW TO PLAY",
+            "КАК ИГРАТЬ",
             fontAsset,
             28,
-            new Color(0.21f, 0.18f, 0.31f, 1f),
+            new Color(0.18f, 0.17f, 0.24f, 1f),
             TextAlignmentOptions.MidlineLeft);
 
         TextMeshProUGUI bodyText = CreateText(
@@ -179,7 +179,7 @@ public static class Level3SceneUiTools
             string.Empty,
             fontAsset,
             22,
-            new Color(0.37f, 0.34f, 0.46f, 1f),
+            new Color(0.48f, 0.49f, 0.57f, 1f),
             TextAlignmentOptions.TopLeft);
 
         Button closeButton = CreateButton(
@@ -187,11 +187,11 @@ public static class Level3SceneUiTools
             helpPanel,
             new Vector2(0.72f, 0.72f),
             new Vector2(0.9f, 0.88f),
-            new Color(1f, 1f, 1f, 1f),
-            "Close",
+            new Color(0.31f, 0.76f, 0.36f, 1f),
+            "Закрыть",
             fontAsset,
             22,
-            new Color(0.45f, 0.32f, 0.87f, 1f),
+            Color.white,
             out _);
 
         return new HelpUiBundle(helpUI, openButton, closeButton, panelCanvasGroup, titleText, bodyText);

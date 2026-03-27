@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SimpleDoor : MonoBehaviour
@@ -7,12 +8,17 @@ public class SimpleDoor : MonoBehaviour
     [SerializeField] private float openSpeed = 2.8f;
     [SerializeField] private bool startOpened;
     [SerializeField] private bool disableCollidersWhenOpened = true;
+    [SerializeField] private bool isFinalDoor;
+    [SerializeField] private ScreenFadePlayerLock screenFadePlayerLock;
+    [SerializeField] private int nextSceneBuildIndex = -1;
+    [SerializeField] private float fadeDelayOnOpen = 0.1f;
 
     private Vector3 closedLocalPosition;
     private Vector3 openedLocalPosition;
     private Collider[] cachedColliders;
     private bool collidersDisabled;
     private bool isOpen;
+    private bool finalFadeTriggered;
 
     public bool IsOpen => isOpen;
 
@@ -28,6 +34,7 @@ public class SimpleDoor : MonoBehaviour
         cachedColliders = GetComponentsInChildren<Collider>(true);
         isOpen = startOpened;
         doorTransform.localPosition = isOpen ? openedLocalPosition : closedLocalPosition;
+        CacheFadePlayerLock();
 
         if (isOpen)
         {
@@ -56,7 +63,18 @@ public class SimpleDoor : MonoBehaviour
 
     public void Open()
     {
+        if (isOpen)
+        {
+            return;
+        }
+
         isOpen = true;
+
+        if (isFinalDoor && !finalFadeTriggered)
+        {
+            finalFadeTriggered = true;
+            StartCoroutine(FadeAfterOpenRoutine());
+        }
     }
 
     private void DisableCollidersIfNeeded()
@@ -73,6 +91,36 @@ public class SimpleDoor : MonoBehaviour
             {
                 colliderComponent.enabled = false;
             }
+        }
+    }
+
+    private IEnumerator FadeAfterOpenRoutine()
+    {
+        if (fadeDelayOnOpen > 0f)
+        {
+            yield return new WaitForSeconds(fadeDelayOnOpen);
+        }
+
+        CacheFadePlayerLock();
+        if (screenFadePlayerLock == null)
+        {
+            yield break;
+        }
+
+        if (nextSceneBuildIndex >= 0)
+        {
+            screenFadePlayerLock.FadeOutAndLockThenLoadScene(nextSceneBuildIndex);
+            yield break;
+        }
+
+        screenFadePlayerLock.FadeOutAndLock();
+    }
+
+    private void CacheFadePlayerLock()
+    {
+        if (screenFadePlayerLock == null)
+        {
+            screenFadePlayerLock = FindFirstObjectByType<ScreenFadePlayerLock>();
         }
     }
 }

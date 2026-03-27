@@ -1,3 +1,4 @@
+using StarterAssets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,21 +8,28 @@ using UnityEngine.InputSystem;
 
 public class Level3HelpUI : MonoBehaviour
 {
-    [SerializeField] private ScreenFadePlayerLock screenFadePlayerLock;
     [SerializeField] private Button openButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private CanvasGroup panelCanvasGroup;
     [SerializeField] private TMP_Text titleText;
-    [SerializeField] [TextArea(5, 12)] private string title = "HOW TO PLAY";
+    [SerializeField] [TextArea(5, 12)] private string title = "КАК ИГРАТЬ";
     [SerializeField] private TMP_Text bodyText;
     [SerializeField] [TextArea(6, 16)] private string body =
-        "Choose one block in each room.\n\n" +
-        "Walk to the terminal and press E to validate the condition.\n\n" +
-        "Doors open only when the statement is TRUE.\n\n" +
-        "The rooms get harder: first simple if checks, then OR, then AND + OR combinations.";
-    [SerializeField] private KeyCode toggleKey = KeyCode.F1;
+        "В каждой комнате выбери один или несколько блоков.\n\n" +
+        "Нажми E у терминала, чтобы проверить условие.\n\n" +
+        "Дверь откроется только тогда, когда выражение истинно.\n\n" +
+        "Сначала будут простые if, потом OR, а затем комбинации AND + OR.\n\n" +
+        "Если условие не выполнено, измени выбор и попробуй снова.";
 
     private bool isVisible;
+    private ThirdPersonController thirdPersonController;
+    private StarterAssetsInputs starterAssetsInputs;
+    private PlayerInteractor playerInteractor;
+    private bool cachedControllerEnabled;
+    private bool cachedInteractorEnabled;
+    private bool cachedCursorLocked = true;
+    private bool cachedCursorInputForLook = true;
+    private bool hasCachedPlayerState;
 
     private void Awake()
     {
@@ -35,27 +43,45 @@ public class Level3HelpUI : MonoBehaviour
             closeButton.onClick.AddListener(Hide);
         }
 
+        CachePlayerComponents();
         RefreshTexts();
         ApplyState(false);
     }
 
     private void Update()
     {
-        if (WasTogglePressed())
+        if (!WasTogglePressed())
         {
             if (isVisible)
             {
-                Hide();
+                EnforceCursorVisible();
             }
-            else
-            {
-                Show();
-            }
+
+            return;
         }
+
+        if (isVisible)
+        {
+            Hide();
+            return;
+        }
+
+        Show();
+    }
+
+    private void OnDisable()
+    {
+        isVisible = false;
+        ApplyState(false);
     }
 
     public void Show()
     {
+        if (isVisible)
+        {
+            return;
+        }
+
         isVisible = true;
         RefreshTexts();
         ApplyState(true);
@@ -63,6 +89,12 @@ public class Level3HelpUI : MonoBehaviour
 
     public void Hide()
     {
+        if (!isVisible && panelCanvasGroup != null && panelCanvasGroup.alpha <= 0.001f)
+        {
+            ApplyState(false);
+            return;
+        }
+
         isVisible = false;
         ApplyState(false);
     }
@@ -89,36 +121,137 @@ public class Level3HelpUI : MonoBehaviour
             panelCanvasGroup.interactable = visible;
         }
 
-        if (screenFadePlayerLock != null)
+        if (openButton != null)
         {
-            screenFadePlayerLock.SetLockedInstant(visible, 0f);
+            openButton.gameObject.SetActive(!visible);
+        }
+
+        if (visible)
+        {
+            LockPlayerForHelp();
+            EnforceCursorVisible();
         }
         else
         {
-            Cursor.visible = visible;
-            Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
+            RestorePlayerState();
         }
     }
 
-    private bool WasTogglePressed()
+    private void CachePlayerComponents()
+    {
+        if (thirdPersonController == null)
+        {
+            thirdPersonController = FindFirstObjectByType<ThirdPersonController>(FindObjectsInactive.Include);
+        }
+
+        Transform playerRoot = thirdPersonController != null ? thirdPersonController.transform.root : null;
+
+        if (starterAssetsInputs == null)
+        {
+            starterAssetsInputs = playerRoot != null
+                ? playerRoot.GetComponentInChildren<StarterAssetsInputs>(true)
+                : FindFirstObjectByType<StarterAssetsInputs>(FindObjectsInactive.Include);
+        }
+
+        if (playerInteractor == null)
+        {
+            playerInteractor = playerRoot != null
+                ? playerRoot.GetComponentInChildren<PlayerInteractor>(true)
+                : FindFirstObjectByType<PlayerInteractor>(FindObjectsInactive.Include);
+        }
+    }
+
+    private void LockPlayerForHelp()
+    {
+        CachePlayerComponents();
+
+        if (!hasCachedPlayerState)
+        {
+            cachedControllerEnabled = thirdPersonController != null && thirdPersonController.enabled;
+            cachedInteractorEnabled = playerInteractor != null && playerInteractor.enabled;
+            cachedCursorLocked = starterAssetsInputs == null || starterAssetsInputs.cursorLocked;
+            cachedCursorInputForLook = starterAssetsInputs == null || starterAssetsInputs.cursorInputForLook;
+            hasCachedPlayerState = true;
+        }
+
+        if (starterAssetsInputs != null)
+        {
+            starterAssetsInputs.MoveInput(Vector2.zero);
+            starterAssetsInputs.LookInput(Vector2.zero);
+            starterAssetsInputs.JumpInput(false);
+            starterAssetsInputs.SprintInput(false);
+            starterAssetsInputs.cursorLocked = false;
+            starterAssetsInputs.cursorInputForLook = false;
+        }
+
+        if (playerInteractor != null)
+        {
+            playerInteractor.enabled = false;
+        }
+
+        if (thirdPersonController != null)
+        {
+            thirdPersonController.enabled = false;
+        }
+    }
+
+    private void RestorePlayerState()
+    {
+        if (!hasCachedPlayerState)
+        {
+            RestoreCursor(true);
+            return;
+        }
+
+        CachePlayerComponents();
+
+        if (starterAssetsInputs != null)
+        {
+            starterAssetsInputs.MoveInput(Vector2.zero);
+            starterAssetsInputs.LookInput(Vector2.zero);
+            starterAssetsInputs.JumpInput(false);
+            starterAssetsInputs.SprintInput(false);
+            starterAssetsInputs.cursorLocked = cachedCursorLocked;
+            starterAssetsInputs.cursorInputForLook = cachedCursorInputForLook;
+        }
+
+        if (playerInteractor != null)
+        {
+            playerInteractor.enabled = cachedInteractorEnabled;
+        }
+
+        if (thirdPersonController != null)
+        {
+            thirdPersonController.enabled = cachedControllerEnabled;
+        }
+
+        RestoreCursor(cachedCursorLocked);
+        hasCachedPlayerState = false;
+    }
+
+    private static void EnforceCursorVisible()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    private static void RestoreCursor(bool locked)
+    {
+        Cursor.visible = !locked;
+        Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+
+    private static bool WasTogglePressed()
     {
 #if ENABLE_INPUT_SYSTEM
-        if (Keyboard.current != null)
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (toggleKey == KeyCode.F1 && Keyboard.current.f1Key.wasPressedThisFrame)
-            {
-                return true;
-            }
-
-            if (toggleKey == KeyCode.H && Keyboard.current.hKey.wasPressedThisFrame)
-            {
-                return true;
-            }
+            return true;
         }
 #endif
 
 #if ENABLE_LEGACY_INPUT_MANAGER
-        return Input.GetKeyDown(toggleKey);
+        return Input.GetKeyDown(KeyCode.Escape);
 #else
         return false;
 #endif

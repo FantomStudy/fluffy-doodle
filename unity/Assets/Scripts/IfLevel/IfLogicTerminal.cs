@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IfLogicTerminal : MonoBehaviour, IInteractable
 {
-    [SerializeField] private string interactionPrompt = "Press E to validate condition";
+    [SerializeField] private string interactionPrompt = "Нажмите E, чтобы проверить условие";
     [SerializeField] [TextArea(2, 4)] private string conditionDescription = "if (selection == Cube)";
     [SerializeField] private SimpleDoor controlledDoor;
     [SerializeField] private IfLogicCondition[] allConditions;
@@ -15,9 +15,12 @@ public class IfLogicTerminal : MonoBehaviour, IInteractable
     [SerializeField] private Material errorMaterial;
     [SerializeField] private TMP_Text conditionText;
     [SerializeField] private TMP_Text statusText;
-    [SerializeField] private string idleStatusText = "READY";
-    [SerializeField] private string successStatusText = "TRUE";
-    [SerializeField] private string errorStatusText = "FALSE";
+    [SerializeField] private string idleStatusText = "ГОТОВО";
+    [SerializeField] private string successStatusText = "ИСТИНА";
+    [SerializeField] private string errorStatusText = "ЛОЖЬ";
+    [SerializeField] private bool createInteractionTrigger = true;
+    [SerializeField] private Vector3 triggerLocalPosition = new Vector3(0f, 1.6f, 1.8f);
+    [SerializeField] private Vector3 triggerSize = new Vector3(6f, 4.6f, 6f);
 
     private bool isSolved;
 
@@ -26,6 +29,8 @@ public class IfLogicTerminal : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        LocalizeDefaults();
+        EnsureInteractionTrigger();
         RefreshTexts();
         ApplyVisualState(TerminalVisualState.Idle);
     }
@@ -55,6 +60,40 @@ public class IfLogicTerminal : MonoBehaviour, IInteractable
         {
             statusText.text = idleStatusText;
         }
+    }
+
+    private void LocalizeDefaults()
+    {
+        if (interactionPrompt == "Press E to validate condition")
+        {
+            interactionPrompt = "Нажмите E, чтобы проверить условие";
+        }
+
+        if (idleStatusText == "READY")
+        {
+            idleStatusText = "ГОТОВО";
+        }
+
+        if (successStatusText == "TRUE")
+        {
+            successStatusText = "ИСТИНА";
+        }
+
+        if (errorStatusText == "FALSE")
+        {
+            errorStatusText = "ЛОЖЬ";
+        }
+
+        conditionDescription = conditionDescription switch
+        {
+            "if (selection == Cube)" => "if (выбор == Куб)",
+            "if (selection == Sphere || selection == Cylinder)" => "if (выбор == Сфера || выбор == Цилиндр)",
+            "if (Room1 == TRUE && selection == Cylinder)" => "if (Комната 1 == ИСТИНА && выбор == Цилиндр)",
+            "if (Door2 is open && (selection == Cube || selection == Sphere))" => "if (Дверь 2 открыта && (выбор == Куб || выбор == Сфера))",
+            "if ((Room3 == TRUE && Room4 == TRUE) && (selection == Sphere || selection == Cylinder))" =>
+                "if ((Комната 3 == ИСТИНА && Комната 4 == ИСТИНА) && (выбор == Сфера || выбор == Цилиндр))",
+            _ => conditionDescription,
+        };
     }
 
     private bool EvaluateAllConditions()
@@ -121,6 +160,44 @@ public class IfLogicTerminal : MonoBehaviour, IInteractable
         }
     }
 
+    private void EnsureInteractionTrigger()
+    {
+        if (!createInteractionTrigger)
+        {
+            return;
+        }
+
+        Transform existingZone = transform.Find("InteractionTriggerZone");
+        if (existingZone == null)
+        {
+            GameObject zoneObject = new GameObject("InteractionTriggerZone");
+            existingZone = zoneObject.transform;
+            existingZone.SetParent(transform, false);
+        }
+
+        existingZone.localPosition = triggerLocalPosition;
+        existingZone.localRotation = Quaternion.identity;
+        existingZone.localScale = Vector3.one;
+
+        BoxCollider triggerCollider = existingZone.GetComponent<BoxCollider>();
+        if (triggerCollider == null)
+        {
+            triggerCollider = existingZone.gameObject.AddComponent<BoxCollider>();
+        }
+
+        triggerCollider.isTrigger = true;
+        triggerCollider.center = Vector3.zero;
+        triggerCollider.size = triggerSize;
+
+        InteractionTriggerZone triggerZone = existingZone.GetComponent<InteractionTriggerZone>();
+        if (triggerZone == null)
+        {
+            triggerZone = existingZone.gameObject.AddComponent<InteractionTriggerZone>();
+        }
+
+        triggerZone.SetTarget(this, interactionPrompt);
+    }
+
     private enum TerminalVisualState
     {
         Idle = 0,
@@ -161,10 +238,9 @@ public class IfLogicCondition
             return false;
         }
 
-        IfObjectId selectedId = selectionManager.CurrentSelectedId;
         foreach (IfObjectId acceptedId in acceptedObjectIds)
         {
-            if (selectedId == acceptedId)
+            if (selectionManager.HasSelectedId(acceptedId))
             {
                 return true;
             }
