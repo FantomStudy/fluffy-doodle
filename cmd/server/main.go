@@ -10,6 +10,7 @@ import (
 	"github.com/FantomStudy/fluffy-doodle/internal/repository"
 	"github.com/FantomStudy/fluffy-doodle/internal/service"
 	"github.com/FantomStudy/fluffy-doodle/pkg/database"
+	"github.com/FantomStudy/fluffy-doodle/pkg/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/swagger"
@@ -31,12 +32,19 @@ func main() {
 	}
 
 	database.AutoMigrate(db)
+
+	// init storage
+	minioStorage, err := storage.NewMinioStorage(&cfg)
+	if err != nil {
+		log.Printf("Warning: Minio storage initialization failed: %v", err)
+	}
+
 	// init auth
 	authRepo := repository.NewAuthRepo(db)
 	authService := service.NewAuthService(authRepo)
 	// init user
 	userRepo := repository.NewUserRepo(db)
-	userService := service.NewUserService(userRepo)
+	userService := service.NewUserService(userRepo, minioStorage)
 
 	app := fiber.New(fiber.Config{
 		BodyLimit: 100 * 1024 * 1024,
