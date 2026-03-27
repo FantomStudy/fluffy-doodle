@@ -10,8 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
-import { Route as RegisterIndexRouteImport } from './routes/register/index'
-import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as authRegisterRouteImport } from './routes/(auth)/register'
+import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as ProtectedSidebarRouteRouteImport } from './routes/_protected/_sidebar/route'
 import { Route as ProtectedSidebarIndexRouteImport } from './routes/_protected/_sidebar/index'
 import { Route as ProtectedSidebarProfileRouteImport } from './routes/_protected/_sidebar/profile'
@@ -24,14 +24,14 @@ const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RegisterIndexRoute = RegisterIndexRouteImport.update({
-  id: '/register/',
-  path: '/register/',
+const authRegisterRoute = authRegisterRouteImport.update({
+  id: '/(auth)/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
+const authLoginRoute = authLoginRouteImport.update({
+  id: '/(auth)/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedSidebarRouteRoute = ProtectedSidebarRouteRouteImport.update({
@@ -74,8 +74,8 @@ const ProtectedSidebarAlgorithmRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof ProtectedSidebarIndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/register/': typeof RegisterIndexRoute
+  '/login': typeof authLoginRoute
+  '/register': typeof authRegisterRoute
   '/algorithm': typeof ProtectedSidebarAlgorithmRoute
   '/challenge': typeof ProtectedSidebarChallengeRoute
   '/course': typeof ProtectedSidebarCourseRoute
@@ -84,8 +84,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof ProtectedSidebarIndexRoute
-  '/login': typeof LoginIndexRoute
-  '/register': typeof RegisterIndexRoute
+  '/login': typeof authLoginRoute
+  '/register': typeof authRegisterRoute
   '/algorithm': typeof ProtectedSidebarAlgorithmRoute
   '/challenge': typeof ProtectedSidebarChallengeRoute
   '/course': typeof ProtectedSidebarCourseRoute
@@ -96,8 +96,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/_protected/_sidebar': typeof ProtectedSidebarRouteRouteWithChildren
-  '/login/': typeof LoginIndexRoute
-  '/register/': typeof RegisterIndexRoute
+  '/(auth)/login': typeof authLoginRoute
+  '/(auth)/register': typeof authRegisterRoute
   '/_protected/_sidebar/algorithm': typeof ProtectedSidebarAlgorithmRoute
   '/_protected/_sidebar/challenge': typeof ProtectedSidebarChallengeRoute
   '/_protected/_sidebar/course': typeof ProtectedSidebarCourseRoute
@@ -109,8 +109,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/login/'
-    | '/register/'
+    | '/login'
+    | '/register'
     | '/algorithm'
     | '/challenge'
     | '/course'
@@ -130,8 +130,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_protected'
     | '/_protected/_sidebar'
-    | '/login/'
-    | '/register/'
+    | '/(auth)/login'
+    | '/(auth)/register'
     | '/_protected/_sidebar/algorithm'
     | '/_protected/_sidebar/challenge'
     | '/_protected/_sidebar/course'
@@ -142,8 +142,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
-  LoginIndexRoute: typeof LoginIndexRoute
-  RegisterIndexRoute: typeof RegisterIndexRoute
+  authLoginRoute: typeof authLoginRoute
+  authRegisterRoute: typeof authRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -155,18 +155,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/register/': {
-      id: '/register/'
+    '/(auth)/register': {
+      id: '/(auth)/register'
       path: '/register'
-      fullPath: '/register/'
-      preLoaderRoute: typeof RegisterIndexRouteImport
+      fullPath: '/register'
+      preLoaderRoute: typeof authRegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login/': {
-      id: '/login/'
+    '/(auth)/login': {
+      id: '/(auth)/login'
       path: '/login'
-      fullPath: '/login/'
-      preLoaderRoute: typeof LoginIndexRouteImport
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected/_sidebar': {
@@ -258,8 +258,8 @@ const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
-  LoginIndexRoute: LoginIndexRoute,
-  RegisterIndexRoute: RegisterIndexRoute,
+  authLoginRoute: authLoginRoute,
+  authRegisterRoute: authRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

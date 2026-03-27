@@ -12,11 +12,6 @@ interface Lesson {
   status: LessonStatus;
 }
 
-interface Achievement {
-  title: string;
-  description: string;
-}
-
 const LESSONS: Lesson[] = [
   {
     number: 1,
@@ -66,13 +61,6 @@ const LESSONS: Lesson[] = [
     image: "/assets/course/course-python.png",
     status: "locked",
   },
-];
-
-const ACHIEVEMENTS: Achievement[] = [
-  { title: "Первая программа", description: "Написал свой первых код" },
-  { title: "Первая программа", description: "Написал свой первых код" },
-  { title: "Первая программа", description: "Написал свой первых код" },
-  { title: "Первая программа", description: "Написал свой первых код" },
 ];
 
 const STATUS_CONFIG = {
@@ -137,8 +125,7 @@ const CoursePage = () => (
               <span className={styles.metaBadge}>12 уроков</span>
               <span className={`${styles.metaBadge} ${styles.metaLevel}`}>Средний уровень</span>
               <span className={styles.metaTime}>
-                <ClockIcon size={16} />
-                6 часов
+                <ClockIcon size={16} /> 6 часов
               </span>
             </div>
           </div>
@@ -164,22 +151,6 @@ const CoursePage = () => (
             </div>
           </div>
           <p className={styles.progressText}>5 из 12 урока</p>
-        </div>
-
-        <div className={styles.achievementsCard}>
-          <h2 className={styles.sidebarTitle}>Достижения курса</h2>
-          <p className={styles.achievementsSubtitle}>Собирай награды за свои успехи!</p>
-          <div className={styles.achievementsList}>
-            {ACHIEVEMENTS.map((a, i) => (
-              <div key={i} className={styles.achievementItem}>
-                <div className={styles.achievementIcon} />
-                <div>
-                  <p className={styles.achievementTitle}>{a.title}</p>
-                  <p className={styles.achievementDesc}>{a.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </aside>
     </div>
