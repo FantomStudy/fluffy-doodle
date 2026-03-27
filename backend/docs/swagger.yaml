@@ -175,4 +175,42 @@ paths:
       summary: Registration
       tags:
       - auth
+  /user/student-invitation:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация студента
+      parameters:
+      - description: Данные для регистрации ученика
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+      summary: Invite student
+      tags:
+      - user
 swagger: "2.0"
