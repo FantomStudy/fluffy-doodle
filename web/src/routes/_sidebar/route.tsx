@@ -1,3 +1,4 @@
+import type { RegisteredRouter, ValidateLinkOptions } from "@tanstack/react-router";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   BookOpenIcon,
@@ -9,13 +10,19 @@ import {
 } from "lucide-react";
 import styles from "./route.module.css";
 
-const NAV = [
-  { icon: <HomeIcon size={16} />, label: "Главная", to: "/" },
-  { icon: <MapIcon size={16} />, label: "Путь", href: "/map" },
-  { icon: <BookOpenIcon size={16} />, label: "Уроки", href: "/knowledge" },
-  { icon: <ClipboardListIcon size={16} />, label: "Задания", href: "/challenge" },
-  { icon: <TrophyIcon size={16} />, label: "Достижения", href: "/achievements" },
-  { icon: <UserIcon size={16} />, label: "Профиль", href: "/profile" },
+interface NavItem {
+  icon: React.ReactNode;
+  label: string;
+  linkOptions: ValidateLinkOptions<RegisteredRouter>;
+}
+
+const NAV: NavItem[] = [
+  { icon: <HomeIcon size={16} />, label: "Главная", linkOptions: { to: "/" } },
+  { icon: <MapIcon size={16} />, label: "Путь", linkOptions: { to: "/" } },
+  { icon: <BookOpenIcon size={16} />, label: "Уроки", linkOptions: { to: "/" } },
+  { icon: <ClipboardListIcon size={16} />, label: "Задания", linkOptions: { to: "/" } },
+  { icon: <TrophyIcon size={16} />, label: "Достижения", linkOptions: { to: "/" } },
+  { icon: <UserIcon size={16} />, label: "Профиль", linkOptions: { to: "/" } },
 ];
 
 const RouteComponent = () => {
@@ -29,7 +36,7 @@ const RouteComponent = () => {
 
         <nav className={styles.nav}>
           {NAV.map((item) => (
-            <Link key={item.label} to={item.href} className={styles.navItem}>
+            <Link key={item.label} {...item.linkOptions} className={styles.navItem}>
               {item.icon}
               <p>{item.label}</p>
             </Link>
