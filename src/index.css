@@ -97,6 +97,7 @@
   --foreground-strong: var(--color-gray-700);
   --foreground-muted: var(--color-gray-500);
   --foreground-subtle: var(--color-gray-400);
+  --foreground-white: var(--color-white);
 
   /* Background & Surface */
   --background: var(--color-slate-50);
