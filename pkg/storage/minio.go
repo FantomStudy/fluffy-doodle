@@ -4,8 +4,6 @@ import (
 	"context"
 	"io"
 	"log"
-	"net/url"
-	"time"
 
 	"github.com/FantomStudy/fluffy-doodle/internal/config"
 	"github.com/minio/minio-go/v7"
@@ -42,6 +40,23 @@ func NewMinioStorage(cfg *config.Config) (*MinioStorage, error) {
 		log.Printf("Bucket %s created", cfg.MinioBucket)
 	}
 
+	// Установка политики публичного доступа для чтения (ReadOnly)
+	policy := `{
+		"Version": "2012-10-17",
+		"Statement": [
+			{
+				"Effect": "Allow",
+				"Principal": {"AWS": ["*"]},
+				"Action": ["s3:GetObject"],
+				"Resource": ["arn:aws:s3:::` + cfg.MinioBucket + `/*"]
+			}
+		]
+	}`
+	err = minioClient.SetBucketPolicy(ctx, cfg.MinioBucket, policy)
+	if err != nil {
+		log.Printf("Error setting bucket policy: %v", err)
+	}
+
 	return &MinioStorage{
 		Client:     minioClient,
 		BucketName: cfg.MinioBucket,
@@ -57,15 +72,11 @@ func (s *MinioStorage) UploadFile(ctx context.Context, fileName string, reader i
 		return "", err
 	}
 
-	// Генерируем URL (в данном случае предполагаем, что бакет публичный для чтения или возвращаем преподписанный URL)
-	// Для простоты вернем путь, который можно сконструировать, если Minio настроен на публичный доступ
-	// Или сгенерируем преподписанный URL на долгий срок (например, 7 дней)
-	
-	reqParams := make(url.Values)
-	presignedURL, err := s.Client.PresignedGetObject(ctx, s.BucketName, fileName, time.Hour*24*7, reqParams)
-	if err != nil {
-		return "", err
-	}
+	// Возвращаем постоянный URL
+	protocol := "http://"
+	// Если используем SSL, то https
+	// Но для простоты берем из эндпоинта. Если в эндпоинте нет протокола, добавляем http.
+	url := protocol + s.Endpoint + "/" + s.BucketName + "/" + fileName
 
-	return presignedURL.String(), nil
+	return url, nil
 }

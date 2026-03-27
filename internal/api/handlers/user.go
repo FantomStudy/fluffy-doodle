@@ -53,12 +53,14 @@ func UploadAvatar(s service.UserService) fiber.Handler {
 
 		file, err := c.FormFile("avatar")
 		if err != nil {
+			fmt.Printf("UploadAvatar Error: %v\n", err)
 			return c.Status(400).JSON(presenter.AuthErrorResponse(errors.New("Файл не найден")))
 		}
 
 		// Открываем файл для чтения
 		src, err := file.Open()
 		if err != nil {
+			fmt.Printf("UploadAvatar File Open Error: %v\n", err)
 			return c.Status(500).JSON(presenter.AuthErrorResponse(errors.New("Не удалось открыть файл")))
 		}
 		defer src.Close()
@@ -69,17 +71,20 @@ func UploadAvatar(s service.UserService) fiber.Handler {
 		// Загружаем в S3 через сервис
 		url, err := s.UploadAvatar(c.Context(), filename, src, file.Size, file.Header.Get("Content-Type"))
 		if err != nil {
+			fmt.Printf("UploadAvatar S3 Upload Error: %v\n", err)
 			return c.Status(500).JSON(presenter.AuthErrorResponse(err))
 		}
 
 		user, err := s.GetUserByID(userId)
 		if err != nil {
+			fmt.Printf("UploadAvatar GetUser Error: %v\n", err)
 			return c.Status(500).JSON(presenter.AuthErrorResponse(err))
 		}
 
 		user.Avatar = url
 		_, err = s.UpdateUser(user)
 		if err != nil {
+			fmt.Printf("UploadAvatar UpdateUser Error: %v\n", err)
 			return c.Status(500).JSON(presenter.AuthErrorResponse(err))
 		}
 
