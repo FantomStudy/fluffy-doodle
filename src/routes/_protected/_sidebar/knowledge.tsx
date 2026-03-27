@@ -5,6 +5,6 @@ const KnowledgePage = () => {
   return <QuizChallenge />;
 };
 
-export const Route = createFileRoute("/_sidebar/knowledge")({
+export const Route = createFileRoute("/_protected/_sidebar/knowledge")({
   component: KnowledgePage,
 });

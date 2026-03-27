@@ -6,4 +6,4 @@ const clearAuthenticated = () => sessionStorage.removeItem(KEY);
 
 const isAuthenticated = () => sessionStorage.getItem(KEY) === "1";
 
-export { setAuthenticated, clearAuthenticated, isAuthenticated };
+export { clearAuthenticated, isAuthenticated, setAuthenticated };

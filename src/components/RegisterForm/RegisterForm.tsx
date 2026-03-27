@@ -1,37 +1,34 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { SparklesIcon } from "lucide-react";
 import { useState } from "react";
-import { ApiError, signUp } from "@/api/auth";
+import { useRegister } from "@/hooks/useRegister";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import styles from "./RegisterForm.module.css";
 
 export const RegisterForm = () => {
-  const navigate = useNavigate();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { mutate, isPending, error } = useRegister();
+
+  const errorMessage = error
+    ? error instanceof Error
+      ? error.message
+      : "Произошла ошибка. Попробуй ещё раз."
+    : null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
 
-    try {
-      await signUp({ login, password, fullName, phoneNumber: phone });
-      navigate({ to: "/login" });
-    } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError("Произошла ошибка. Попробуй ещё раз.");
-      }
-    } finally {
-      setLoading(false);
-    }
+    mutate(
+      { login, password, fullName, phoneNumber: phone },
+      { onSuccess: () => navigate({ to: "/login" }) },
+    );
   };
 
   return (
@@ -98,12 +95,12 @@ export const RegisterForm = () => {
         </div>
       </div>
 
-      <Button type="submit" className={styles.submitBtn} disabled={loading}>
+      <Button type="submit" className={styles.submitBtn} disabled={isPending}>
         <SparklesIcon size={18} />
-        {loading ? "Регистрируем..." : "Зарегистрироваться"}
+        {isPending ? "Регистрируем..." : "Зарегистрироваться"}
       </Button>
 
-      {error && <p className={styles.error}>{error}</p>}
+      {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
       <Link to="/login" className={styles.link}>
         Уже есть аккаунт? <span>Войти</span>

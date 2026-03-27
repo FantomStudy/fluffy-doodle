@@ -5,6 +5,6 @@ const AlgorithmPage = () => {
   return <FlowchartChallenge />;
 };
 
-export const Route = createFileRoute("/_sidebar/algorithm")({
+export const Route = createFileRoute("/_protected/_sidebar/algorithm")({
   component: AlgorithmPage,
 });

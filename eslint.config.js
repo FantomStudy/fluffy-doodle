@@ -1,4 +1,5 @@
 import antfu from "@antfu/eslint-config";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 
 const eslintConfig = antfu(
   {
@@ -19,6 +20,7 @@ const eslintConfig = antfu(
       "eslint-comments/no-unlimited-disable": "off",
     },
   },
+  ...pluginQuery.configs["flat/recommended"],
   {
     name: "fantomstudy/perfectionist",
     rules: {

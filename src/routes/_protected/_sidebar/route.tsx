@@ -1,5 +1,5 @@
 import type { RegisteredRouter, ValidateLinkOptions } from "@tanstack/react-router";
-import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   BookOpenIcon,
   ClipboardListIcon,
@@ -8,8 +8,6 @@ import {
   TrophyIcon,
   UserIcon,
 } from "lucide-react";
-import { refresh } from "@/api/auth";
-import { isAuthenticated, setAuthenticated } from "@/lib/authSession";
 import styles from "./route.module.css";
 
 interface NavItem {
@@ -51,16 +49,6 @@ const RouteComponent = () => {
   );
 };
 
-export const Route = createFileRoute("/_sidebar")({
-  beforeLoad: async () => {
-    if (isAuthenticated()) return;
-
-    try {
-      await refresh();
-      setAuthenticated();
-    } catch {
-      throw redirect({ to: "/login" });
-    }
-  },
+export const Route = createFileRoute("/_protected/_sidebar")({
   component: RouteComponent,
 });

@@ -5,6 +5,6 @@ const RouteComponent = () => {
   return <ProfilePage />;
 };
 
-export const Route = createFileRoute("/_sidebar/profile")({
+export const Route = createFileRoute("/_protected/_sidebar/profile")({
   component: RouteComponent,
 });

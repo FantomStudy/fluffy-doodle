@@ -5,6 +5,6 @@ const ChallengePage = () => {
   return <CodingChallenge />;
 };
 
-export const Route = createFileRoute("/_sidebar/challenge")({
+export const Route = createFileRoute("/_protected/_sidebar/challenge")({
   component: ChallengePage,
 });

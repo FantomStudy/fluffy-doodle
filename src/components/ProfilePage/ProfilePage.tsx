@@ -1,33 +1,22 @@
-import type { UserProfile } from "@/api/profile";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Download } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { logout } from "@/api/auth";
-import { getProfile, uploadAvatar } from "@/api/profile";
+import { uploadAvatar } from "@/api/user";
+import { useProfile } from "@/hooks/useProfile";
 import { clearAuthenticated } from "@/lib/authSession";
 import styles from "./ProfilePage.module.css";
 
 const ProfilePage = () => {
-  const navigate = useNavigate();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      const data = await getProfile();
-      setProfile(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка загрузки профиля");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+  const queryClient = useQueryClient();
+  const { data: profile, isLoading, error } = useProfile();
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -39,9 +28,9 @@ const ProfilePage = () => {
 
     try {
       await uploadAvatar(file);
-      fetchProfile();
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка загрузки аватара");
+      setUploadError(err instanceof Error ? err.message : "Ошибка загрузки аватара");
     }
   };
 
@@ -54,7 +43,7 @@ const ProfilePage = () => {
     }
   };
 
-  if (loading)
+  if (isLoading)
     return (
       <main className={styles.root}>
         <p>Загрузка...</p>
@@ -63,7 +52,9 @@ const ProfilePage = () => {
   if (error)
     return (
       <main className={styles.root}>
-        <p className={styles.error}>{error}</p>
+        <p className={styles.error}>
+          {error instanceof Error ? error.message : "Ошибка загрузки профиля"}
+        </p>
       </main>
     );
   if (!profile) return null;
@@ -71,6 +62,8 @@ const ProfilePage = () => {
   return (
     <main className={styles.root}>
       <h1 className={styles.title}>Мой профиль</h1>
+
+      {uploadError && <p className={styles.error}>{uploadError}</p>}
 
       <section className={styles.userCard}>
         <input

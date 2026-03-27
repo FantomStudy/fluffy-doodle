@@ -1,31 +1,30 @@
-import { ApiError, request } from "./client";
+import { api } from "./instance";
 
-interface SignInPayload {
+interface SignInRequest {
   login: string;
   password: string;
 }
 
-interface SignUpPayload {
+interface SignUpRequest {
+  fullName: string;
   login: string;
   password: string;
-  fullName: string;
   phoneNumber: string;
 }
 
-const signIn = (payload: SignInPayload) =>
-  request("/auth/sign-in", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+interface AuthResponse {
+  status: boolean;
+  error?: unknown;
+}
 
-const signUp = (payload: SignUpPayload) =>
-  request("/auth/sign-up", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+export const signIn = (body: SignInRequest) =>
+  api<AuthResponse>("/auth/sign-in", { method: "POST", body });
 
-const refresh = () => request("/auth/refresh", { method: "POST" });
+export const signUp = (body: SignUpRequest) =>
+  api<AuthResponse>("/auth/sign-up", { method: "POST", body });
 
-const logout = () => request("/auth/logout", { method: "POST" });
+export const logout = () => api<AuthResponse>("/auth/logout", { method: "POST" });
 
-export { signIn, signUp, refresh, logout, ApiError };
+export const refresh = () => api<AuthResponse>("/auth/refresh", { method: "POST" });
+
+export const isAdmin = () => api<AuthResponse>("/auth/is-admin");
