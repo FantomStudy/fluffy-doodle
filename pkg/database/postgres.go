@@ -57,6 +57,8 @@ func AutoMigrate(connection *gorm.DB) {
 		&models.CourseCategory{},
 		&models.Course{},
 		&models.Lesson{},
+		&models.LessonTask{},
+		&models.UserTaskProgress{},
 		&models.Achievement{},
 	)
 

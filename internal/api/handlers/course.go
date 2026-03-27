@@ -243,12 +243,33 @@ func CreateLesson(s service.CourseService) fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("invalid request payload"))
 		}
 
+		tasks := make([]service.CreateLessonTaskInput, 0, len(req.Tasks))
+		for _, task := range req.Tasks {
+			options := make([]models.TaskOption, 0, len(task.Options))
+			for _, option := range task.Options {
+				options = append(options, models.TaskOption{
+					ID:   option.ID,
+					Text: option.Text,
+				})
+			}
+
+			tasks = append(tasks, service.CreateLessonTaskInput{
+				Type:             task.Type,
+				Title:            task.Title,
+				Description:      task.Description,
+				Question:         task.Question,
+				Options:          options,
+				CorrectOptionIDs: task.CorrectOptionIDs,
+			})
+		}
+
 		lesson, err := s.CreateLesson(courseID, service.CreateLessonInput{
 			Title:            req.Title,
 			Description:      req.Description,
 			Order:            req.Order,
 			EstimatedMinutes: req.EstimatedMinutes,
 			IsFreePreview:    req.IsFreePreview,
+			Tasks:            tasks,
 		})
 		if err != nil {
 			return mapCourseError(c, err)
@@ -288,6 +309,44 @@ func ListCourseLessons(s service.CourseService) fiber.Handler {
 	}
 }
 
+func SubmitLessonTask(s service.CourseService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		lessonID, err := c.ParamsInt("lessonId")
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("invalid lesson id"))
+		}
+
+		taskID, err := c.ParamsInt("taskId")
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("invalid task id"))
+		}
+
+		var req presenter.SubmitLessonTaskRequest
+		if err := c.BodyParser(&req); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("invalid request payload"))
+		}
+
+		result, err := s.SubmitLessonTask(c.Locals("userId").(uint), lessonID, taskID, service.SubmitLessonTaskInput{
+			SelectedOptionIDs: req.SelectedOptionIDs,
+			Solved:            req.Solved,
+		})
+		if err != nil {
+			return mapCourseError(c, err)
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.SuccessResponseWithData("task submitted", presenter.SubmitLessonTaskResponse{
+			TaskID:       result.TaskID,
+			IsSolved:     result.IsSolved,
+			WasSolved:    result.WasSolved,
+			AwardedStars: result.AwardedStars,
+			AwardedExp:   result.AwardedExp,
+			CurrentStars: result.CurrentStars,
+			CurrentExp:   result.CurrentExp,
+			CurrentLevel: result.CurrentLevel,
+		}))
+	}
+}
+
 func mapCourseError(c *fiber.Ctx, err error) error {
 	switch {
 	case errors.Is(err, service.ErrCourseNotFound):
@@ -302,6 +361,16 @@ func mapCourseError(c *fiber.Ctx, err error) error {
 		return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("hours must be greater than 0"))
 	case errors.Is(err, service.ErrStorageNotAvailable):
 		return c.Status(fiber.StatusInternalServerError).JSON(presenter.ErrorResponseFunc("file storage is not configured"))
+	case errors.Is(err, service.ErrLessonNotFound):
+		return c.Status(fiber.StatusNotFound).JSON(presenter.ErrorResponseFunc("lesson not found"))
+	case errors.Is(err, service.ErrTaskNotFound):
+		return c.Status(fiber.StatusNotFound).JSON(presenter.ErrorResponseFunc("task not found"))
+	case errors.Is(err, service.ErrUnsupportedTaskType):
+		return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("task type must be quiz, flowchart or algorithm"))
+	case errors.Is(err, service.ErrInvalidTaskConfig):
+		return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("invalid task configuration"))
+	case errors.Is(err, service.ErrQuizAnswerRequired):
+		return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("quiz answers are required"))
 	default:
 		return c.Status(fiber.StatusInternalServerError).JSON(presenter.ErrorResponseFunc(fmt.Sprintf("internal error: %v", err)))
 	}

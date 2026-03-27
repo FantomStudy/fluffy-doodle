@@ -11,12 +11,14 @@ type User struct {
 	RefreshToken   string `json:"-"`
 	Avatar         string `json:"avatar"`
 	Stars          int    `gorm:"default:0" json:"stars"`
+	Exp            int    `gorm:"default:0" json:"exp"`
 	InvitationCode string `gorm:"uniqueIndex" json:"invitationCode,omitempty"`
 	ParentID       *uint  `gorm:"index" json:"parentId,omitempty"`
 	// Роль
 	RoleID uint `json:"roleId"`
 	Role   Role `gorm:"foreignKey:RoleID" json:"role,omitempty"`
 	// Достижения
-	Achievements []Achievement `gorm:"many2many:user_achievements;" json:"achievements"`
-	Children     []User        `gorm:"foreignKey:ParentID" json:"children,omitempty"`
+	Achievements []Achievement      `gorm:"many2many:user_achievements;" json:"achievements"`
+	Children     []User             `gorm:"foreignKey:ParentID" json:"children,omitempty"`
+	TaskProgress []UserTaskProgress `gorm:"foreignKey:UserID" json:"taskProgress,omitempty"`
 }

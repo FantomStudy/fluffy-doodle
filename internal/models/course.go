@@ -24,10 +24,11 @@ type Course struct {
 
 type Lesson struct {
 	gorm.Model
-	CourseID         uint   `gorm:"not null;index" json:"courseId"`
-	Title            string `gorm:"not null" json:"title"`
-	Description      string `gorm:"type:text" json:"description"`
-	Order            int    `gorm:"not null;index" json:"order"`
-	EstimatedMinutes int    `gorm:"default:0" json:"estimatedMinutes"`
-	IsFreePreview    bool   `gorm:"default:false" json:"isFreePreview"`
+	CourseID         uint         `gorm:"not null;index" json:"courseId"`
+	Title            string       `gorm:"not null" json:"title"`
+	Description      string       `gorm:"type:text" json:"description"`
+	Order            int          `gorm:"not null;index" json:"order"`
+	EstimatedMinutes int          `gorm:"default:0" json:"estimatedMinutes"`
+	IsFreePreview    bool         `gorm:"default:false" json:"isFreePreview"`
+	Tasks            []LessonTask `gorm:"foreignKey:LessonID" json:"tasks,omitempty"`
 }

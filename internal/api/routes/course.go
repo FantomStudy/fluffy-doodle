@@ -12,6 +12,7 @@ func CourseRoutes(app *fiber.App, courseService service.CourseService, db *gorm.
 	app.Get("/courses", handlers.ListCourses(courseService))
 	app.Get("/courses/:id", handlers.GetCourseByID(courseService))
 	app.Get("/courses/:id/lessons", handlers.ListCourseLessons(courseService))
+	app.Post("/lessons/:lessonId/tasks/:taskId/submit", middleware.Protected(), handlers.SubmitLessonTask(courseService))
 
 	adminRoutes := app.Group("/admin",
 		middleware.Protected(),

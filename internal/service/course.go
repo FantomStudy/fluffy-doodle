@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"slices"
 	"strings"
 	"time"
 
@@ -21,6 +22,11 @@ var (
 	ErrEmptyCourseTitle    = errors.New("course title is required")
 	ErrInvalidHours        = errors.New("hours must be greater than 0")
 	ErrStorageNotAvailable = errors.New("storage is not available")
+	ErrLessonNotFound      = errors.New("lesson not found")
+	ErrTaskNotFound        = errors.New("task not found")
+	ErrUnsupportedTaskType = errors.New("unsupported task type")
+	ErrInvalidTaskConfig   = errors.New("invalid task config")
+	ErrQuizAnswerRequired  = errors.New("quiz answer is required")
 )
 
 type CourseService interface {
@@ -31,6 +37,7 @@ type CourseService interface {
 	ListCourses() ([]models.Course, error)
 	CreateLesson(courseID int, req CreateLessonInput) (*models.Lesson, error)
 	ListLessons(courseID int) ([]models.Lesson, error)
+	SubmitLessonTask(userID uint, lessonID int, taskID int, req SubmitLessonTaskInput) (*SubmitLessonTaskResult, error)
 }
 
 type CreateCourseInput struct {
@@ -61,6 +68,32 @@ type CreateLessonInput struct {
 	Order            int
 	EstimatedMinutes int
 	IsFreePreview    bool
+	Tasks            []CreateLessonTaskInput
+}
+
+type CreateLessonTaskInput struct {
+	Type             string
+	Title            string
+	Description      string
+	Question         string
+	Options          []models.TaskOption
+	CorrectOptionIDs []string
+}
+
+type SubmitLessonTaskInput struct {
+	SelectedOptionIDs []string
+	Solved            bool
+}
+
+type SubmitLessonTaskResult struct {
+	TaskID       uint
+	IsSolved     bool
+	WasSolved    bool
+	AwardedStars int
+	AwardedExp   int
+	CurrentStars int
+	CurrentExp   int
+	CurrentLevel int
 }
 
 type courseService struct {
@@ -209,6 +242,11 @@ func (s *courseService) CreateLesson(courseID int, req CreateLessonInput) (*mode
 		return nil, err
 	}
 
+	tasks, err := buildLessonTasks(req.Tasks)
+	if err != nil {
+		return nil, err
+	}
+
 	lesson := &models.Lesson{
 		CourseID:         course.ID,
 		Title:            req.Title,
@@ -218,17 +256,7 @@ func (s *courseService) CreateLesson(courseID int, req CreateLessonInput) (*mode
 		IsFreePreview:    req.IsFreePreview,
 	}
 
-	created, err := s.repo.CreateLesson(lesson)
-	if err != nil {
-		return nil, err
-	}
-
-	course.TotalLessons++
-	if _, err = s.repo.Update(course); err != nil {
-		return nil, err
-	}
-
-	return created, nil
+	return s.repo.CreateLessonWithTasks(lesson, tasks)
 }
 
 func (s *courseService) ListLessons(courseID int) ([]models.Lesson, error) {
@@ -243,6 +271,154 @@ func (s *courseService) ListLessons(courseID int) ([]models.Lesson, error) {
 	return s.repo.ListLessonsByCourseID(course.ID)
 }
 
+func (s *courseService) SubmitLessonTask(userID uint, lessonID int, taskID int, req SubmitLessonTaskInput) (*SubmitLessonTaskResult, error) {
+	task, err := s.repo.GetLessonTask(lessonID, taskID)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, ErrTaskNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	isSolved, submittedOptionIDs, err := evaluateTaskSubmission(task, req)
+	if err != nil {
+		return nil, err
+	}
+
+	progress, user, awardedStars, awardedExp, err := s.repo.SaveTaskProgress(userID, task, isSolved, submittedOptionIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SubmitLessonTaskResult{
+		TaskID:       task.ID,
+		IsSolved:     progress.IsSolved,
+		WasSolved:    progress.IsSolved && awardedStars == 0 && awardedExp == 0,
+		AwardedStars: awardedStars,
+		AwardedExp:   awardedExp,
+		CurrentStars: user.Stars,
+		CurrentExp:   user.Exp,
+		CurrentLevel: models.CalculateLevel(user.Exp),
+	}, nil
+}
+
+func evaluateTaskSubmission(task *models.LessonTask, req SubmitLessonTaskInput) (bool, []string, error) {
+	switch task.Type {
+	case models.TaskTypeQuiz:
+		submittedOptionIDs := normalizeOptionIDs(req.SelectedOptionIDs)
+		if len(submittedOptionIDs) == 0 {
+			return false, nil, ErrQuizAnswerRequired
+		}
+		return slices.Equal(submittedOptionIDs, normalizeOptionIDs(task.CorrectOptionIDs)), submittedOptionIDs, nil
+	case models.TaskTypeFlowchart, models.TaskTypeAlgorithm:
+		return req.Solved, nil, nil
+	default:
+		return false, nil, ErrUnsupportedTaskType
+	}
+}
+
+func buildLessonTasks(inputs []CreateLessonTaskInput) ([]models.LessonTask, error) {
+	tasks := make([]models.LessonTask, 0, len(inputs))
+	for _, input := range inputs {
+		taskType := strings.TrimSpace(strings.ToLower(input.Type))
+		if taskType == "" {
+			return nil, ErrInvalidTaskConfig
+		}
+
+		task := models.LessonTask{
+			Type:        taskType,
+			Title:       strings.TrimSpace(input.Title),
+			Description: strings.TrimSpace(input.Description),
+			Question:    strings.TrimSpace(input.Question),
+			RewardStars: models.TaskRewardStars,
+			RewardExp:   models.TaskRewardExp,
+		}
+
+		if task.Title == "" {
+			return nil, ErrInvalidTaskConfig
+		}
+
+		switch taskType {
+		case models.TaskTypeQuiz:
+			if task.Question == "" {
+				return nil, ErrInvalidTaskConfig
+			}
+
+			options := make([]models.TaskOption, 0, len(input.Options))
+			seenIDs := map[string]struct{}{}
+			for index, option := range input.Options {
+				optionID := strings.TrimSpace(option.ID)
+				if optionID == "" {
+					optionID = fmt.Sprintf("option_%d", index+1)
+				}
+				if _, exists := seenIDs[optionID]; exists {
+					return nil, ErrInvalidTaskConfig
+				}
+				seenIDs[optionID] = struct{}{}
+
+				text := strings.TrimSpace(option.Text)
+				if text == "" {
+					return nil, ErrInvalidTaskConfig
+				}
+
+				options = append(options, models.TaskOption{
+					ID:   optionID,
+					Text: text,
+				})
+			}
+
+			if len(options) < 2 {
+				return nil, ErrInvalidTaskConfig
+			}
+
+			correctOptionIDs := normalizeOptionIDs(input.CorrectOptionIDs)
+			if len(correctOptionIDs) == 0 {
+				return nil, ErrInvalidTaskConfig
+			}
+			for _, correctID := range correctOptionIDs {
+				if _, exists := seenIDs[correctID]; !exists {
+					return nil, ErrInvalidTaskConfig
+				}
+			}
+
+			task.Options = options
+			task.CorrectOptionIDs = correctOptionIDs
+		case models.TaskTypeFlowchart, models.TaskTypeAlgorithm:
+			task.Options = nil
+			task.CorrectOptionIDs = nil
+		default:
+			return nil, ErrUnsupportedTaskType
+		}
+
+		tasks = append(tasks, task)
+	}
+
+	return tasks, nil
+}
+
+func normalizeOptionIDs(optionIDs []string) []string {
+	if len(optionIDs) == 0 {
+		return nil
+	}
+
+	seen := map[string]struct{}{}
+	normalized := make([]string, 0, len(optionIDs))
+	for _, optionID := range optionIDs {
+		value := strings.TrimSpace(optionID)
+		if value == "" {
+			continue
+		}
+		if _, exists := seen[value]; exists {
+			continue
+		}
+		seen[value] = struct{}{}
+		normalized = append(normalized, value)
+	}
+
+	slices.Sort(normalized)
+	return normalized
+}
+
 func isValidLevel(level string) bool {
 	switch level {
 	case models.CourseLevelBeginner, models.CourseLevelIntermediate, models.CourseLevelAdvanced:
@@ -254,11 +430,11 @@ func isValidLevel(level string) bool {
 
 func normalizeLevel(level string) string {
 	switch strings.TrimSpace(strings.ToLower(level)) {
-	case "начальный", "beginner":
+	case "beginner":
 		return models.CourseLevelBeginner
-	case "средний", "intermediate":
+	case "intermediate":
 		return models.CourseLevelIntermediate
-	case "сложный", "advanced":
+	case "advanced":
 		return models.CourseLevelAdvanced
 	default:
 		return strings.TrimSpace(strings.ToLower(level))

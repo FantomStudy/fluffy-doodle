@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
+	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"github.com/FantomStudy/fluffy-doodle/internal/service"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -32,7 +33,18 @@ func GetProfile(s service.UserService) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
 		}
 
-		return c.Status(fiber.StatusOK).JSON(user)
+		return c.Status(fiber.StatusOK).JSON(presenter.UserProfileResponse{
+			ID:             user.ID,
+			Login:          user.Login,
+			FullName:       user.FullName,
+			PhoneNumber:    user.PhoneNumber,
+			Avatar:         user.Avatar,
+			RoleID:         user.RoleID,
+			Stars:          user.Stars,
+			Exp:            user.Exp,
+			Level:          models.CalculateLevel(user.Exp),
+			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
+		})
 	}
 }
 
@@ -112,6 +124,8 @@ func ParentChildProgress(s service.UserService) fiber.Handler {
 			StudentName:    child.FullName,
 			StudentLogin:   child.Login,
 			Stars:          child.Stars,
+			Exp:            child.Exp,
+			Level:          models.CalculateLevel(child.Exp),
 			Achievements:   len(child.Achievements),
 			InvitationCode: child.InvitationCode,
 		})
