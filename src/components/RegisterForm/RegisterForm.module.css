@@ -83,3 +83,17 @@
 .link:hover {
   opacity: 0.8;
 }
+
+.error {
+  font-size: 13px;
+  color: var(--danger);
+  text-align: center;
+  font-weight: 500;
+}
+
+.error {
+  font-size: 13px;
+  color: var(--danger);
+  text-align: center;
+  font-weight: 500;
+}

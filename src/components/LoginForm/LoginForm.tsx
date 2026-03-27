@@ -1,16 +1,37 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { RocketIcon } from "lucide-react";
 import { useState } from "react";
+import { ApiError, signIn } from "@/api/auth";
+import { setAuthenticated } from "@/lib/authSession";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import styles from "./LoginForm.module.css";
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      await signIn({ login, password });
+      setAuthenticated();
+      navigate({ to: "/" });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Произошла ошибка. Попробуй ещё раз.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,9 +72,12 @@ export const LoginForm = () => {
         </div>
       </div>
 
-      <Button type="submit" className={styles.submitBtn}>
-        Начать обучение
+      <Button type="submit" className={styles.submitBtn} disabled={loading}>
+        <RocketIcon size={18} />
+        {loading ? "Входим..." : "Начать обучение"}
       </Button>
+
+      {error && <p className={styles.error}>{error}</p>}
 
       <Link to="/register" className={styles.link}>
         Нет аккаунта? <span>Зарегистрироваться</span>
