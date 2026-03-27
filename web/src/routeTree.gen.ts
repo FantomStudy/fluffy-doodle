@@ -36,6 +36,7 @@ import { Route as GamesRouteImport } from './routes/games'
 import { Route as ControlRouteImport } from './routes/control'
 import { Route as ChallengeRouteImport } from './routes/challenge'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AlgorithmRouteImport } from './routes/algorithm'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -174,6 +175,11 @@ const AnalyticsRoute = AnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlgorithmRoute = AlgorithmRouteImport.update({
+  id: '/algorithm',
+  path: '/algorithm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AchievementsRoute = AchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
@@ -188,6 +194,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/algorithm': typeof AlgorithmRoute
   '/analytics': typeof AnalyticsRoute
   '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/algorithm': typeof AlgorithmRoute
   '/analytics': typeof AnalyticsRoute
   '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/algorithm': typeof AlgorithmRoute
   '/analytics': typeof AnalyticsRoute
   '/challenge': typeof ChallengeRoute
   '/control': typeof ControlRoute
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/achievements'
+    | '/algorithm'
     | '/analytics'
     | '/challenge'
     | '/control'
@@ -315,6 +325,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/achievements'
+    | '/algorithm'
     | '/analytics'
     | '/challenge'
     | '/control'
@@ -346,6 +357,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/achievements'
+    | '/algorithm'
     | '/analytics'
     | '/challenge'
     | '/control'
@@ -378,6 +390,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AchievementsRoute: typeof AchievementsRoute
+  AlgorithmRoute: typeof AlgorithmRoute
   AnalyticsRoute: typeof AnalyticsRoute
   ChallengeRoute: typeof ChallengeRoute
   ControlRoute: typeof ControlRoute
@@ -598,6 +611,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/algorithm': {
+      id: '/algorithm'
+      path: '/algorithm'
+      fullPath: '/algorithm'
+      preLoaderRoute: typeof AlgorithmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/achievements': {
       id: '/achievements'
       path: '/achievements'
@@ -618,6 +638,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
+  AlgorithmRoute: AlgorithmRoute,
   AnalyticsRoute: AnalyticsRoute,
   ChallengeRoute: ChallengeRoute,
   ControlRoute: ControlRoute,
