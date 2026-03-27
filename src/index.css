@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
 /* LAYER 1 — DESIGN TOKENS (primitives) */
 :root {
   /* Color — White */
@@ -37,6 +39,9 @@
   --color-amber-500: #f59e0b;
   --color-amber-900: #92400e;
 
+  /* Color — Orange */
+  --color-orange-500: #ff7d24;
+
   /* Color — Red */
   --color-red-400: #f87171;
 
@@ -56,6 +61,7 @@
   --radius-xl: 12px;
   --radius-2xl: 14px;
   --radius-3xl: 22px;
+  --radius-4xl: 40px;
   --radius-full: 999px;
 }
 
@@ -79,6 +85,9 @@
   --warning-border: var(--color-amber-200);
   --warning-icon: var(--color-amber-500);
   --warning-text: var(--color-amber-900);
+
+  /* Accent (orange) */
+  --accent: var(--color-orange-500);
 
   /* Danger */
   --danger: var(--color-red-400);
@@ -124,7 +133,7 @@
 }
 
 body {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-family: "Manrope", "Inter", "Segoe UI", system-ui, sans-serif;
   color: var(--foreground);
   background-color: var(--background);
 }
