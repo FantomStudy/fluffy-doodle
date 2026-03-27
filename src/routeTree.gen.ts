@@ -13,6 +13,7 @@ import { Route as SidebarRouteRouteImport } from './routes/_sidebar/route'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as SidebarIndexRouteImport } from './routes/_sidebar/index'
+import { Route as SidebarProfileRouteImport } from './routes/_sidebar/profile'
 import { Route as SidebarKnowledgeRouteImport } from './routes/_sidebar/knowledge'
 import { Route as SidebarCourseRouteImport } from './routes/_sidebar/course'
 import { Route as SidebarChallengeRouteImport } from './routes/_sidebar/challenge'
@@ -35,6 +36,11 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
 const SidebarIndexRoute = SidebarIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => SidebarRouteRoute,
+} as any)
+const SidebarProfileRoute = SidebarProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => SidebarRouteRoute,
 } as any)
 const SidebarKnowledgeRoute = SidebarKnowledgeRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/challenge': typeof SidebarChallengeRoute
   '/course': typeof SidebarCourseRoute
   '/knowledge': typeof SidebarKnowledgeRoute
+  '/profile': typeof SidebarProfileRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
 }
@@ -72,6 +79,7 @@ export interface FileRoutesByTo {
   '/challenge': typeof SidebarChallengeRoute
   '/course': typeof SidebarCourseRoute
   '/knowledge': typeof SidebarKnowledgeRoute
+  '/profile': typeof SidebarProfileRoute
   '/': typeof SidebarIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   '/_sidebar/challenge': typeof SidebarChallengeRoute
   '/_sidebar/course': typeof SidebarCourseRoute
   '/_sidebar/knowledge': typeof SidebarKnowledgeRoute
+  '/_sidebar/profile': typeof SidebarProfileRoute
   '/_sidebar/': typeof SidebarIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
     | '/challenge'
     | '/course'
     | '/knowledge'
+    | '/profile'
     | '/login/'
     | '/register/'
   fileRoutesByTo: FileRoutesByTo
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
     | '/challenge'
     | '/course'
     | '/knowledge'
+    | '/profile'
     | '/'
     | '/login'
     | '/register'
@@ -113,6 +124,7 @@ export interface FileRouteTypes {
     | '/_sidebar/challenge'
     | '/_sidebar/course'
     | '/_sidebar/knowledge'
+    | '/_sidebar/profile'
     | '/_sidebar/'
     | '/login/'
     | '/register/'
@@ -154,6 +166,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SidebarIndexRouteImport
       parentRoute: typeof SidebarRouteRoute
     }
+    '/_sidebar/profile': {
+      id: '/_sidebar/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof SidebarProfileRouteImport
+      parentRoute: typeof SidebarRouteRoute
+    }
     '/_sidebar/knowledge': {
       id: '/_sidebar/knowledge'
       path: '/knowledge'
@@ -190,6 +209,7 @@ interface SidebarRouteRouteChildren {
   SidebarChallengeRoute: typeof SidebarChallengeRoute
   SidebarCourseRoute: typeof SidebarCourseRoute
   SidebarKnowledgeRoute: typeof SidebarKnowledgeRoute
+  SidebarProfileRoute: typeof SidebarProfileRoute
   SidebarIndexRoute: typeof SidebarIndexRoute
 }
 
@@ -198,6 +218,7 @@ const SidebarRouteRouteChildren: SidebarRouteRouteChildren = {
   SidebarChallengeRoute: SidebarChallengeRoute,
   SidebarCourseRoute: SidebarCourseRoute,
   SidebarKnowledgeRoute: SidebarKnowledgeRoute,
+  SidebarProfileRoute: SidebarProfileRoute,
   SidebarIndexRoute: SidebarIndexRoute,
 }
 

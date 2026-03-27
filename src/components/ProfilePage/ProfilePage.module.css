@@ -1,0 +1,299 @@
+.root {
+  padding: 24px 32px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* User Card */
+.userCard {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  background: var(--surface);
+  border-radius: var(--radius-3xl);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.avatarUpload {
+  flex-shrink: 0;
+  width: 184px;
+  height: 184px;
+  background: var(--color-purple-50);
+  border: none;
+  border-radius: var(--radius-3xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.avatarButton {
+  flex-shrink: 0;
+  width: 184px;
+  height: 184px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-3xl);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--color-purple-50);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uploadIcon {
+  color: var(--foreground);
+}
+
+.uploadText {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--foreground);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.userInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userName {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.userPhone {
+  font-size: 14px;
+  color: var(--foreground-subtle);
+}
+
+.userMeta {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.starIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.starCount {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.editButton {
+  background: var(--success);
+  color: var(--foreground-white);
+  border: none;
+  border-radius: var(--radius-4xl);
+  padding: 16px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.editButton:hover {
+  background: var(--success-hover);
+}
+
+.logoutButton {
+  background: none;
+  border: 2px solid var(--danger);
+  color: var(--danger);
+  border-radius: var(--radius-4xl);
+  padding: 12px 40px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.logoutButton:hover {
+  background: var(--danger);
+  color: var(--foreground-white);
+}
+
+.error {
+  color: var(--danger);
+  text-align: center;
+  font-size: 16px;
+}
+
+.emptyText {
+  text-align: center;
+  color: var(--foreground-muted);
+  font-size: 16px;
+}
+
+/* Achievements */
+.achievementsTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.achievementsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.achievementCard {
+  background: var(--surface);
+  border-radius: var(--radius-3xl);
+  padding: 12px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.04);
+}
+
+.achievementImageWrap {
+  width: 100%;
+  aspect-ratio: 200 / 160;
+  border-radius: var(--radius-3xl);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.achievementImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.achievementName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.achievementDesc {
+  font-size: 14px;
+  color: var(--foreground-subtle);
+  line-height: 1.4;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .achievementsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet small */
+@media (max-width: 768px) {
+  .root {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .userCard {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .avatarUpload,
+  .avatarButton {
+    width: 140px;
+    height: 140px;
+    align-self: center;
+  }
+
+  .userInfo {
+    text-align: center;
+  }
+
+  .userMeta {
+    align-items: center;
+  }
+
+  .achievementsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .root {
+    padding: 12px;
+    padding-bottom: 80px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .userCard {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .avatarUpload,
+  .avatarButton {
+    width: 120px;
+    height: 120px;
+  }
+
+  .editButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .achievementsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .achievementName {
+    font-size: 14px;
+  }
+
+  .achievementDesc {
+    font-size: 12px;
+  }
+}

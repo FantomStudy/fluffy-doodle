@@ -24,7 +24,7 @@ const NAV: NavItem[] = [
   { icon: <BookOpenIcon size={16} />, label: "Уроки", linkOptions: { to: "/" } },
   { icon: <ClipboardListIcon size={16} />, label: "Задания", linkOptions: { to: "/" } },
   { icon: <TrophyIcon size={16} />, label: "Достижения", linkOptions: { to: "/" } },
-  { icon: <UserIcon size={16} />, label: "Профиль", linkOptions: { to: "/" } },
+  { icon: <UserIcon size={16} />, label: "Профиль", linkOptions: { to: "/profile" } },
 ];
 
 const RouteComponent = () => {
