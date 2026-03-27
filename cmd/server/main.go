@@ -37,6 +37,9 @@ func main() {
 	// init user
 	userRepo := repository.NewUserRepo(db)
 	userService := service.NewUserService(userRepo)
+	// init course category
+	courseCategoryRepo := repository.NewCourseCategoryRepository(db)
+	courseCategoryService := service.NewCourseCategoryService(courseCategoryRepo)
 
 	app := fiber.New(fiber.Config{
 		BodyLimit: 100 * 1024 * 1024,
@@ -56,6 +59,7 @@ func main() {
 	// routes
 	routes.AuthRoutes(app, authService)
 	routes.UserRoutes(app, userService, db)
+	routes.CourseRoutes(app, courseCategoryService, db)
 
 	fmt.Printf("App started successfully on port %s\n", cfg.Port)
 	app.Listen(":" + cfg.Port)

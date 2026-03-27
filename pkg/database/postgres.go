@@ -51,7 +51,7 @@ func NewPostgresDB(cfg *config.Config) (*gorm.DB, error) {
 }
 
 func AutoMigrate(connection *gorm.DB) {
-	connection.AutoMigrate(&models.User{}, &models.Role{})
+	connection.AutoMigrate(&models.User{}, &models.Role{}, &models.CourseCategory{})
 
 	// createDefaultRoles(connection)
 	// fixOldUsers(connection)
@@ -83,6 +83,7 @@ func AutoMigrate(connection *gorm.DB) {
 // 		{Name: "admin"},
 // 		{Name: "teacher"},
 // 		{Name: "student"},
+// 		{Name: "parent"},
 // 	}
 
 // 	for _, role := range roles {
