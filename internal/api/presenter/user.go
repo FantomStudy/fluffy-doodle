@@ -51,6 +51,21 @@ type ParentChildProgressResponse struct {
 	InvitationCode string `json:"studentCode" example:"STU-8A7KQ21M"`
 }
 
+type CompleteGameLevelRequest struct {
+	Completed bool `json:"completed"`
+}
+
+type CompleteGameLevelResponse struct {
+	LevelID      string `json:"levelId"`
+	IsCompleted  bool   `json:"isCompleted"`
+	WasCompleted bool   `json:"wasCompleted"`
+	AwardedStars int    `json:"awardedStars"`
+	AwardedExp   int    `json:"awardedExp"`
+	CurrentStars int    `json:"currentStars"`
+	CurrentExp   int    `json:"currentExp"`
+	CurrentLevel int    `json:"currentLevel"`
+}
+
 func AuthErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
 		"success": false,

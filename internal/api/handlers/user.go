@@ -48,6 +48,39 @@ func GetProfile(s service.UserService) fiber.Handler {
 	}
 }
 
+func CompleteGameLevel(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		levelID := c.Params("levelId")
+
+		var req presenter.CompleteGameLevelRequest
+		if err := c.BodyParser(&req); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("invalid request payload")))
+		}
+		if !req.Completed {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("completed must be true")))
+		}
+
+		result, err := s.CompleteGameLevel(c.Locals("userId").(uint), levelID)
+		if err != nil {
+			if err.Error() == "invalid game level id" {
+				return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("levelId is required")))
+			}
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.SuccessResponseWithData("game level completed", presenter.CompleteGameLevelResponse{
+			LevelID:      result.LevelID,
+			IsCompleted:  result.IsCompleted,
+			WasCompleted: result.WasCompleted,
+			AwardedStars: result.AwardedStars,
+			AwardedExp:   result.AwardedExp,
+			CurrentStars: result.CurrentStars,
+			CurrentExp:   result.CurrentExp,
+			CurrentLevel: result.CurrentLevel,
+		}))
+	}
+}
+
 // @Summary Upload avatar
 // @Description Upload user avatar to S3
 // @Accept multipart/form-data

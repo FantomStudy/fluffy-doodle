@@ -18,7 +18,8 @@ type User struct {
 	RoleID uint `json:"roleId"`
 	Role   Role `gorm:"foreignKey:RoleID" json:"role,omitempty"`
 	// Достижения
-	Achievements []Achievement      `gorm:"many2many:user_achievements;" json:"achievements"`
-	Children     []User             `gorm:"foreignKey:ParentID" json:"children,omitempty"`
-	TaskProgress []UserTaskProgress `gorm:"foreignKey:UserID" json:"taskProgress,omitempty"`
+	Achievements []Achievement           `gorm:"many2many:user_achievements;" json:"achievements"`
+	Children     []User                  `gorm:"foreignKey:ParentID" json:"children,omitempty"`
+	TaskProgress []UserTaskProgress      `gorm:"foreignKey:UserID" json:"taskProgress,omitempty"`
+	GameProgress []UserGameLevelProgress `gorm:"foreignKey:UserID" json:"gameProgress,omitempty"`
 }
