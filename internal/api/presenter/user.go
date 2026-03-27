@@ -15,10 +15,11 @@ type AuthSwaggerErrorResponse struct {
 }
 
 type SignUpRequest struct {
-	Login       string `json:"login"`
-	Password    string `json:"password"`
-	FullName    string `json:"fullName"`
-	PhoneNumber string `json:"phoneNumber"`
+	Login          string `json:"login"`
+	Password       string `json:"password"`
+	FullName       string `json:"fullName"`
+	PhoneNumber    string `json:"phoneNumber"`
+	InvitationCode string `json:"-"`
 }
 
 type SignInRequest struct {
@@ -33,6 +34,27 @@ type UserProfileResponse struct {
 	PhoneNumber string `json:"phoneNumber" example:"+79001234567"`
 	Avatar      string `json:"avatar" example:"https://minio.local/avatar_1.png"`
 	RoleID      uint   `json:"roleId" example:"2"`
+}
+
+type ParentSignUpRequest struct {
+	Login       string `json:"login" example:"parent01"`
+	Password    string `json:"password" example:"superSecret123"`
+	FullName    string `json:"fullName" example:"Мария Иванова"`
+	PhoneNumber string `json:"phoneNumber" example:"+79001234567"`
+	StudentCode string `json:"studentCode" example:"STU-8A7KQ21M"`
+}
+
+type StudentInviteResponse struct {
+	StudentCode string `json:"studentCode" example:"STU-8A7KQ21M"`
+}
+
+type ParentChildProgressResponse struct {
+	StudentID      uint   `json:"studentId" example:"12"`
+	StudentName    string `json:"studentName" example:"Петя Иванов"`
+	StudentLogin   string `json:"studentLogin" example:"petya_ivanov"`
+	Stars          int    `json:"stars" example:"18"`
+	Achievements   int    `json:"achievements" example:"4"`
+	InvitationCode string `json:"studentCode" example:"STU-8A7KQ21M"`
 }
 
 func AuthErrorResponse(err error) *fiber.Map {

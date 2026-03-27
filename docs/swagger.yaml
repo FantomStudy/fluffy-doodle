@@ -48,6 +48,45 @@ definitions:
     required:
     - name
     type: object
+  presenter.ParentChildProgressResponse:
+    properties:
+      achievements:
+        example: 4
+        type: integer
+      stars:
+        example: 18
+        type: integer
+      studentCode:
+        example: STU-8A7KQ21M
+        type: string
+      studentId:
+        example: 12
+        type: integer
+      studentLogin:
+        example: petya_ivanov
+        type: string
+      studentName:
+        example: Петя Иванов
+        type: string
+    type: object
+  presenter.ParentSignUpRequest:
+    properties:
+      fullName:
+        example: Мария Иванова
+        type: string
+      login:
+        example: parent01
+        type: string
+      password:
+        example: superSecret123
+        type: string
+      phoneNumber:
+        example: "+79001234567"
+        type: string
+      studentCode:
+        example: STU-8A7KQ21M
+        type: string
+    type: object
   presenter.SignInRequest:
     properties:
       login:
@@ -64,6 +103,12 @@ definitions:
       password:
         type: string
       phoneNumber:
+        type: string
+    type: object
+  presenter.StudentInviteResponse:
+    properties:
+      studentCode:
+        example: STU-8A7KQ21M
         type: string
     type: object
   presenter.SuccessResponse:
@@ -684,9 +729,9 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: Загрузка аватарки пользователя в S3
+      description: Upload user avatar to S3
       parameters:
-      - description: Файл аватарки
+      - description: Avatar file
         in: formData
         name: avatar
         required: true
@@ -707,6 +752,69 @@ paths:
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Upload avatar
+      tags:
+      - user
+  /user/parent-sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Parent creates account and links to student using student code
+      parameters:
+      - description: Parent registration data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.ParentSignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Parent registration by student code
+      tags:
+      - user
+  /user/parent/child-progress:
+    get:
+      description: Returns current child progress for authenticated parent
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.ParentChildProgressResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Parent child progress
       tags:
       - user
   /user/profile:
@@ -738,9 +846,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: Регистрация студента
+      description: Teacher creates student account and receives student code
       parameters:
-      - description: Данные для регистрации ученика
+      - description: Student registration data
         in: body
         name: body
         required: true
@@ -752,17 +860,17 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.StudentInviteResponse'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "409":
+          description: Conflict
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
