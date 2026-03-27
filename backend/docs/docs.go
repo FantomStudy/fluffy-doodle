@@ -224,6 +224,64 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/student-invitation": {
+            "post": {
+                "description": "Регистрация студента",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Invite student",
+                "parameters": [
+                    {
+                        "description": "Данные для регистрации ученика",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

@@ -9,6 +9,7 @@ type User struct {
 	FullName     string `gorm:"not null" json:"fullName"`
 	PhoneNumber  string `gorm:"not null" json:"phoneNumber"`
 	RefreshToken string `json:"refreshToken"`
+	// Роль
+	RoleID uint `json:"roleId"`
+	Role   Role `gorm:"foreignKey:RoleID" json:"role,omitempty"`
 }
-
-// регаются учителя. у них есть ссылка, которую даёт пиздюку. он регается, фио, логин пароль, телефон

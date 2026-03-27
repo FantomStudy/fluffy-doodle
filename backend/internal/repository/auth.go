@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
 	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"gorm.io/gorm"
@@ -23,11 +25,17 @@ func NewAuthRepo(db *gorm.DB) AuthRepository {
 }
 
 func (r *authRepository) SignUp(req *presenter.SignUpRequest) (*models.User, error) {
+
+	var defaultRole models.Role
+	if err := r.db.Where("name = ?", "teacher").First(&defaultRole).Error; err != nil {
+		return nil, errors.New("роль по умолчанию не найдена")
+	}
 	user := &models.User{
 		Login:       req.Login,
 		Password:    req.Password,
 		FullName:    req.FullName,
 		PhoneNumber: req.PhoneNumber,
+		RoleID:      defaultRole.ID,
 	}
 
 	if err := r.db.Create(user).Error; err != nil {
