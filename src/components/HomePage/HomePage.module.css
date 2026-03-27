@@ -402,3 +402,161 @@
   font-size: 13px;
   color: var(--foreground-subtle);
 }
+
+/* ======== RESPONSIVE ======== */
+
+/* Tablet — ≤ 768px */
+@media (max-width: 768px) {
+  .root {
+    padding: 20px 16px;
+    padding-bottom: 80px;
+    gap: 20px;
+  }
+
+  .greeting {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .learningCard {
+    border-radius: 24px;
+  }
+
+  .cardHeader {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 16px 10px;
+  }
+
+  .cardLabel {
+    width: 100%;
+  }
+
+  .mapSection {
+    height: 240px;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    padding: 20px 16px 24px;
+    gap: 20px;
+  }
+
+  .currentLesson {
+    flex: none;
+    width: 100%;
+  }
+
+  .continueBtn {
+    width: 100%;
+  }
+
+  .progressSection {
+    flex: none;
+    width: 100%;
+  }
+
+  .characterSection {
+    display: none;
+  }
+
+  .badges {
+    flex-wrap: wrap;
+  }
+
+  .sectionTitle {
+    font-size: 22px;
+  }
+
+  .courseGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Mobile — ≤ 480px */
+@media (max-width: 480px) {
+  .root {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .greeting {
+    font-size: 18px;
+  }
+
+  .cardHeader {
+    padding: 14px 12px 8px;
+  }
+
+  .cardActions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .streakBadge {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .streakBadge img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .mapSection {
+    height: 180px;
+  }
+
+  .waypoint {
+    width: 7%;
+  }
+
+  .cardFooter {
+    padding: 16px 12px 20px;
+  }
+
+  .lessonTitle {
+    font-size: 16px;
+  }
+
+  .continueBtn {
+    font-size: 14px;
+    padding: 14px 0;
+  }
+
+  .lessonCount {
+    font-size: 16px;
+  }
+
+  .badge {
+    width: 42px;
+    height: 36px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+  }
+
+  .courseGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .courseTitle {
+    font-size: 16px;
+  }
+
+  .allCoursesBtn {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .allCoursesBtn img {
+    width: 16px;
+    height: 16px;
+  }
+}
