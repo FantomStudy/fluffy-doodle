@@ -69,24 +69,6 @@ definitions:
         example: Петя Иванов
         type: string
     type: object
-  presenter.ParentSignUpRequest:
-    properties:
-      fullName:
-        example: Мария Иванова
-        type: string
-      login:
-        example: parent01
-        type: string
-      password:
-        example: superSecret123
-        type: string
-      phoneNumber:
-        example: "+79001234567"
-        type: string
-      studentCode:
-        example: STU-8A7KQ21M
-        type: string
-    type: object
   presenter.SignInRequest:
     properties:
       login:
@@ -104,11 +86,7 @@ definitions:
         type: string
       phoneNumber:
         type: string
-    type: object
-  presenter.StudentInviteResponse:
-    properties:
       studentCode:
-        example: STU-8A7KQ21M
         type: string
     type: object
   presenter.SuccessResponse:
@@ -461,7 +439,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Проверяет пользователя на роль администратора
+      description: Checks role (protected endpoint)
       produces:
       - application/json
       responses:
@@ -476,7 +454,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Выход пользователя из системы
+      description: Logout
       produces:
       - application/json
       responses:
@@ -491,7 +469,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Обновление токенов
+      description: Refresh access and refresh tokens
       produces:
       - application/json
       responses:
@@ -499,10 +477,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "401":
           description: Unauthorized
           schema:
@@ -522,9 +496,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: Авторизация пользователя
+      description: User login
       parameters:
-      - description: Данные для авторизации
+      - description: Credentials
         in: body
         name: body
         required: true
@@ -560,9 +534,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: Регистрация пользователя
+      description: Student signs up without code. Parent signs up with studentCode.
       parameters:
-      - description: Данные для регистрации
+      - description: Sign up payload
         in: body
         name: body
         required: true
@@ -579,12 +553,12 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "409":
+          description: Conflict
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
@@ -754,44 +728,6 @@ paths:
       summary: Upload avatar
       tags:
       - user
-  /user/parent-sign-up:
-    post:
-      consumes:
-      - application/json
-      description: Parent creates account and links to student using student code
-      parameters:
-      - description: Parent registration data
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/presenter.ParentSignUpRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-      summary: Parent registration by student code
-      tags:
-      - user
   /user/parent/child-progress:
     get:
       description: Returns current child progress for authenticated parent
@@ -840,44 +776,6 @@ paths:
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Get user profile
-      tags:
-      - user
-  /user/student-invitation:
-    post:
-      consumes:
-      - application/json
-      description: Teacher creates student account and receives student code
-      parameters:
-      - description: Student registration data
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/presenter.SignUpRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/presenter.StudentInviteResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
-      summary: Invite student
       tags:
       - user
 swagger: "2.0"

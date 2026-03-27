@@ -4,15 +4,12 @@ import (
 	"context"
 	"io"
 
-	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
 	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"github.com/FantomStudy/fluffy-doodle/internal/repository"
 	"github.com/FantomStudy/fluffy-doodle/pkg/storage"
 )
 
 type UserService interface {
-	InviteUser(req *presenter.SignUpRequest, roleId uint) (*models.User, error)
-	FindRole(role string) (*models.Role, error)
 	GetUser(login string) (*models.User, error)
 	GetUserByID(id uint) (*models.User, error)
 	GetUserByInvitationCode(code string) (*models.User, error)
@@ -57,14 +54,6 @@ func NewUserService(r repository.UserRepository, st *storage.MinioStorage) UserS
 		repository: r,
 		storage:    st,
 	}
-}
-
-func (s *userService) InviteUser(req *presenter.SignUpRequest, roleId uint) (*models.User, error) {
-	return s.repository.SignUp(req, roleId)
-}
-
-func (s *userService) FindRole(role string) (*models.Role, error) {
-	return s.repository.FindRole(role)
 }
 
 func (s *userService) GetUser(login string) (*models.User, error) {

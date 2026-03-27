@@ -19,7 +19,7 @@ type SignUpRequest struct {
 	Password       string `json:"password"`
 	FullName       string `json:"fullName"`
 	PhoneNumber    string `json:"phoneNumber"`
-	InvitationCode string `json:"-"`
+	InvitationCode string `json:"studentCode,omitempty"`
 }
 
 type SignInRequest struct {
@@ -34,18 +34,6 @@ type UserProfileResponse struct {
 	PhoneNumber string `json:"phoneNumber" example:"+79001234567"`
 	Avatar      string `json:"avatar" example:"https://minio.local/avatar_1.png"`
 	RoleID      uint   `json:"roleId" example:"2"`
-}
-
-type ParentSignUpRequest struct {
-	Login       string `json:"login" example:"parent01"`
-	Password    string `json:"password" example:"superSecret123"`
-	FullName    string `json:"fullName" example:"Мария Иванова"`
-	PhoneNumber string `json:"phoneNumber" example:"+79001234567"`
-	StudentCode string `json:"studentCode" example:"STU-8A7KQ21M"`
-}
-
-type StudentInviteResponse struct {
-	StudentCode string `json:"studentCode" example:"STU-8A7KQ21M"`
 }
 
 type ParentChildProgressResponse struct {

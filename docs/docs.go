@@ -463,7 +463,7 @@ const docTemplate = `{
         },
         "/auth/is-admin": {
             "get": {
-                "description": "Проверяет пользователя на роль администратора",
+                "description": "Checks role (protected endpoint)",
                 "consumes": [
                     "application/json"
                 ],
@@ -486,7 +486,7 @@ const docTemplate = `{
         },
         "/auth/logout": {
             "post": {
-                "description": "Выход пользователя из системы",
+                "description": "Logout",
                 "consumes": [
                     "application/json"
                 ],
@@ -509,7 +509,7 @@ const docTemplate = `{
         },
         "/auth/refresh": {
             "post": {
-                "description": "Обновление токенов",
+                "description": "Refresh access and refresh tokens",
                 "consumes": [
                     "application/json"
                 ],
@@ -525,12 +525,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "401": {
@@ -556,7 +550,7 @@ const docTemplate = `{
         },
         "/auth/sign-in": {
             "post": {
-                "description": "Авторизация пользователя",
+                "description": "User login",
                 "consumes": [
                     "application/json"
                 ],
@@ -569,7 +563,7 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
-                        "description": "Данные для авторизации",
+                        "description": "Credentials",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -614,7 +608,7 @@ const docTemplate = `{
         },
         "/auth/sign-up": {
             "post": {
-                "description": "Регистрация пользователя",
+                "description": "Student signs up without code. Parent signs up with studentCode.",
                 "consumes": [
                     "application/json"
                 ],
@@ -627,7 +621,7 @@ const docTemplate = `{
                 "summary": "Registration",
                 "parameters": [
                     {
-                        "description": "Данные для регистрации",
+                        "description": "Sign up payload",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -649,14 +643,14 @@ const docTemplate = `{
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
@@ -913,64 +907,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/parent-sign-up": {
-            "post": {
-                "description": "Parent creates account and links to student using student code",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Parent registration by student code",
-                "parameters": [
-                    {
-                        "description": "Parent registration data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/presenter.ParentSignUpRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/user/parent/child-progress": {
             "get": {
                 "description": "Returns current child progress for authenticated parent",
@@ -1034,64 +970,6 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/student-invitation": {
-            "post": {
-                "description": "Teacher creates student account and receives student code",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Invite student",
-                "parameters": [
-                    {
-                        "description": "Student registration data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/presenter.SignUpRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.StudentInviteResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
@@ -1205,31 +1083,6 @@ const docTemplate = `{
                 }
             }
         },
-        "presenter.ParentSignUpRequest": {
-            "type": "object",
-            "properties": {
-                "fullName": {
-                    "type": "string",
-                    "example": "Мария Иванова"
-                },
-                "login": {
-                    "type": "string",
-                    "example": "parent01"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "superSecret123"
-                },
-                "phoneNumber": {
-                    "type": "string",
-                    "example": "+79001234567"
-                },
-                "studentCode": {
-                    "type": "string",
-                    "example": "STU-8A7KQ21M"
-                }
-            }
-        },
         "presenter.SignInRequest": {
             "type": "object",
             "properties": {
@@ -1255,15 +1108,9 @@ const docTemplate = `{
                 },
                 "phoneNumber": {
                     "type": "string"
-                }
-            }
-        },
-        "presenter.StudentInviteResponse": {
-            "type": "object",
-            "properties": {
+                },
                 "studentCode": {
-                    "type": "string",
-                    "example": "STU-8A7KQ21M"
+                    "type": "string"
                 }
             }
         },
