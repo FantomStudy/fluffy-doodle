@@ -9,6 +9,7 @@ import (
 	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"github.com/FantomStudy/fluffy-doodle/internal/repository"
 	"github.com/FantomStudy/fluffy-doodle/pkg/storage"
+	"gorm.io/gorm"
 )
 
 var ErrInvalidGameLevelID = errors.New("invalid game level id")
@@ -16,6 +17,7 @@ var ErrInvalidGameLevelID = errors.New("invalid game level id")
 type UserService interface {
 	GetUser(login string) (*models.User, error)
 	GetUserByID(id uint) (*models.User, error)
+	EnsureStudentInvitationCode(user *models.User) (*models.User, error)
 	GetUserByInvitationCode(code string) (*models.User, error)
 	AssignParentToStudent(studentID uint, parentID uint) error
 	GetChildByParentID(parentID uint) (*models.User, error)
@@ -38,6 +40,35 @@ type CompleteGameLevelResult struct {
 
 func (s *userService) GetUserByID(id uint) (*models.User, error) {
 	return s.repository.GetUserByID(id)
+}
+
+func (s *userService) EnsureStudentInvitationCode(user *models.User) (*models.User, error) {
+	if user == nil || user.RoleID != 3 || strings.TrimSpace(user.InvitationCode) != "" {
+		return user, nil
+	}
+
+	for range 5 {
+		code, err := repository.GenerateInvitationCode("STU")
+		if err != nil {
+			return nil, err
+		}
+
+		existing, err := s.repository.GetUserByInvitationCode(code)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		if existing != nil && existing.ID != 0 {
+			continue
+		}
+
+		if err := s.repository.SetInvitationCode(user.ID, code); err != nil {
+			return nil, err
+		}
+		user.InvitationCode = code
+		return user, nil
+	}
+
+	return nil, errors.New("failed to generate unique student code")
 }
 
 func (s *userService) GetUserByInvitationCode(code string) (*models.User, error) {

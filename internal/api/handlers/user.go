@@ -33,6 +33,11 @@ func GetProfile(s service.UserService) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
 		}
 
+		user, err = s.EnsureStudentInvitationCode(user)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
 		return c.Status(fiber.StatusOK).JSON(presenter.UserProfileResponse{
 			ID:             user.ID,
 			Login:          user.Login,

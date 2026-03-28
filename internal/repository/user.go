@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"crypto/rand"
+	"encoding/base32"
 	"errors"
 	"strings"
 	"time"
@@ -17,6 +19,7 @@ type UserRepository interface {
 	GetChildByParentID(parentID uint) (*models.User, error)
 	UpdateUser(user *models.User) (*models.User, error)
 	SetRefresh(token string, id int) (*models.User, error)
+	SetInvitationCode(userID uint, code string) error
 	CompleteGameLevel(userID uint, levelID string) (*models.UserGameLevelProgress, *models.User, int, int, error)
 }
 
@@ -110,6 +113,10 @@ func (r *userRepository) SetRefresh(token string, id int) (*models.User, error) 
 	return &user, nil
 }
 
+func (r *userRepository) SetInvitationCode(userID uint, code string) error {
+	return r.db.Model(&models.User{}).Where("id = ?", userID).Update("invitation_code", code).Error
+}
+
 func (r *userRepository) CompleteGameLevel(userID uint, levelID string) (*models.UserGameLevelProgress, *models.User, int, int, error) {
 	var progress models.UserGameLevelProgress
 	var user models.User
@@ -163,4 +170,14 @@ func (r *userRepository) CompleteGameLevel(userID uint, levelID string) (*models
 	}
 
 	return &progress, &user, awardedStars, awardedExp, nil
+}
+
+func GenerateInvitationCode(prefix string) (string, error) {
+	b := make([]byte, 5)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+
+	code := strings.TrimRight(base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(b), "=")
+	return prefix + "-" + code, nil
 }
