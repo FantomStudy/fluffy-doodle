@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  presenter.AchievementResponse:
+    properties:
+      description:
+        example: Полностью прошел первый урок
+        type: string
+      icon:
+        example: lesson
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Первый урок
+        type: string
+    type: object
   presenter.AuthSwaggerErrorResponse:
     properties:
       error: {}
@@ -11,6 +26,36 @@ definitions:
       error: {}
       status:
         type: boolean
+    type: object
+  presenter.CreateForumCategoryRequest:
+    properties:
+      description:
+        example: Обсуждение языка программирования Go
+        type: string
+      name:
+        example: Вопросы по Go
+        type: string
+      order:
+        example: 1
+        type: integer
+    type: object
+  presenter.CreateForumCommentRequest:
+    properties:
+      content:
+        example: Вот решение вашей проблемы...
+        type: string
+    type: object
+  presenter.CreateForumTopicRequest:
+    properties:
+      categoryId:
+        example: 1
+        type: integer
+      content:
+        example: У меня вопрос по связям...
+        type: string
+      title:
+        example: Как использовать GORM?
+        type: string
     type: object
   presenter.CreateLessonRequest:
     properties:
@@ -75,6 +120,91 @@ definitions:
         example: false
         type: boolean
     type: object
+  presenter.ForumAuthor:
+    properties:
+      avatar:
+        type: string
+      fullName:
+        type: string
+      id:
+        type: integer
+      role:
+        type: string
+      stars:
+        type: integer
+    type: object
+  presenter.ForumCategoryResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      topicsCount:
+        type: integer
+    type: object
+  presenter.ForumCommentResponse:
+    properties:
+      author:
+        $ref: '#/definitions/presenter.ForumAuthor'
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      isSolution:
+        type: boolean
+    type: object
+  presenter.ForumTopicDetailResponse:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/presenter.ForumCommentResponse'
+        type: array
+      topic:
+        $ref: '#/definitions/presenter.ForumTopicResponse'
+    type: object
+  presenter.ForumTopicResponse:
+    properties:
+      author:
+        $ref: '#/definitions/presenter.ForumAuthor'
+      categoryId:
+        type: integer
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      isSolved:
+        type: boolean
+      replies:
+        type: integer
+      title:
+        type: string
+      views:
+        type: integer
+    type: object
+  presenter.FrameResponse:
+    properties:
+      id:
+        example: 1
+        type: integer
+      image:
+        example: https://minio.local/frame_1.png
+        type: string
+      name:
+        example: Gold Frame
+        type: string
+      owned:
+        example: true
+        type: boolean
+      price:
+        example: 100
+        type: integer
+    type: object
   presenter.InsertCategoryRequest:
     properties:
       name:
@@ -84,8 +214,34 @@ definitions:
     required:
     - name
     type: object
+  presenter.LeaderboardResponse:
+    properties:
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
+      avatar:
+        example: https://minio.local/avatar_1.png
+        type: string
+      fullName:
+        example: Ivan Ivanov
+        type: string
+      id:
+        example: 1
+        type: integer
+      level:
+        example: 5
+        type: integer
+      stars:
+        example: 150
+        type: integer
+    type: object
   presenter.MeResponse:
     properties:
+      achievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
       avatar:
         example: https://minio.local/avatar_1.png
         type: string
@@ -107,6 +263,10 @@ definitions:
       login:
         example: teacher01
         type: string
+      ownedFrames:
+        items:
+          type: integer
+        type: array
       phoneNumber:
         example: "+79001234567"
         type: string
@@ -129,8 +289,14 @@ definitions:
   presenter.ParentChildProgressResponse:
     properties:
       achievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
+      achievementsCount:
         example: 4
         type: integer
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
       exp:
         example: 45
         type: integer
@@ -173,6 +339,38 @@ definitions:
       studentCode:
         type: string
     type: object
+  presenter.SubmitLessonTaskRequest:
+    properties:
+      selectedOptionIds:
+        items:
+          type: string
+        type: array
+      solved:
+        type: boolean
+    type: object
+  presenter.SubmitLessonTaskResponse:
+    properties:
+      awardedAchievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
+      awardedExp:
+        type: integer
+      awardedStars:
+        type: integer
+      currentExp:
+        type: integer
+      currentLevel:
+        type: integer
+      currentStars:
+        type: integer
+      isSolved:
+        type: boolean
+      taskId:
+        type: integer
+      wasSolved:
+        type: boolean
+    type: object
   presenter.SuccessResponse:
     properties:
       data: {}
@@ -194,6 +392,12 @@ definitions:
     type: object
   presenter.UserProfileResponse:
     properties:
+      achievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
       avatar:
         example: https://minio.local/avatar_1.png
         type: string
@@ -801,6 +1005,242 @@ paths:
       summary: List course lessons
       tags:
       - courses
+  /courses/lessons/{lessonId}/tasks/{taskId}/submit:
+    post:
+      consumes:
+      - application/json
+      description: Submits a task for a lesson and returns progress/rewards
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      - description: Submission payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.SubmitLessonTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SubmitLessonTaskResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Submit lesson task
+      tags:
+      - courses
+  /forum/categories:
+    get:
+      description: Returns a list of forum categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/presenter.ForumCategoryResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Get forum categories
+      tags:
+      - forum
+    post:
+      consumes:
+      - application/json
+      description: Creates a new forum category
+      parameters:
+      - description: Category data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.CreateForumCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.ForumCategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create forum category
+      tags:
+      - forum
+  /forum/comments/{id}/solution:
+    put:
+      description: Marks a specific comment as the solution to the topic (only topic
+        author can do this)
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Topic ID
+        in: query
+        name: topicId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Mark comment as solution
+      tags:
+      - forum
+  /forum/topics:
+    get:
+      description: Returns a list of forum topics. Can be filtered by categoryId.
+      parameters:
+      - description: Category ID
+        in: query
+        name: categoryId
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/presenter.ForumTopicResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Get forum topics
+      tags:
+      - forum
+    post:
+      consumes:
+      - application/json
+      description: Creates a new forum topic
+      parameters:
+      - description: Topic data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.CreateForumTopicRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.ForumTopicResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create topic
+      tags:
+      - forum
+  /forum/topics/{id}:
+    get:
+      description: Returns topic details along with comments
+      parameters:
+      - description: Topic ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.ForumTopicDetailResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Get topic details
+      tags:
+      - forum
+  /forum/topics/{id}/comments:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new comment in a topic
+      parameters:
+      - description: Topic ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Comment data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.CreateForumCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.ForumCommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create comment
+      tags:
+      - forum
   /me:
     get:
       description: Returns current authenticated user with role name
@@ -853,6 +1293,116 @@ paths:
           schema:
             $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Upload avatar
+      tags:
+      - user
+  /user/frames:
+    get:
+      description: Returns all available frames and marks owned ones
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/presenter.FrameResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get available frames
+      tags:
+      - user
+  /user/frames/{frameId}/active:
+    post:
+      description: Sets a frame as active for the user. Set frameId to 0 to remove
+        frame.
+      parameters:
+      - description: Frame ID
+        in: path
+        name: frameId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Set active frame
+      tags:
+      - user
+  /user/frames/{frameId}/buy:
+    post:
+      description: Allows user to buy a frame using stars
+      parameters:
+      - description: Frame ID
+        in: path
+        name: frameId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Buy a frame
+      tags:
+      - user
+  /user/leaderboard/stars:
+    get:
+      description: Returns users sorted by stars
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/presenter.LeaderboardResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get stars leaderboard
       tags:
       - user
   /user/parent/child-progress:

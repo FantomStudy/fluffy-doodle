@@ -19,7 +19,8 @@ type CourseRepository interface {
 	ListLessonsByCourseID(courseID uint) ([]models.Lesson, error)
 	GetLessonTask(lessonID int, taskID int) (*models.LessonTask, error)
 	GetSolvedTaskIDsByUser(userID uint) ([]uint, error)
-	SaveTaskProgress(userID uint, task *models.LessonTask, isSolved bool, submittedOptionIDs []string) (*models.UserTaskProgress, *models.User, int, int, error)
+	SaveTaskProgress(userID uint, task *models.LessonTask, isSolved bool, submittedOptionIDs []string) (*models.UserTaskProgress, *models.User, int, int, []models.Achievement, error)
+	CheckAndAwardLessonAchievement(tx *gorm.DB, userID uint, lessonID uint) (*models.Achievement, error)
 }
 
 type courseRepository struct {
@@ -151,11 +152,12 @@ func (r *courseRepository) GetSolvedTaskIDsByUser(userID uint) ([]uint, error) {
 	return taskIDs, nil
 }
 
-func (r *courseRepository) SaveTaskProgress(userID uint, task *models.LessonTask, isSolved bool, submittedOptionIDs []string) (*models.UserTaskProgress, *models.User, int, int, error) {
+func (r *courseRepository) SaveTaskProgress(userID uint, task *models.LessonTask, isSolved bool, submittedOptionIDs []string) (*models.UserTaskProgress, *models.User, int, int, []models.Achievement, error) {
 	var progress models.UserTaskProgress
 	var user models.User
 	awardedStars := 0
 	awardedExp := 0
+	var awardedAchievements []models.Achievement
 
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("id = ?", userID).First(&user).Error; err != nil {
@@ -196,6 +198,11 @@ func (r *courseRepository) SaveTaskProgress(userID uint, task *models.LessonTask
 					return err
 				}
 			}
+
+			// Check for lesson achievement
+			if achievement, err := r.CheckAndAwardLessonAchievement(tx, userID, task.LessonID); err == nil && achievement != nil {
+				awardedAchievements = append(awardedAchievements, *achievement)
+			}
 		} else if !progress.Awarded {
 			progress.IsSolved = false
 			progress.SolvedAt = nil
@@ -214,10 +221,64 @@ func (r *courseRepository) SaveTaskProgress(userID uint, task *models.LessonTask
 		return nil
 	})
 	if err != nil {
-		return nil, nil, 0, 0, err
+		return nil, nil, 0, 0, nil, err
 	}
 
-	return &progress, &user, awardedStars, awardedExp, nil
+	return &progress, &user, awardedStars, awardedExp, awardedAchievements, nil
+}
+
+func (r *courseRepository) CheckAndAwardLessonAchievement(tx *gorm.DB, userID uint, lessonID uint) (*models.Achievement, error) {
+	// Get all task IDs for this lesson
+	var lessonTaskIDs []uint
+	if err := tx.Model(&models.LessonTask{}).Where("lesson_id = ?", lessonID).Pluck("id", &lessonTaskIDs).Error; err != nil {
+		return nil, err
+	}
+
+	if len(lessonTaskIDs) == 0 {
+		return nil, nil
+	}
+
+	// Check if user solved all of them
+	var solvedCount int64
+	if err := tx.Model(&models.UserTaskProgress{}).
+		Where("user_id = ? AND task_id IN ? AND is_solved = ?", userID, lessonTaskIDs, true).
+		Count(&solvedCount).Error; err != nil {
+		return nil, err
+	}
+
+	if int(solvedCount) < len(lessonTaskIDs) {
+		return nil, nil
+	}
+
+	// All tasks solved! Award achievement if not already awarded
+	var achievement models.Achievement
+	if err := tx.Where("name = ?", "Первый урок").First(&achievement).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// Achievement might not be in DB if seeder didn't run, but we don't want to crash
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	// Check if user already has it
+	var count int64
+	if err := tx.Table("user_achievements").Where("user_id = ? AND achievement_id = ?", userID, achievement.ID).Count(&count).Error; err != nil {
+		return nil, err
+	}
+
+	if count == 0 {
+		// Award it
+		var user models.User
+		if err := tx.First(&user, userID).Error; err != nil {
+			return nil, err
+		}
+		if err := tx.Model(&user).Association("Achievements").Append(&achievement); err != nil {
+			return nil, err
+		}
+		return &achievement, nil
+	}
+
+	return nil, nil
 }
 
 func updateUserLearningStreak(user *models.User, activityTime time.Time) {

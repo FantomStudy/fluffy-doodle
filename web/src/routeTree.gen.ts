@@ -15,11 +15,15 @@ import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as ProtectedSidebarRouteRouteImport } from './routes/_protected/_sidebar/route'
 import { Route as ProtectedSidebarIndexRouteImport } from './routes/_protected/_sidebar/index'
 import { Route as ProtectedSidebarProfileRouteImport } from './routes/_protected/_sidebar/profile'
+import { Route as ProtectedSidebarLeaderboardRouteImport } from './routes/_protected/_sidebar/leaderboard'
 import { Route as ProtectedSidebarKnowledgeRouteImport } from './routes/_protected/_sidebar/knowledge'
 import { Route as ProtectedSidebarChildRouteImport } from './routes/_protected/_sidebar/child'
 import { Route as ProtectedSidebarChallengeRouteImport } from './routes/_protected/_sidebar/challenge'
 import { Route as ProtectedSidebarAlgorithmRouteImport } from './routes/_protected/_sidebar/algorithm'
+import { Route as ProtectedSidebarForumIndexRouteImport } from './routes/_protected/_sidebar/forum/index'
 import { Route as ProtectedSidebarCoursesIndexRouteImport } from './routes/_protected/_sidebar/courses/index'
+import { Route as ProtectedSidebarForumCreateRouteImport } from './routes/_protected/_sidebar/forum/create'
+import { Route as ProtectedSidebarForumTopicIdRouteImport } from './routes/_protected/_sidebar/forum/$topicId'
 import { Route as ProtectedSidebarCoursesCourseIdIndexRouteImport } from './routes/_protected/_sidebar/courses/$courseId/index'
 import { Route as ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRouteImport } from './routes/_protected/_sidebar/courses/$courseId/lessons/$lessonId/index'
 
@@ -51,6 +55,12 @@ const ProtectedSidebarProfileRoute = ProtectedSidebarProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => ProtectedSidebarRouteRoute,
 } as any)
+const ProtectedSidebarLeaderboardRoute =
+  ProtectedSidebarLeaderboardRouteImport.update({
+    id: '/leaderboard',
+    path: '/leaderboard',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
 const ProtectedSidebarKnowledgeRoute =
   ProtectedSidebarKnowledgeRouteImport.update({
     id: '/knowledge',
@@ -74,10 +84,28 @@ const ProtectedSidebarAlgorithmRoute =
     path: '/algorithm',
     getParentRoute: () => ProtectedSidebarRouteRoute,
   } as any)
+const ProtectedSidebarForumIndexRoute =
+  ProtectedSidebarForumIndexRouteImport.update({
+    id: '/forum/',
+    path: '/forum/',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
 const ProtectedSidebarCoursesIndexRoute =
   ProtectedSidebarCoursesIndexRouteImport.update({
     id: '/courses/',
     path: '/courses/',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
+const ProtectedSidebarForumCreateRoute =
+  ProtectedSidebarForumCreateRouteImport.update({
+    id: '/forum/create',
+    path: '/forum/create',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
+const ProtectedSidebarForumTopicIdRoute =
+  ProtectedSidebarForumTopicIdRouteImport.update({
+    id: '/forum/$topicId',
+    path: '/forum/$topicId',
     getParentRoute: () => ProtectedSidebarRouteRoute,
   } as any)
 const ProtectedSidebarCoursesCourseIdIndexRoute =
@@ -101,8 +129,12 @@ export interface FileRoutesByFullPath {
   '/challenge': typeof ProtectedSidebarChallengeRoute
   '/child': typeof ProtectedSidebarChildRoute
   '/knowledge': typeof ProtectedSidebarKnowledgeRoute
+  '/leaderboard': typeof ProtectedSidebarLeaderboardRoute
   '/profile': typeof ProtectedSidebarProfileRoute
+  '/forum/$topicId': typeof ProtectedSidebarForumTopicIdRoute
+  '/forum/create': typeof ProtectedSidebarForumCreateRoute
   '/courses/': typeof ProtectedSidebarCoursesIndexRoute
+  '/forum/': typeof ProtectedSidebarForumIndexRoute
   '/courses/$courseId/': typeof ProtectedSidebarCoursesCourseIdIndexRoute
   '/courses/$courseId/lessons/$lessonId/': typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
@@ -114,8 +146,12 @@ export interface FileRoutesByTo {
   '/challenge': typeof ProtectedSidebarChallengeRoute
   '/child': typeof ProtectedSidebarChildRoute
   '/knowledge': typeof ProtectedSidebarKnowledgeRoute
+  '/leaderboard': typeof ProtectedSidebarLeaderboardRoute
   '/profile': typeof ProtectedSidebarProfileRoute
+  '/forum/$topicId': typeof ProtectedSidebarForumTopicIdRoute
+  '/forum/create': typeof ProtectedSidebarForumCreateRoute
   '/courses': typeof ProtectedSidebarCoursesIndexRoute
+  '/forum': typeof ProtectedSidebarForumIndexRoute
   '/courses/$courseId': typeof ProtectedSidebarCoursesCourseIdIndexRoute
   '/courses/$courseId/lessons/$lessonId': typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
@@ -129,9 +165,13 @@ export interface FileRoutesById {
   '/_protected/_sidebar/challenge': typeof ProtectedSidebarChallengeRoute
   '/_protected/_sidebar/child': typeof ProtectedSidebarChildRoute
   '/_protected/_sidebar/knowledge': typeof ProtectedSidebarKnowledgeRoute
+  '/_protected/_sidebar/leaderboard': typeof ProtectedSidebarLeaderboardRoute
   '/_protected/_sidebar/profile': typeof ProtectedSidebarProfileRoute
   '/_protected/_sidebar/': typeof ProtectedSidebarIndexRoute
+  '/_protected/_sidebar/forum/$topicId': typeof ProtectedSidebarForumTopicIdRoute
+  '/_protected/_sidebar/forum/create': typeof ProtectedSidebarForumCreateRoute
   '/_protected/_sidebar/courses/': typeof ProtectedSidebarCoursesIndexRoute
+  '/_protected/_sidebar/forum/': typeof ProtectedSidebarForumIndexRoute
   '/_protected/_sidebar/courses/$courseId/': typeof ProtectedSidebarCoursesCourseIdIndexRoute
   '/_protected/_sidebar/courses/$courseId/lessons/$lessonId/': typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
@@ -145,8 +185,12 @@ export interface FileRouteTypes {
     | '/challenge'
     | '/child'
     | '/knowledge'
+    | '/leaderboard'
     | '/profile'
+    | '/forum/$topicId'
+    | '/forum/create'
     | '/courses/'
+    | '/forum/'
     | '/courses/$courseId/'
     | '/courses/$courseId/lessons/$lessonId/'
   fileRoutesByTo: FileRoutesByTo
@@ -158,8 +202,12 @@ export interface FileRouteTypes {
     | '/challenge'
     | '/child'
     | '/knowledge'
+    | '/leaderboard'
     | '/profile'
+    | '/forum/$topicId'
+    | '/forum/create'
     | '/courses'
+    | '/forum'
     | '/courses/$courseId'
     | '/courses/$courseId/lessons/$lessonId'
   id:
@@ -172,9 +220,13 @@ export interface FileRouteTypes {
     | '/_protected/_sidebar/challenge'
     | '/_protected/_sidebar/child'
     | '/_protected/_sidebar/knowledge'
+    | '/_protected/_sidebar/leaderboard'
     | '/_protected/_sidebar/profile'
     | '/_protected/_sidebar/'
+    | '/_protected/_sidebar/forum/$topicId'
+    | '/_protected/_sidebar/forum/create'
     | '/_protected/_sidebar/courses/'
+    | '/_protected/_sidebar/forum/'
     | '/_protected/_sidebar/courses/$courseId/'
     | '/_protected/_sidebar/courses/$courseId/lessons/$lessonId/'
   fileRoutesById: FileRoutesById
@@ -229,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSidebarProfileRouteImport
       parentRoute: typeof ProtectedSidebarRouteRoute
     }
+    '/_protected/_sidebar/leaderboard': {
+      id: '/_protected/_sidebar/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof ProtectedSidebarLeaderboardRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
     '/_protected/_sidebar/knowledge': {
       id: '/_protected/_sidebar/knowledge'
       path: '/knowledge'
@@ -257,11 +316,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSidebarAlgorithmRouteImport
       parentRoute: typeof ProtectedSidebarRouteRoute
     }
+    '/_protected/_sidebar/forum/': {
+      id: '/_protected/_sidebar/forum/'
+      path: '/forum'
+      fullPath: '/forum/'
+      preLoaderRoute: typeof ProtectedSidebarForumIndexRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
     '/_protected/_sidebar/courses/': {
       id: '/_protected/_sidebar/courses/'
       path: '/courses'
       fullPath: '/courses/'
       preLoaderRoute: typeof ProtectedSidebarCoursesIndexRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/forum/create': {
+      id: '/_protected/_sidebar/forum/create'
+      path: '/forum/create'
+      fullPath: '/forum/create'
+      preLoaderRoute: typeof ProtectedSidebarForumCreateRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/forum/$topicId': {
+      id: '/_protected/_sidebar/forum/$topicId'
+      path: '/forum/$topicId'
+      fullPath: '/forum/$topicId'
+      preLoaderRoute: typeof ProtectedSidebarForumTopicIdRouteImport
       parentRoute: typeof ProtectedSidebarRouteRoute
     }
     '/_protected/_sidebar/courses/$courseId/': {
@@ -286,9 +366,13 @@ interface ProtectedSidebarRouteRouteChildren {
   ProtectedSidebarChallengeRoute: typeof ProtectedSidebarChallengeRoute
   ProtectedSidebarChildRoute: typeof ProtectedSidebarChildRoute
   ProtectedSidebarKnowledgeRoute: typeof ProtectedSidebarKnowledgeRoute
+  ProtectedSidebarLeaderboardRoute: typeof ProtectedSidebarLeaderboardRoute
   ProtectedSidebarProfileRoute: typeof ProtectedSidebarProfileRoute
   ProtectedSidebarIndexRoute: typeof ProtectedSidebarIndexRoute
+  ProtectedSidebarForumTopicIdRoute: typeof ProtectedSidebarForumTopicIdRoute
+  ProtectedSidebarForumCreateRoute: typeof ProtectedSidebarForumCreateRoute
   ProtectedSidebarCoursesIndexRoute: typeof ProtectedSidebarCoursesIndexRoute
+  ProtectedSidebarForumIndexRoute: typeof ProtectedSidebarForumIndexRoute
   ProtectedSidebarCoursesCourseIdIndexRoute: typeof ProtectedSidebarCoursesCourseIdIndexRoute
   ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute: typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
@@ -298,9 +382,13 @@ const ProtectedSidebarRouteRouteChildren: ProtectedSidebarRouteRouteChildren = {
   ProtectedSidebarChallengeRoute: ProtectedSidebarChallengeRoute,
   ProtectedSidebarChildRoute: ProtectedSidebarChildRoute,
   ProtectedSidebarKnowledgeRoute: ProtectedSidebarKnowledgeRoute,
+  ProtectedSidebarLeaderboardRoute: ProtectedSidebarLeaderboardRoute,
   ProtectedSidebarProfileRoute: ProtectedSidebarProfileRoute,
   ProtectedSidebarIndexRoute: ProtectedSidebarIndexRoute,
+  ProtectedSidebarForumTopicIdRoute: ProtectedSidebarForumTopicIdRoute,
+  ProtectedSidebarForumCreateRoute: ProtectedSidebarForumCreateRoute,
   ProtectedSidebarCoursesIndexRoute: ProtectedSidebarCoursesIndexRoute,
+  ProtectedSidebarForumIndexRoute: ProtectedSidebarForumIndexRoute,
   ProtectedSidebarCoursesCourseIdIndexRoute:
     ProtectedSidebarCoursesCourseIdIndexRoute,
   ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute:

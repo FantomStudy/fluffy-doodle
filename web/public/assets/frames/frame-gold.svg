@@ -1,0 +1,27 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="50%" stop-color="#FFC107"/>
+      <stop offset="100%" stop-color="#FF8F00"/>
+    </linearGradient>
+    <linearGradient id="gold-inner" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFF176"/>
+      <stop offset="100%" stop-color="#FFD700"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="194" height="194" rx="32" stroke="url(#gold)" stroke-width="6" fill="none"/>
+  <rect x="11" y="11" width="178" height="178" rx="26" stroke="url(#gold-inner)" stroke-width="2" fill="none" opacity="0.7"/>
+  <!-- corner diamonds -->
+  <g fill="#FFD700">
+    <rect x="12" y="12" width="12" height="12" rx="2" transform="rotate(45 18 18)"/>
+    <rect x="176" y="12" width="12" height="12" rx="2" transform="rotate(45 182 18)"/>
+    <rect x="12" y="176" width="12" height="12" rx="2" transform="rotate(45 18 182)"/>
+    <rect x="176" y="176" width="12" height="12" rx="2" transform="rotate(45 182 182)"/>
+  </g>
+  <!-- top/bottom accents -->
+  <circle cx="100" cy="5" r="3" fill="#FFD700"/>
+  <circle cx="100" cy="195" r="3" fill="#FFD700"/>
+  <circle cx="5" cy="100" r="3" fill="#FFD700"/>
+  <circle cx="195" cy="100" r="3" fill="#FFD700"/>
+</svg>

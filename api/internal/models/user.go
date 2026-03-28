@@ -20,11 +20,14 @@ type User struct {
 	LastStreakAt   *time.Time
 	InvitationCode string `gorm:"uniqueIndex" json:"invitationCode,omitempty"`
 	ParentID       *uint  `gorm:"index" json:"parentId,omitempty"`
+	ActiveFrameID  *uint  `json:"activeFrameId,omitempty"`
+	ActiveFrame    *Frame `gorm:"foreignKey:ActiveFrameID" json:"activeFrame,omitempty"`
 	// Роль
 	RoleID uint `json:"roleId"`
 	Role   Role `gorm:"foreignKey:RoleID" json:"role,omitempty"`
 	// Достижения
 	Achievements []Achievement           `gorm:"many2many:user_achievements;" json:"achievements"`
+	Frames       []Frame                 `gorm:"many2many:user_frames;" json:"frames"`
 	Children     []User                  `gorm:"foreignKey:ParentID" json:"children,omitempty"`
 	TaskProgress []UserTaskProgress      `gorm:"foreignKey:UserID" json:"taskProgress,omitempty"`
 	GameProgress []UserGameLevelProgress `gorm:"foreignKey:UserID" json:"gameProgress,omitempty"`

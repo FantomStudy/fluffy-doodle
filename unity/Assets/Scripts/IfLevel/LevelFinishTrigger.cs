@@ -34,6 +34,11 @@ public class LevelFinishTrigger : MonoBehaviour
 
     private IEnumerator FinishRoutine()
     {
+        if (LevelCompletionFlowController.TryStartCurrentLevelCompletion())
+        {
+            yield break;
+        }
+
         ApplyState(1f, true);
 
         if (fadeDuration > 0f)

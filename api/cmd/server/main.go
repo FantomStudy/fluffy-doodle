@@ -51,6 +51,9 @@ func main() {
 	// init courses
 	courseRepo := repository.NewCourseRepository(db)
 	courseService := service.NewCourseService(courseRepo, minioStorage)
+	// init forum
+	forumRepo := repository.NewForumRepository(db)
+	forumService := service.NewForumService(forumRepo)
 
 	app := fiber.New(fiber.Config{
 		BodyLimit: 100 * 1024 * 1024,
@@ -72,6 +75,7 @@ func main() {
 	routes.UserRoutes(app, userService, db)
 	routes.CourseCategoryRoutes(app, courseCategoryService, db)
 	routes.CourseRoutes(app, courseService, db)
+	routes.ForumRoutes(app, forumService)
 
 	fmt.Printf("App started successfully on port %s\n", cfg.Port)
 	app.Listen(":" + cfg.Port)

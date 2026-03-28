@@ -1,6 +1,6 @@
 import type { RegisteredRouter, ValidateLinkOptions } from "@tanstack/react-router";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { BookOpenIcon, ClipboardListIcon, HomeIcon, MapIcon, UserIcon } from "lucide-react";
+import { BookOpenIcon, HomeIcon, MessageCircleIcon, TrophyIcon, UserIcon } from "lucide-react";
 import { useMe } from "@/hooks/useMe";
 import styles from "./route.module.css";
 
@@ -12,9 +12,9 @@ interface NavItem {
 
 const STUDENT_NAV: NavItem[] = [
   { icon: <HomeIcon size={16} />, label: "Главная", linkOptions: { to: "/" } },
-  { icon: <MapIcon size={16} />, label: "Путь", linkOptions: { to: "/" } },
   { icon: <BookOpenIcon size={16} />, label: "Уроки", linkOptions: { to: "/courses" } },
-  { icon: <ClipboardListIcon size={16} />, label: "Задания", linkOptions: { to: "/" } },
+  { icon: <TrophyIcon size={16} />, label: "Лидерборд", linkOptions: { to: "/leaderboard" } },
+  { icon: <MessageCircleIcon size={16} />, label: "Форум", linkOptions: { to: "/forum" } },
   { icon: <UserIcon size={16} />, label: "Профиль", linkOptions: { to: "/profile" } },
 ];
 
@@ -31,7 +31,7 @@ const RouteComponent = () => {
     <div className={styles.layout}>
       <aside className={styles.sidebar}>
         <div className={styles.sidebarTop}>
-          <div className={styles.avatar} />
+          <img src="/assets/mascot.png" alt="Fluffy Doodle" className={styles.logo} />
           <span className={styles.brand}>Fluffy Doodle</span>
         </div>
 

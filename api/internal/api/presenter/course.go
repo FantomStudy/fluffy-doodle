@@ -74,14 +74,15 @@ type SubmitLessonTaskRequest struct {
 }
 
 type SubmitLessonTaskResponse struct {
-	TaskID       uint `json:"taskId"`
-	IsSolved     bool `json:"isSolved"`
-	WasSolved    bool `json:"wasSolved"`
-	AwardedStars int  `json:"awardedStars"`
-	AwardedExp   int  `json:"awardedExp"`
-	CurrentStars int  `json:"currentStars"`
-	CurrentExp   int  `json:"currentExp"`
-	CurrentLevel int  `json:"currentLevel"`
+	TaskID              uint                  `json:"taskId"`
+	IsSolved            bool                  `json:"isSolved"`
+	WasSolved           bool                  `json:"wasSolved"`
+	AwardedStars        int                   `json:"awardedStars"`
+	AwardedExp          int                   `json:"awardedExp"`
+	CurrentStars        int                   `json:"currentStars"`
+	CurrentExp          int                   `json:"currentExp"`
+	CurrentLevel        int                   `json:"currentLevel"`
+	AwardedAchievements []AchievementResponse `json:"awardedAchievements,omitempty"`
 }
 
 func CourseToResponse(course *models.Course, isSolved bool) CourseResponse {

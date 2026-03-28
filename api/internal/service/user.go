@@ -25,6 +25,10 @@ type UserService interface {
 	SetToken(token string, id int) (*models.User, error)
 	UploadAvatar(ctx context.Context, fileName string, reader io.Reader, fileSize int64, contentType string) (string, error)
 	CompleteGameLevel(userID uint, levelID string) (*CompleteGameLevelResult, error)
+	GetLeaderboard(limit int) ([]models.User, error)
+	GetFrames() ([]models.Frame, error)
+	BuyFrame(userID uint, frameID uint) error
+	SetActiveFrame(userID uint, frameID uint) error
 }
 
 type CompleteGameLevelResult struct {
@@ -112,6 +116,25 @@ func (s *userService) CompleteGameLevel(userID uint, levelID string) (*CompleteG
 		CurrentExp:   user.Exp,
 		CurrentLevel: models.CalculateLevel(user.Exp),
 	}, nil
+}
+
+func (s *userService) GetLeaderboard(limit int) ([]models.User, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+	return s.repository.GetLeaderboard(limit)
+}
+
+func (s *userService) GetFrames() ([]models.Frame, error) {
+	return s.repository.GetFrames()
+}
+
+func (s *userService) BuyFrame(userID uint, frameID uint) error {
+	return s.repository.BuyFrame(userID, frameID)
+}
+
+func (s *userService) SetActiveFrame(userID uint, frameID uint) error {
+	return s.repository.SetActiveFrame(userID, frameID)
 }
 
 type userService struct {

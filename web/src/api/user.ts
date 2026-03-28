@@ -1,5 +1,12 @@
 import { api } from "./instance";
 
+export type ActiveFrame = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+};
+
 interface Achievement {
   id: number;
   name: string;
@@ -31,6 +38,7 @@ export interface User {
   roleId: number;
   role: Role;
   achievements: Achievement[];
+  activeFrame?: ActiveFrame;
   createdAt: string;
   updatedAt: string;
 }
@@ -49,6 +57,8 @@ export interface Me {
   level: number;
   expToNextLevel: number;
   streak: number;
+  activeFrame?: ActiveFrame;
+  ownedFrames?: number[];
 }
 
 interface InviteStudentRequest {
@@ -101,3 +111,15 @@ export interface ChildProgress {
 }
 
 export const getChildProgress = () => api<ChildProgress>("/user/parent/child-progress");
+
+export interface LeaderboardEntry {
+  id: number;
+  fullName: string;
+  avatar: string;
+  stars: number;
+  level: number;
+  activeFrame?: ActiveFrame | null;
+}
+
+export const getLeaderboard = (limit = 10) =>
+  api<LeaderboardEntry[]>("/user/leaderboard/stars", { query: { limit } });

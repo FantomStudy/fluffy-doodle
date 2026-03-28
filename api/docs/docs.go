@@ -769,6 +769,72 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses/lessons/{lessonId}/tasks/{taskId}/submit": {
+            "post": {
+                "description": "Submits a task for a lesson and returns progress/rewards",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Submit lesson task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lessonId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Submission payload",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SubmitLessonTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SubmitLessonTaskResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/courses/{id}": {
             "get": {
                 "description": "Returns course detail by id",
@@ -863,6 +929,296 @@ const docTemplate = `{
                 }
             }
         },
+        "/forum/categories": {
+            "get": {
+                "description": "Returns a list of forum categories",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Get forum categories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/presenter.ForumCategoryResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new forum category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Create forum category",
+                "parameters": [
+                    {
+                        "description": "Category data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.CreateForumCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ForumCategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/forum/comments/{id}/solution": {
+            "put": {
+                "description": "Marks a specific comment as the solution to the topic (only topic author can do this)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Mark comment as solution",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Comment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Topic ID",
+                        "name": "topicId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/forum/topics": {
+            "get": {
+                "description": "Returns a list of forum topics. Can be filtered by categoryId.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Get forum topics",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Category ID",
+                        "name": "categoryId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/presenter.ForumTopicResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new forum topic",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Create topic",
+                "parameters": [
+                    {
+                        "description": "Topic data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.CreateForumTopicRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ForumTopicResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/forum/topics/{id}": {
+            "get": {
+                "description": "Returns topic details along with comments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Get topic details",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Topic ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ForumTopicDetailResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/forum/topics/{id}/comments": {
+            "post": {
+                "description": "Creates a new comment in a topic",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Create comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Topic ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Comment data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.CreateForumCommentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ForumCommentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/me": {
             "get": {
                 "description": "Returns current authenticated user with role name",
@@ -934,6 +1290,172 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/frames": {
+            "get": {
+                "description": "Returns all available frames and marks owned ones",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get available frames",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/presenter.FrameResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/frames/{frameId}/active": {
+            "post": {
+                "description": "Sets a frame as active for the user. Set frameId to 0 to remove frame.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Set active frame",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Frame ID",
+                        "name": "frameId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/frames/{frameId}/buy": {
+            "post": {
+                "description": "Allows user to buy a frame using stars",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Buy a frame",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Frame ID",
+                        "name": "frameId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/leaderboard/stars": {
+            "get": {
+                "description": "Returns users sorted by stars",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get stars leaderboard",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/presenter.LeaderboardResponse"
+                            }
                         }
                     },
                     "500": {
@@ -1023,6 +1545,27 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "presenter.AchievementResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Полностью прошел первый урок"
+                },
+                "icon": {
+                    "type": "string",
+                    "example": "lesson"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Первый урок"
+                }
+            }
+        },
         "presenter.AuthSwaggerErrorResponse": {
             "type": "object",
             "properties": {
@@ -1038,6 +1581,49 @@ const docTemplate = `{
                 "error": {},
                 "status": {
                     "type": "boolean"
+                }
+            }
+        },
+        "presenter.CreateForumCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Обсуждение языка программирования Go"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Вопросы по Go"
+                },
+                "order": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "presenter.CreateForumCommentRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "example": "Вот решение вашей проблемы..."
+                }
+            }
+        },
+        "presenter.CreateForumTopicRequest": {
+            "type": "object",
+            "properties": {
+                "categoryId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "content": {
+                    "type": "string",
+                    "example": "У меня вопрос по связям..."
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Как использовать GORM?"
                 }
             }
         },
@@ -1131,6 +1717,134 @@ const docTemplate = `{
                 }
             }
         },
+        "presenter.ForumAuthor": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "fullName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "stars": {
+                    "type": "integer"
+                }
+            }
+        },
+        "presenter.ForumCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "topicsCount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "presenter.ForumCommentResponse": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "$ref": "#/definitions/presenter.ForumAuthor"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isSolution": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "presenter.ForumTopicDetailResponse": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.ForumCommentResponse"
+                    }
+                },
+                "topic": {
+                    "$ref": "#/definitions/presenter.ForumTopicResponse"
+                }
+            }
+        },
+        "presenter.ForumTopicResponse": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "$ref": "#/definitions/presenter.ForumAuthor"
+                },
+                "categoryId": {
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isSolved": {
+                    "type": "boolean"
+                },
+                "replies": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "views": {
+                    "type": "integer"
+                }
+            }
+        },
+        "presenter.FrameResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://minio.local/frame_1.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Gold Frame"
+                },
+                "owned": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 100
+                }
+            }
+        },
         "presenter.InsertCategoryRequest": {
             "type": "object",
             "required": [
@@ -1144,9 +1858,46 @@ const docTemplate = `{
                 }
             }
         },
+        "presenter.LeaderboardResponse": {
+            "type": "object",
+            "properties": {
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
+                },
+                "avatar": {
+                    "type": "string",
+                    "example": "https://minio.local/avatar_1.png"
+                },
+                "fullName": {
+                    "type": "string",
+                    "example": "Ivan Ivanov"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "level": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "stars": {
+                    "type": "integer",
+                    "example": 150
+                }
+            }
+        },
         "presenter.MeResponse": {
             "type": "object",
             "properties": {
+                "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
+                },
                 "avatar": {
                     "type": "string",
                     "example": "https://minio.local/avatar_1.png"
@@ -1174,6 +1925,12 @@ const docTemplate = `{
                 "login": {
                     "type": "string",
                     "example": "teacher01"
+                },
+                "ownedFrames": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 },
                 "phoneNumber": {
                     "type": "string",
@@ -1205,8 +1962,17 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
+                "achievementsCount": {
                     "type": "integer",
                     "example": 4
+                },
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
                 },
                 "exp": {
                     "type": "integer",
@@ -1269,6 +2035,55 @@ const docTemplate = `{
                 }
             }
         },
+        "presenter.SubmitLessonTaskRequest": {
+            "type": "object",
+            "properties": {
+                "selectedOptionIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "solved": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "presenter.SubmitLessonTaskResponse": {
+            "type": "object",
+            "properties": {
+                "awardedAchievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
+                "awardedExp": {
+                    "type": "integer"
+                },
+                "awardedStars": {
+                    "type": "integer"
+                },
+                "currentExp": {
+                    "type": "integer"
+                },
+                "currentLevel": {
+                    "type": "integer"
+                },
+                "currentStars": {
+                    "type": "integer"
+                },
+                "isSolved": {
+                    "type": "boolean"
+                },
+                "taskId": {
+                    "type": "integer"
+                },
+                "wasSolved": {
+                    "type": "boolean"
+                }
+            }
+        },
         "presenter.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -1299,6 +2114,15 @@ const docTemplate = `{
         "presenter.UserProfileResponse": {
             "type": "object",
             "properties": {
+                "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
+                },
                 "avatar": {
                     "type": "string",
                     "example": "https://minio.local/avatar_1.png"

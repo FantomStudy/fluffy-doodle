@@ -1,4 +1,20 @@
 services:
+  web:
+    build: ./web
+    restart: unless-stopped
+    env_file:
+      - ./web/.env
+    ports:
+      - "5173:80"
+    networks:
+      - network
+  unity:
+    build: ./web/unity
+    restart: unless-stopped
+    ports:
+      - "5174:80"
+    networks:
+      - network
   api:
     build: ./api
     ports:
@@ -8,10 +24,8 @@ services:
     volumes:
       - ./uploads:/app/uploads
     restart: unless-stopped
-  web:
-    build: ./web
-    ports:
-      - "5173:80"
-    env_file:
-      - ./web/.env
-    restart: unless-stopped
+    networks:
+      - network
+
+networks:
+  network:

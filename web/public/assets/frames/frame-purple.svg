@@ -1,0 +1,32 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="purple" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A855F7"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+    <linearGradient id="purple-glow" x1="100" y1="0" x2="100" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C084FC"/>
+      <stop offset="100%" stop-color="#9333EA"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="194" height="194" rx="32" stroke="url(#purple)" stroke-width="7" fill="none"/>
+  <rect x="12" y="12" width="176" height="176" rx="25" stroke="url(#purple-glow)" stroke-width="1.5" stroke-dasharray="6 4" fill="none" opacity="0.6"/>
+  <!-- gem accents -->
+  <g fill="#C084FC">
+    <circle cx="100" cy="4" r="4"/>
+    <circle cx="100" cy="196" r="4"/>
+    <circle cx="4" cy="100" r="4"/>
+    <circle cx="196" cy="100" r="4"/>
+  </g>
+  <g fill="#A855F7" opacity="0.6">
+    <circle cx="30" cy="6" r="2"/>
+    <circle cx="170" cy="6" r="2"/>
+    <circle cx="30" cy="194" r="2"/>
+    <circle cx="170" cy="194" r="2"/>
+    <circle cx="6" cy="30" r="2"/>
+    <circle cx="6" cy="170" r="2"/>
+    <circle cx="194" cy="30" r="2"/>
+    <circle cx="194" cy="170" r="2"/>
+  </g>
+</svg>

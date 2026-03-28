@@ -6,7 +6,22 @@ public class ExitZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (levelController == null)
+        TryComplete(other);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision == null)
+        {
+            return;
+        }
+
+        TryComplete(collision.collider);
+    }
+
+    private void TryComplete(Collider other)
+    {
+        if (levelController == null || other == null)
         {
             return;
         }

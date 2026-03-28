@@ -1,0 +1,29 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="green" x1="0" y1="200" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="50%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+    <linearGradient id="green-light" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6EE7B7"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="194" height="194" rx="32" stroke="url(#green)" stroke-width="6" fill="none"/>
+  <rect x="10" y="10" width="180" height="180" rx="27" stroke="url(#green-light)" stroke-width="2" fill="none" opacity="0.5"/>
+  <!-- leaf-like corner accents -->
+  <g fill="#10B981" opacity="0.8">
+    <ellipse cx="18" cy="10" rx="6" ry="3" transform="rotate(-45 18 10)"/>
+    <ellipse cx="182" cy="10" rx="6" ry="3" transform="rotate(45 182 10)"/>
+    <ellipse cx="18" cy="190" rx="6" ry="3" transform="rotate(45 18 190)"/>
+    <ellipse cx="182" cy="190" rx="6" ry="3" transform="rotate(-45 182 190)"/>
+  </g>
+  <!-- mid-side accents -->
+  <g fill="#34D399">
+    <ellipse cx="100" cy="3" rx="8" ry="3"/>
+    <ellipse cx="100" cy="197" rx="8" ry="3"/>
+    <ellipse cx="3" cy="100" rx="3" ry="8"/>
+    <ellipse cx="197" cy="100" rx="3" ry="8"/>
+  </g>
+</svg>

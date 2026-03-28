@@ -7,6 +7,9 @@ namespace StarterAssets
 {
 	public class StarterAssetsInputs : MonoBehaviour
 	{
+		[SerializeField] private GameObject mobileControlsRoot;
+		[SerializeField] private bool forceMobileControlsInEditor;
+
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
@@ -19,6 +22,16 @@ namespace StarterAssets
 		[Header("Mouse Cursor Settings")]
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
+
+		private void Start()
+		{
+			ConfigureLaunchMode();
+		}
+
+		private void OnEnable()
+		{
+			ConfigureLaunchMode();
+		}
 
 #if ENABLE_INPUT_SYSTEM
 		public void OnMove(InputValue value)
@@ -64,6 +77,35 @@ namespace StarterAssets
 		public void SprintInput(bool newSprintState)
 		{
 			sprint = newSprintState;
+		}
+
+		private void ConfigureLaunchMode()
+		{
+			bool isMobileLaunch = global::PracticeLaunchOptions.IsMobileLaunch() || Application.isMobilePlatform;
+
+#if UNITY_EDITOR
+			if (forceMobileControlsInEditor)
+			{
+				isMobileLaunch = true;
+			}
+#endif
+
+			if (mobileControlsRoot == null)
+			{
+				UICanvasControllerInput mobileCanvas = GetComponentInChildren<UICanvasControllerInput>(true);
+				if (mobileCanvas != null)
+				{
+					mobileControlsRoot = mobileCanvas.gameObject;
+				}
+			}
+
+			if (mobileControlsRoot != null)
+			{
+				mobileControlsRoot.SetActive(isMobileLaunch);
+			}
+
+			cursorLocked = !isMobileLaunch;
+			SetCursorState(cursorLocked);
 		}
 
 		private void OnApplicationFocus(bool hasFocus)
