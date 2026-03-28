@@ -30,11 +30,7 @@ const RouteComponent = () => {
     <div className={styles.layout}>
       <aside className={styles.sidebar}>
         <div className={styles.sidebarTop}>
-          <img
-            src="/assets/mascot.png"
-            alt="Fluffy Doodle"
-            className={styles.logo}
-          />
+          <img src="/assets/mascot.png" alt="Fluffy Doodle" className={styles.logo} />
           <span className={styles.brand}>Fluffy Doodle</span>
         </div>
 
