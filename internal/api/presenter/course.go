@@ -12,6 +12,7 @@ type CourseResponse struct {
 	CategoryID   uint   `json:"categoryId"`
 	CategoryName string `json:"categoryName"`
 	TotalLessons int    `json:"totalLessons"`
+	IsSolved     bool   `json:"isSolved"`
 }
 
 type LessonResponse struct {
@@ -22,6 +23,7 @@ type LessonResponse struct {
 	Order            int                  `json:"order"`
 	EstimatedMinutes int                  `json:"estimatedMinutes"`
 	IsFreePreview    bool                 `json:"isFreePreview"`
+	IsSolved         bool                 `json:"isSolved"`
 	Tasks            []LessonTaskResponse `json:"tasks"`
 }
 
@@ -56,6 +58,7 @@ type LessonTaskResponse struct {
 	Description string               `json:"description"`
 	Question    string               `json:"question"`
 	Options     []TaskOptionResponse `json:"options,omitempty"`
+	IsSolved    bool                 `json:"isSolved"`
 	RewardStars int                  `json:"rewardStars"`
 	RewardExp   int                  `json:"rewardExp"`
 }
@@ -81,7 +84,7 @@ type SubmitLessonTaskResponse struct {
 	CurrentLevel int  `json:"currentLevel"`
 }
 
-func CourseToResponse(course *models.Course) CourseResponse {
+func CourseToResponse(course *models.Course, isSolved bool) CourseResponse {
 	return CourseResponse{
 		ID:           course.ID,
 		Title:        course.Title,
@@ -92,35 +95,30 @@ func CourseToResponse(course *models.Course) CourseResponse {
 		CategoryID:   course.CategoryID,
 		CategoryName: course.Category.Name,
 		TotalLessons: course.TotalLessons,
+		IsSolved:     isSolved,
 	}
 }
 
-func CoursesToResponse(courses []models.Course) []CourseResponse {
-	result := make([]CourseResponse, 0, len(courses))
-	for _, course := range courses {
-		result = append(result, CourseToResponse(&course))
+func LessonToResponse(lesson *models.Lesson, isSolved bool, solvedTaskIDs []uint) LessonResponse {
+	return LessonResponse{
+		ID:               lesson.ID,
+		CourseID:         lesson.CourseID,
+		Title:            lesson.Title,
+		Description:      lesson.Description,
+		Order:            lesson.Order,
+		EstimatedMinutes: lesson.EstimatedMinutes,
+		IsFreePreview:    lesson.IsFreePreview,
+		IsSolved:         isSolved,
+		Tasks:            LessonTasksToResponse(lesson.Tasks, solvedTaskIDs),
 	}
-	return result
 }
 
-func LessonsToResponse(lessons []models.Lesson) []LessonResponse {
-	result := make([]LessonResponse, 0, len(lessons))
-	for _, lesson := range lessons {
-		result = append(result, LessonResponse{
-			ID:               lesson.ID,
-			CourseID:         lesson.CourseID,
-			Title:            lesson.Title,
-			Description:      lesson.Description,
-			Order:            lesson.Order,
-			EstimatedMinutes: lesson.EstimatedMinutes,
-			IsFreePreview:    lesson.IsFreePreview,
-			Tasks:            LessonTasksToResponse(lesson.Tasks),
-		})
+func LessonTasksToResponse(tasks []models.LessonTask, solvedTaskIDs []uint) []LessonTaskResponse {
+	solvedSet := make(map[uint]struct{}, len(solvedTaskIDs))
+	for _, taskID := range solvedTaskIDs {
+		solvedSet[taskID] = struct{}{}
 	}
-	return result
-}
 
-func LessonTasksToResponse(tasks []models.LessonTask) []LessonTaskResponse {
 	result := make([]LessonTaskResponse, 0, len(tasks))
 	for _, task := range tasks {
 		options := make([]TaskOptionResponse, 0, len(task.Options))
@@ -139,9 +137,15 @@ func LessonTasksToResponse(tasks []models.LessonTask) []LessonTaskResponse {
 			Description: task.Description,
 			Question:    task.Question,
 			Options:     options,
+			IsSolved:    hasSolvedTask(solvedSet, task.ID),
 			RewardStars: task.RewardStars,
 			RewardExp:   task.RewardExp,
 		})
 	}
 	return result
+}
+
+func hasSolvedTask(solvedSet map[uint]struct{}, taskID uint) bool {
+	_, ok := solvedSet[taskID]
+	return ok
 }

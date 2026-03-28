@@ -1191,6 +1191,10 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 10
                 },
+                "streak": {
+                    "type": "integer",
+                    "example": 4
+                },
                 "studentCode": {
                     "type": "string",
                     "example": "STU-8A7KQ21M"
@@ -1334,6 +1338,10 @@ const docTemplate = `{
                 "stars": {
                     "type": "integer",
                     "example": 10
+                },
+                "streak": {
+                    "type": "integer",
+                    "example": 4
                 },
                 "studentCode": {
                     "type": "string",

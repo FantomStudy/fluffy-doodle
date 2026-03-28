@@ -6,9 +6,11 @@ import (
 	"strconv"
 
 	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
+	"github.com/FantomStudy/fluffy-doodle/internal/config"
 	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"github.com/FantomStudy/fluffy-doodle/internal/service"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt"
 )
 
 // @Summary Create course
@@ -71,7 +73,7 @@ func CreateCourse(s service.CourseService) fiber.Handler {
 		}
 
 		return c.Status(fiber.StatusCreated).JSON(
-			presenter.SuccessResponseWithData("course created", presenter.CourseToResponse(course)),
+			presenter.SuccessResponseWithData("course created", presenter.CourseToResponse(course, false)),
 		)
 	}
 }
@@ -141,7 +143,7 @@ func UpdateCourse(s service.CourseService) fiber.Handler {
 		}
 
 		return c.Status(fiber.StatusOK).JSON(
-			presenter.SuccessResponseWithData("course updated", presenter.CourseToResponse(course)),
+			presenter.SuccessResponseWithData("course updated", presenter.CourseToResponse(course, false)),
 		)
 	}
 }
@@ -180,13 +182,13 @@ func DeleteCourse(s service.CourseService) fiber.Handler {
 // @Router /courses [get]
 func ListCourses(s service.CourseService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		courses, err := s.ListCourses()
+		courses, err := s.ListCourses(optionalUserID(c))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(presenter.ErrorResponseFunc("failed to list courses"))
 		}
 
 		return c.Status(fiber.StatusOK).JSON(
-			presenter.SuccessResponseWithData("courses fetched", presenter.CoursesToResponse(courses)),
+			presenter.SuccessResponseWithData("courses fetched", coursesToResponse(courses)),
 		)
 	}
 }
@@ -208,13 +210,13 @@ func GetCourseByID(s service.CourseService) fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("invalid course id"))
 		}
 
-		course, err := s.GetCourseByID(id)
+		course, err := s.GetCourseByID(id, optionalUserID(c))
 		if err != nil {
 			return mapCourseError(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(
-			presenter.SuccessResponseWithData("course fetched", presenter.CourseToResponse(course)),
+			presenter.SuccessResponseWithData("course fetched", presenter.CourseToResponse(&course.Course, course.IsSolved)),
 		)
 	}
 }
@@ -276,7 +278,7 @@ func CreateLesson(s service.CourseService) fiber.Handler {
 		}
 
 		return c.Status(fiber.StatusCreated).JSON(
-			presenter.SuccessResponseWithData("lesson created", presenter.LessonsToResponse([]models.Lesson{*lesson})[0]),
+			presenter.SuccessResponseWithData("lesson created", presenter.LessonToResponse(lesson, false, nil)),
 		)
 	}
 }
@@ -298,15 +300,33 @@ func ListCourseLessons(s service.CourseService) fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponseFunc("invalid course id"))
 		}
 
-		lessons, err := s.ListLessons(courseID)
+		lessons, err := s.ListLessons(courseID, optionalUserID(c))
 		if err != nil {
 			return mapCourseError(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(
-			presenter.SuccessResponseWithData("lessons fetched", presenter.LessonsToResponse(lessons)),
+			presenter.SuccessResponseWithData("lessons fetched", lessonsToResponse(lessons)),
 		)
 	}
+}
+
+func coursesToResponse(courses []service.CourseWithStatus) []presenter.CourseResponse {
+	result := make([]presenter.CourseResponse, 0, len(courses))
+	for _, course := range courses {
+		result = append(result, presenter.CourseToResponse(&course.Course, course.IsSolved))
+	}
+
+	return result
+}
+
+func lessonsToResponse(lessons []service.LessonWithStatus) []presenter.LessonResponse {
+	result := make([]presenter.LessonResponse, 0, len(lessons))
+	for _, lesson := range lessons {
+		result = append(result, presenter.LessonToResponse(&lesson.Lesson, lesson.IsSolved, lesson.SolvedTaskIDs))
+	}
+
+	return result
 }
 
 func SubmitLessonTask(s service.CourseService) fiber.Handler {
@@ -345,6 +365,37 @@ func SubmitLessonTask(s service.CourseService) fiber.Handler {
 			CurrentLevel: result.CurrentLevel,
 		}))
 	}
+}
+
+func optionalUserID(c *fiber.Ctx) *uint {
+	tokenString := c.Cookies("access_token")
+	if tokenString == "" {
+		return nil
+	}
+
+	cfg := config.Load()
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid token signing method")
+		}
+		return []byte(cfg.JwtSecret), nil
+	})
+	if err != nil || !token.Valid {
+		return nil
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil
+	}
+
+	rawID, ok := claims["id"].(float64)
+	if !ok {
+		return nil
+	}
+
+	userID := uint(rawID)
+	return &userID
 }
 
 func mapCourseError(c *fiber.Ctx, err error) error {

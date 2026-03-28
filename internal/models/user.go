@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -12,6 +16,8 @@ type User struct {
 	Avatar         string `json:"avatar"`
 	Stars          int    `gorm:"default:0" json:"stars"`
 	Exp            int    `gorm:"default:0" json:"exp"`
+	StreakDays     int    `gorm:"default:0" json:"streak"`
+	LastStreakAt   *time.Time
 	InvitationCode string `gorm:"uniqueIndex" json:"invitationCode,omitempty"`
 	ParentID       *uint  `gorm:"index" json:"parentId,omitempty"`
 	// Роль

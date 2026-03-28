@@ -119,6 +119,9 @@ definitions:
       stars:
         example: 10
         type: integer
+      streak:
+        example: 4
+        type: integer
       studentCode:
         example: STU-8A7KQ21M
         type: string
@@ -220,6 +223,9 @@ definitions:
         type: integer
       stars:
         example: 10
+        type: integer
+      streak:
+        example: 4
         type: integer
       studentCode:
         example: STU-8A7KQ21M

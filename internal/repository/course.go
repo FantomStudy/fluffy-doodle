@@ -18,6 +18,7 @@ type CourseRepository interface {
 	CreateLessonWithTasks(lesson *models.Lesson, tasks []models.LessonTask) (*models.Lesson, error)
 	ListLessonsByCourseID(courseID uint) ([]models.Lesson, error)
 	GetLessonTask(lessonID int, taskID int) (*models.LessonTask, error)
+	GetSolvedTaskIDsByUser(userID uint) ([]uint, error)
 	SaveTaskProgress(userID uint, task *models.LessonTask, isSolved bool, submittedOptionIDs []string) (*models.UserTaskProgress, *models.User, int, int, error)
 }
 
@@ -67,7 +68,15 @@ func (r *courseRepository) GetByID(id int) (*models.Course, error) {
 
 func (r *courseRepository) List() ([]models.Course, error) {
 	var courses []models.Course
-	if err := r.db.Preload("Category").Order("created_at DESC").Find(&courses).Error; err != nil {
+	if err := r.db.Preload("Category").
+		Preload("Lessons", func(db *gorm.DB) *gorm.DB {
+			return db.Order("\"order\" ASC")
+		}).
+		Preload("Lessons.Tasks", func(db *gorm.DB) *gorm.DB {
+			return db.Order("id ASC")
+		}).
+		Order("created_at DESC").
+		Find(&courses).Error; err != nil {
 		return nil, err
 	}
 	return courses, nil
@@ -131,6 +140,17 @@ func (r *courseRepository) GetLessonTask(lessonID int, taskID int) (*models.Less
 	return &task, nil
 }
 
+func (r *courseRepository) GetSolvedTaskIDsByUser(userID uint) ([]uint, error) {
+	var taskIDs []uint
+	if err := r.db.Model(&models.UserTaskProgress{}).
+		Where("user_id = ? AND is_solved = ?", userID, true).
+		Pluck("task_id", &taskIDs).Error; err != nil {
+		return nil, err
+	}
+
+	return taskIDs, nil
+}
+
 func (r *courseRepository) SaveTaskProgress(userID uint, task *models.LessonTask, isSolved bool, submittedOptionIDs []string) (*models.UserTaskProgress, *models.User, int, int, error) {
 	var progress models.UserTaskProgress
 	var user models.User
@@ -162,6 +182,8 @@ func (r *courseRepository) SaveTaskProgress(userID uint, task *models.LessonTask
 			if progress.SolvedAt == nil {
 				progress.SolvedAt = &now
 			}
+
+			updateUserLearningStreak(&user, now)
 
 			if !progress.Awarded {
 				progress.Awarded = true
@@ -196,4 +218,32 @@ func (r *courseRepository) SaveTaskProgress(userID uint, task *models.LessonTask
 	}
 
 	return &progress, &user, awardedStars, awardedExp, nil
+}
+
+func updateUserLearningStreak(user *models.User, activityTime time.Time) {
+	activityDay := beginningOfDay(activityTime)
+
+	if user.LastStreakAt == nil {
+		user.StreakDays = 1
+		user.LastStreakAt = &activityDay
+		return
+	}
+
+	lastDay := beginningOfDay(*user.LastStreakAt)
+	dayDiff := int(activityDay.Sub(lastDay).Hours() / 24)
+
+	switch {
+	case dayDiff <= 0:
+		return
+	case dayDiff == 1:
+		user.StreakDays++
+	default:
+		user.StreakDays = 1
+	}
+
+	user.LastStreakAt = &activityDay
+}
+
+func beginningOfDay(value time.Time) time.Time {
+	return time.Date(value.Year(), value.Month(), value.Day(), 0, 0, 0, 0, value.Location())
 }

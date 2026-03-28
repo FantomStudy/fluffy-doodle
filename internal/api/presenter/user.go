@@ -37,6 +37,7 @@ type UserProfileResponse struct {
 	RoleID         uint   `json:"roleId" example:"2"`
 	Stars          int    `json:"stars" example:"10"`
 	Exp            int    `json:"exp" example:"45"`
+	Streak         int    `json:"streak" example:"4"`
 	Level          int    `json:"level" example:"1"`
 	ExpToNextLevel int    `json:"expToNextLevel" example:"55"`
 }
@@ -52,6 +53,7 @@ type MeResponse struct {
 	RoleName       string `json:"roleName" example:"student"`
 	Stars          int    `json:"stars" example:"10"`
 	Exp            int    `json:"exp" example:"45"`
+	Streak         int    `json:"streak" example:"4"`
 	Level          int    `json:"level" example:"1"`
 	ExpToNextLevel int    `json:"expToNextLevel" example:"55"`
 }

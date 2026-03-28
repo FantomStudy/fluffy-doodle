@@ -33,10 +33,10 @@ type CourseService interface {
 	CreateCourse(ctx context.Context, req CreateCourseInput) (*models.Course, error)
 	UpdateCourse(ctx context.Context, id int, req UpdateCourseInput) (*models.Course, error)
 	DeleteCourse(id int) error
-	GetCourseByID(id int) (*models.Course, error)
-	ListCourses() ([]models.Course, error)
+	GetCourseByID(id int, userID *uint) (*CourseWithStatus, error)
+	ListCourses(userID *uint) ([]CourseWithStatus, error)
 	CreateLesson(courseID int, req CreateLessonInput) (*models.Lesson, error)
-	ListLessons(courseID int) ([]models.Lesson, error)
+	ListLessons(courseID int, userID *uint) ([]LessonWithStatus, error)
 	SubmitLessonTask(userID uint, lessonID int, taskID int, req SubmitLessonTaskInput) (*SubmitLessonTaskResult, error)
 }
 
@@ -94,6 +94,17 @@ type SubmitLessonTaskResult struct {
 	CurrentStars int
 	CurrentExp   int
 	CurrentLevel int
+}
+
+type CourseWithStatus struct {
+	Course   models.Course
+	IsSolved bool
+}
+
+type LessonWithStatus struct {
+	Lesson        models.Lesson
+	IsSolved      bool
+	SolvedTaskIDs []uint
 }
 
 type courseService struct {
@@ -210,7 +221,7 @@ func (s *courseService) DeleteCourse(id int) error {
 	return s.repo.Delete(course)
 }
 
-func (s *courseService) GetCourseByID(id int) (*models.Course, error) {
+func (s *courseService) GetCourseByID(id int, userID *uint) (*CourseWithStatus, error) {
 	course, err := s.repo.GetByID(id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrCourseNotFound
@@ -219,11 +230,37 @@ func (s *courseService) GetCourseByID(id int) (*models.Course, error) {
 		return nil, err
 	}
 
-	return course, nil
+	solvedTaskIDs, err := s.buildSolvedTaskSet(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &CourseWithStatus{
+		Course:   *course,
+		IsSolved: isCourseSolved(course.Lessons, solvedTaskIDs),
+	}, nil
 }
 
-func (s *courseService) ListCourses() ([]models.Course, error) {
-	return s.repo.List()
+func (s *courseService) ListCourses(userID *uint) ([]CourseWithStatus, error) {
+	courses, err := s.repo.List()
+	if err != nil {
+		return nil, err
+	}
+
+	solvedTaskIDs, err := s.buildSolvedTaskSet(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]CourseWithStatus, 0, len(courses))
+	for _, course := range courses {
+		result = append(result, CourseWithStatus{
+			Course:   course,
+			IsSolved: isCourseSolved(course.Lessons, solvedTaskIDs),
+		})
+	}
+
+	return result, nil
 }
 
 func (s *courseService) CreateLesson(courseID int, req CreateLessonInput) (*models.Lesson, error) {
@@ -259,7 +296,7 @@ func (s *courseService) CreateLesson(courseID int, req CreateLessonInput) (*mode
 	return s.repo.CreateLessonWithTasks(lesson, tasks)
 }
 
-func (s *courseService) ListLessons(courseID int) ([]models.Lesson, error) {
+func (s *courseService) ListLessons(courseID int, userID *uint) ([]LessonWithStatus, error) {
 	course, err := s.repo.GetByID(courseID)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrCourseNotFound
@@ -268,7 +305,26 @@ func (s *courseService) ListLessons(courseID int) ([]models.Lesson, error) {
 		return nil, err
 	}
 
-	return s.repo.ListLessonsByCourseID(course.ID)
+	lessons, err := s.repo.ListLessonsByCourseID(course.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	solvedTaskIDs, err := s.buildSolvedTaskSet(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]LessonWithStatus, 0, len(lessons))
+	for _, lesson := range lessons {
+		result = append(result, LessonWithStatus{
+			Lesson:        lesson,
+			IsSolved:      isLessonSolved(lesson, solvedTaskIDs),
+			SolvedTaskIDs: solvedTaskIDsForLesson(lesson, solvedTaskIDs),
+		})
+	}
+
+	return result, nil
 }
 
 func (s *courseService) SubmitLessonTask(userID uint, lessonID int, taskID int, req SubmitLessonTaskInput) (*SubmitLessonTaskResult, error) {
@@ -417,6 +473,63 @@ func normalizeOptionIDs(optionIDs []string) []string {
 
 	slices.Sort(normalized)
 	return normalized
+}
+
+func (s *courseService) buildSolvedTaskSet(userID *uint) (map[uint]struct{}, error) {
+	if userID == nil {
+		return map[uint]struct{}{}, nil
+	}
+
+	solvedTaskIDs, err := s.repo.GetSolvedTaskIDsByUser(*userID)
+	if err != nil {
+		return nil, err
+	}
+
+	taskSet := make(map[uint]struct{}, len(solvedTaskIDs))
+	for _, taskID := range solvedTaskIDs {
+		taskSet[taskID] = struct{}{}
+	}
+
+	return taskSet, nil
+}
+
+func isLessonSolved(lesson models.Lesson, solvedTaskIDs map[uint]struct{}) bool {
+	if len(lesson.Tasks) == 0 {
+		return false
+	}
+
+	for _, task := range lesson.Tasks {
+		if _, ok := solvedTaskIDs[task.ID]; !ok {
+			return false
+		}
+	}
+
+	return true
+}
+
+func isCourseSolved(lessons []models.Lesson, solvedTaskIDs map[uint]struct{}) bool {
+	if len(lessons) == 0 {
+		return false
+	}
+
+	for _, lesson := range lessons {
+		if !isLessonSolved(lesson, solvedTaskIDs) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func solvedTaskIDsForLesson(lesson models.Lesson, solvedTaskIDs map[uint]struct{}) []uint {
+	result := make([]uint, 0, len(lesson.Tasks))
+	for _, task := range lesson.Tasks {
+		if _, ok := solvedTaskIDs[task.ID]; ok {
+			result = append(result, task.ID)
+		}
+	}
+
+	return result
 }
 
 func isValidLevel(level string) bool {

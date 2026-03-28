@@ -59,6 +59,7 @@ func GetProfile(s service.UserService) fiber.Handler {
 			RoleID:         user.RoleID,
 			Stars:          user.Stars,
 			Exp:            user.Exp,
+			Streak:         user.StreakDays,
 			Level:          models.CalculateLevel(user.Exp),
 			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
 		})
@@ -102,6 +103,7 @@ func GetMe(s service.UserService) fiber.Handler {
 			RoleName:       user.Role.Name,
 			Stars:          user.Stars,
 			Exp:            user.Exp,
+			Streak:         user.StreakDays,
 			Level:          models.CalculateLevel(user.Exp),
 			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
 		})
