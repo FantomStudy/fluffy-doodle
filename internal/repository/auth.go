@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"crypto/rand"
+	"encoding/base32"
 	"errors"
 	"strings"
 
@@ -75,12 +77,18 @@ func (r *authRepository) signUpParent(req *presenter.SignUpRequest) (*models.Use
 
 	var createdParent *models.User
 	err := r.db.Transaction(func(tx *gorm.DB) error {
+		parentCode, codeErr := generateInvitationCode("PAR")
+		if codeErr != nil {
+			return codeErr
+		}
+
 		parent := &models.User{
-			Login:       req.Login,
-			Password:    req.Password,
-			FullName:    req.FullName,
-			PhoneNumber: req.PhoneNumber,
-			RoleID:      parentRole.ID,
+			Login:          req.Login,
+			Password:       req.Password,
+			FullName:       req.FullName,
+			PhoneNumber:    req.PhoneNumber,
+			RoleID:         parentRole.ID,
+			InvitationCode: parentCode,
 		}
 		if err := tx.Create(parent).Error; err != nil {
 			return err
@@ -100,6 +108,16 @@ func (r *authRepository) signUpParent(req *presenter.SignUpRequest) (*models.Use
 	return createdParent, nil
 }
 
+func generateInvitationCode(prefix string) (string, error) {
+	b := make([]byte, 5)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+
+	code := strings.TrimRight(base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(b), "=")
+	return prefix + "-" + code, nil
+}
+
 func (r *authRepository) GetUser(login string) (*models.User, error) {
 	var user models.User
 	if err := r.db.Where("login = ?", login).First(&user).Error; err != nil {
@@ -114,10 +132,10 @@ func (r *authRepository) SetRefresh(token string, id int) (*models.User, error) 
 		return nil, err
 	}
 
-	user.RefreshToken = token
-	if err := r.db.Save(&user).Error; err != nil {
+	if err := r.db.Model(&models.User{}).Where("id = ?", id).Update("refresh_token", token).Error; err != nil {
 		return nil, err
 	}
 
+	user.RefreshToken = token
 	return &user, nil
 }

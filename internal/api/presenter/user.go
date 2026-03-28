@@ -33,6 +33,7 @@ type UserProfileResponse struct {
 	FullName       string `json:"fullName" example:"Ivan Ivanov"`
 	PhoneNumber    string `json:"phoneNumber" example:"+79001234567"`
 	Avatar         string `json:"avatar" example:"https://minio.local/avatar_1.png"`
+	InvitationCode string `json:"studentCode,omitempty" example:"STU-8A7KQ21M"`
 	RoleID         uint   `json:"roleId" example:"2"`
 	Stars          int    `json:"stars" example:"10"`
 	Exp            int    `json:"exp" example:"45"`

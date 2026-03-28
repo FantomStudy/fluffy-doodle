@@ -39,6 +39,7 @@ func GetProfile(s service.UserService) fiber.Handler {
 			FullName:       user.FullName,
 			PhoneNumber:    user.PhoneNumber,
 			Avatar:         user.Avatar,
+			InvitationCode: user.InvitationCode,
 			RoleID:         user.RoleID,
 			Stars:          user.Stars,
 			Exp:            user.Exp,

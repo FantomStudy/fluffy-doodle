@@ -31,7 +31,18 @@ func (r *userRepository) GetUserByID(id uint) (*models.User, error) {
 }
 
 func (r *userRepository) UpdateUser(user *models.User) (*models.User, error) {
-	if err := r.db.Save(user).Error; err != nil {
+	updates := map[string]any{
+		"full_name":     user.FullName,
+		"phone_number":  user.PhoneNumber,
+		"avatar":        user.Avatar,
+		"stars":         user.Stars,
+		"exp":           user.Exp,
+		"parent_id":     user.ParentID,
+		"role_id":       user.RoleID,
+		"refresh_token": user.RefreshToken,
+	}
+
+	if err := r.db.Model(&models.User{}).Where("id = ?", user.ID).Updates(updates).Error; err != nil {
 		return nil, err
 	}
 
@@ -91,12 +102,11 @@ func (r *userRepository) SetRefresh(token string, id int) (*models.User, error) 
 		return nil, err
 	}
 
-	user.RefreshToken = token
-
-	if err := r.db.Save(&user).Error; err != nil {
+	if err := r.db.Model(&models.User{}).Where("id = ?", id).Update("refresh_token", token).Error; err != nil {
 		return nil, err
 	}
 
+	user.RefreshToken = token
 	return &user, nil
 }
 
