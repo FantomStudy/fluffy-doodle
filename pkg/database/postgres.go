@@ -61,6 +61,9 @@ func AutoMigrate(connection *gorm.DB) {
 		&models.UserTaskProgress{},
 		&models.UserGameLevelProgress{},
 		&models.Achievement{},
+		&models.ForumCategory{},
+		&models.ForumTopic{},
+		&models.ForumComment{},
 	)
 
 	// createDefaultRoles(connection)
