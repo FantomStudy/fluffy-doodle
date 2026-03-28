@@ -329,6 +329,19 @@ func lessonsToResponse(lessons []service.LessonWithStatus) []presenter.LessonRes
 	return result
 }
 
+// @Summary Submit lesson task
+// @Description Submits a task for a lesson and returns progress/rewards
+// @Accept json
+// @Produce json
+// @Tags courses
+// @Param lessonId path int true "Lesson ID"
+// @Param taskId path int true "Task ID"
+// @Param body body presenter.SubmitLessonTaskRequest true "Submission payload"
+// @Success 200 {object} presenter.SubmitLessonTaskResponse
+// @Failure 400 {object} presenter.ErrorResponse
+// @Failure 404 {object} presenter.ErrorResponse
+// @Failure 500 {object} presenter.ErrorResponse
+// @Router /courses/lessons/{lessonId}/tasks/{taskId}/submit [post]
 func SubmitLessonTask(s service.CourseService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		lessonID, err := c.ParamsInt("lessonId")
@@ -354,15 +367,21 @@ func SubmitLessonTask(s service.CourseService) fiber.Handler {
 			return mapCourseError(c, err)
 		}
 
+		awardedAchievements := make([]presenter.AchievementResponse, 0, len(result.AwardedAchievements))
+		for _, a := range result.AwardedAchievements {
+			awardedAchievements = append(awardedAchievements, presenter.MapAchievement(a))
+		}
+
 		return c.Status(fiber.StatusOK).JSON(presenter.SuccessResponseWithData("task submitted", presenter.SubmitLessonTaskResponse{
-			TaskID:       result.TaskID,
-			IsSolved:     result.IsSolved,
-			WasSolved:    result.WasSolved,
-			AwardedStars: result.AwardedStars,
-			AwardedExp:   result.AwardedExp,
-			CurrentStars: result.CurrentStars,
-			CurrentExp:   result.CurrentExp,
-			CurrentLevel: result.CurrentLevel,
+			TaskID:              result.TaskID,
+			IsSolved:            result.IsSolved,
+			WasSolved:           result.WasSolved,
+			AwardedStars:        result.AwardedStars,
+			AwardedExp:          result.AwardedExp,
+			CurrentStars:        result.CurrentStars,
+			CurrentExp:          result.CurrentExp,
+			CurrentLevel:        result.CurrentLevel,
+			AwardedAchievements: awardedAchievements,
 		}))
 	}
 }

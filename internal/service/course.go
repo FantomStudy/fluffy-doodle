@@ -86,14 +86,15 @@ type SubmitLessonTaskInput struct {
 }
 
 type SubmitLessonTaskResult struct {
-	TaskID       uint
-	IsSolved     bool
-	WasSolved    bool
-	AwardedStars int
-	AwardedExp   int
-	CurrentStars int
-	CurrentExp   int
-	CurrentLevel int
+	TaskID              uint
+	IsSolved            bool
+	WasSolved           bool
+	AwardedStars        int
+	AwardedExp          int
+	CurrentStars        int
+	CurrentExp          int
+	CurrentLevel        int
+	AwardedAchievements []models.Achievement
 }
 
 type CourseWithStatus struct {
@@ -341,20 +342,21 @@ func (s *courseService) SubmitLessonTask(userID uint, lessonID int, taskID int, 
 		return nil, err
 	}
 
-	progress, user, awardedStars, awardedExp, err := s.repo.SaveTaskProgress(userID, task, isSolved, submittedOptionIDs)
+	progress, user, awardedStars, awardedExp, awardedAchievements, err := s.repo.SaveTaskProgress(userID, task, isSolved, submittedOptionIDs)
 	if err != nil {
 		return nil, err
 	}
 
 	return &SubmitLessonTaskResult{
-		TaskID:       task.ID,
-		IsSolved:     progress.IsSolved,
-		WasSolved:    progress.IsSolved && awardedStars == 0 && awardedExp == 0,
-		AwardedStars: awardedStars,
-		AwardedExp:   awardedExp,
-		CurrentStars: user.Stars,
-		CurrentExp:   user.Exp,
-		CurrentLevel: models.CalculateLevel(user.Exp),
+		TaskID:              task.ID,
+		IsSolved:            progress.IsSolved,
+		WasSolved:           progress.IsSolved && awardedStars == 0 && awardedExp == 0,
+		AwardedStars:        awardedStars,
+		AwardedExp:          awardedExp,
+		CurrentStars:        user.Stars,
+		CurrentExp:          user.Exp,
+		CurrentLevel:        models.CalculateLevel(user.Exp),
+		AwardedAchievements: awardedAchievements,
 	}, nil
 }
 

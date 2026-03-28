@@ -64,6 +64,7 @@ func GetProfile(s service.UserService) fiber.Handler {
 			Level:          models.CalculateLevel(user.Exp),
 			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
 			ActiveFrame:    presenter.MapFrame(user.ActiveFrame),
+			Achievements:   presenter.MapAchievements(user.Achievements),
 		})
 	}
 }
@@ -115,6 +116,7 @@ func GetMe(s service.UserService) fiber.Handler {
 			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
 			ActiveFrame:    presenter.MapFrame(user.ActiveFrame),
 			OwnedFrames:    ownedFrameIDs,
+			Achievements:   presenter.MapAchievements(user.Achievements),
 		})
 	}
 }
@@ -233,6 +235,7 @@ func ParentChildProgress(s service.UserService) fiber.Handler {
 			Achievements:   len(child.Achievements),
 			InvitationCode: child.InvitationCode,
 			ActiveFrame:    presenter.MapFrame(child.ActiveFrame),
+			AchievementsList: presenter.MapAchievements(child.Achievements),
 		})
 	}
 }

@@ -769,6 +769,72 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses/lessons/{lessonId}/tasks/{taskId}/submit": {
+            "post": {
+                "description": "Submits a task for a lesson and returns progress/rewards",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Submit lesson task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lessonId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Submission payload",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SubmitLessonTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.SubmitLessonTaskResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/courses/{id}": {
             "get": {
                 "description": "Returns course detail by id",
@@ -1479,6 +1545,27 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "presenter.AchievementResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Полностью прошел первый урок"
+                },
+                "icon": {
+                    "type": "string",
+                    "example": "lesson"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Первый урок"
+                }
+            }
+        },
         "presenter.AuthSwaggerErrorResponse": {
             "type": "object",
             "properties": {
@@ -1802,6 +1889,12 @@ const docTemplate = `{
         "presenter.MeResponse": {
             "type": "object",
             "properties": {
+                "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
                 "activeFrame": {
                     "$ref": "#/definitions/presenter.FrameResponse"
                 },
@@ -1869,6 +1962,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
+                "achievementsCount": {
                     "type": "integer",
                     "example": 4
                 },
@@ -1936,6 +2035,55 @@ const docTemplate = `{
                 }
             }
         },
+        "presenter.SubmitLessonTaskRequest": {
+            "type": "object",
+            "properties": {
+                "selectedOptionIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "solved": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "presenter.SubmitLessonTaskResponse": {
+            "type": "object",
+            "properties": {
+                "awardedAchievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
+                "awardedExp": {
+                    "type": "integer"
+                },
+                "awardedStars": {
+                    "type": "integer"
+                },
+                "currentExp": {
+                    "type": "integer"
+                },
+                "currentLevel": {
+                    "type": "integer"
+                },
+                "currentStars": {
+                    "type": "integer"
+                },
+                "isSolved": {
+                    "type": "boolean"
+                },
+                "taskId": {
+                    "type": "integer"
+                },
+                "wasSolved": {
+                    "type": "boolean"
+                }
+            }
+        },
         "presenter.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -1966,6 +2114,12 @@ const docTemplate = `{
         "presenter.UserProfileResponse": {
             "type": "object",
             "properties": {
+                "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.AchievementResponse"
+                    }
+                },
                 "activeFrame": {
                     "$ref": "#/definitions/presenter.FrameResponse"
                 },

@@ -38,50 +38,60 @@ type FrameResponse struct {
 	Owned bool   `json:"owned" example:"true"`
 }
 
+type AchievementResponse struct {
+	ID          uint   `json:"id" example:"1"`
+	Name        string `json:"name" example:"Первый урок"`
+	Description string `json:"description" example:"Полностью прошел первый урок"`
+	Icon        string `json:"icon" example:"lesson"`
+}
+
 type UserProfileResponse struct {
-	ID             uint           `json:"id" example:"1"`
-	Login          string         `json:"login" example:"teacher01"`
-	FullName       string         `json:"fullName" example:"Ivan Ivanov"`
-	PhoneNumber    string         `json:"phoneNumber" example:"+79001234567"`
-	Avatar         string         `json:"avatar" example:"https://minio.local/avatar_1.png"`
-	InvitationCode string         `json:"studentCode,omitempty" example:"STU-8A7KQ21M"`
-	RoleID         uint           `json:"roleId" example:"2"`
-	Stars          int            `json:"stars" example:"10"`
-	Exp            int            `json:"exp" example:"45"`
-	Streak         int            `json:"streak" example:"4"`
-	Level          int            `json:"level" example:"1"`
-	ExpToNextLevel int            `json:"expToNextLevel" example:"55"`
-	ActiveFrame    *FrameResponse `json:"activeFrame,omitempty"`
+	ID             uint                  `json:"id" example:"1"`
+	Login          string                `json:"login" example:"teacher01"`
+	FullName       string                `json:"fullName" example:"Ivan Ivanov"`
+	PhoneNumber    string                `json:"phoneNumber" example:"+79001234567"`
+	Avatar         string                `json:"avatar" example:"https://minio.local/avatar_1.png"`
+	InvitationCode string                `json:"studentCode,omitempty" example:"STU-8A7KQ21M"`
+	RoleID         uint                  `json:"roleId" example:"2"`
+	Stars          int                   `json:"stars" example:"10"`
+	Exp            int                   `json:"exp" example:"45"`
+	Streak         int                   `json:"streak" example:"4"`
+	Level          int                   `json:"level" example:"1"`
+	ExpToNextLevel int                   `json:"expToNextLevel" example:"55"`
+	ActiveFrame    *FrameResponse        `json:"activeFrame,omitempty"`
+	Achievements   []AchievementResponse `json:"achievements,omitempty"`
 }
 
 type MeResponse struct {
-	ID             uint           `json:"id" example:"1"`
-	Login          string         `json:"login" example:"teacher01"`
-	FullName       string         `json:"fullName" example:"Ivan Ivanov"`
-	PhoneNumber    string         `json:"phoneNumber" example:"+79001234567"`
-	Avatar         string         `json:"avatar" example:"https://minio.local/avatar_1.png"`
-	InvitationCode string         `json:"studentCode,omitempty" example:"STU-8A7KQ21M"`
-	RoleID         uint           `json:"roleId" example:"2"`
-	RoleName       string         `json:"roleName" example:"student"`
-	Stars          int            `json:"stars" example:"10"`
-	Exp            int            `json:"exp" example:"45"`
-	Streak         int            `json:"streak" example:"4"`
-	Level          int            `json:"level" example:"1"`
-	ExpToNextLevel int            `json:"expToNextLevel" example:"55"`
-	ActiveFrame    *FrameResponse `json:"activeFrame,omitempty"`
-	OwnedFrames    []uint         `json:"ownedFrames,omitempty"`
+	ID             uint                  `json:"id" example:"1"`
+	Login          string                `json:"login" example:"teacher01"`
+	FullName       string                `json:"fullName" example:"Ivan Ivanov"`
+	PhoneNumber    string                `json:"phoneNumber" example:"+79001234567"`
+	Avatar         string                `json:"avatar" example:"https://minio.local/avatar_1.png"`
+	InvitationCode string                `json:"studentCode,omitempty" example:"STU-8A7KQ21M"`
+	RoleID         uint                  `json:"roleId" example:"2"`
+	RoleName       string                `json:"roleName" example:"student"`
+	Stars          int                   `json:"stars" example:"10"`
+	Exp            int                   `json:"exp" example:"45"`
+	Streak         int                   `json:"streak" example:"4"`
+	Level          int                   `json:"level" example:"1"`
+	ExpToNextLevel int                   `json:"expToNextLevel" example:"55"`
+	ActiveFrame    *FrameResponse        `json:"activeFrame,omitempty"`
+	OwnedFrames    []uint                `json:"ownedFrames,omitempty"`
+	Achievements   []AchievementResponse `json:"achievements,omitempty"`
 }
 
 type ParentChildProgressResponse struct {
-	StudentID      uint           `json:"studentId" example:"12"`
-	StudentName    string         `json:"studentName" example:"Petya Ivanov"`
-	StudentLogin   string         `json:"studentLogin" example:"petya_ivanov"`
-	Stars          int            `json:"stars" example:"18"`
-	Exp            int            `json:"exp" example:"45"`
-	Level          int            `json:"level" example:"1"`
-	Achievements   int            `json:"achievements" example:"4"`
-	InvitationCode string         `json:"studentCode" example:"STU-8A7KQ21M"`
-	ActiveFrame    *FrameResponse `json:"activeFrame,omitempty"`
+	StudentID      uint                  `json:"studentId" example:"12"`
+	StudentName    string                `json:"studentName" example:"Petya Ivanov"`
+	StudentLogin   string                `json:"studentLogin" example:"petya_ivanov"`
+	Stars          int                   `json:"stars" example:"18"`
+	Exp            int                   `json:"exp" example:"45"`
+	Level          int                   `json:"level" example:"1"`
+	Achievements   int                   `json:"achievementsCount" example:"4"`
+	InvitationCode string                `json:"studentCode" example:"STU-8A7KQ21M"`
+	ActiveFrame    *FrameResponse        `json:"activeFrame,omitempty"`
+	AchievementsList []AchievementResponse `json:"achievements,omitempty"`
 }
 
 type CompleteGameLevelRequest struct {
@@ -132,4 +142,21 @@ func MapFrame(frame *models.Frame) *FrameResponse {
 		Price: frame.Price,
 		Image: frame.Image,
 	}
+}
+
+func MapAchievement(a models.Achievement) AchievementResponse {
+	return AchievementResponse{
+		ID:          a.ID,
+		Name:        a.Name,
+		Description: a.Description,
+		Icon:        a.Icon,
+	}
+}
+
+func MapAchievements(achievements []models.Achievement) []AchievementResponse {
+	res := make([]AchievementResponse, 0, len(achievements))
+	for _, a := range achievements {
+		res = append(res, MapAchievement(a))
+	}
+	return res
 }

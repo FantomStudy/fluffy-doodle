@@ -22,6 +22,7 @@ Returns the current authenticated user's data.
 - `id`, `login`, `fullName`, `phoneNumber`, `avatar`, `stars`, `exp`, `streak`, `level`, `expToNextLevel`, `roleName`.
 - `activeFrame`: (Object) Currently equipped frame `{ id, name, price, image }`.
 - `ownedFrames`: (Array of IDs) List of frame IDs owned by the user.
+- `achievements`: (Array of Objects) List of unlocked achievements `{ id, name, description, icon }`.
 
 ### 2. Get User Profile (`GET /user/profile`)
 Similar to `/me`, but if the user is a `parent`, it returns their linked `child`'s data.
@@ -29,6 +30,17 @@ Similar to `/me`, but if the user is a `parent`, it returns their linked `child`
 ### 3. Leaderboard (`GET /user/leaderboard/stars?limit=10`)
 Returns users sorted by stars.
 **Fields:** `id`, `fullName`, `avatar`, `stars`, `level`, `activeFrame`.
+
+---
+
+## Courses & Learning
+
+### 1. Submit Task (`POST /courses/lessons/:lessonId/tasks/:taskId/submit`)
+Submits a task solution.
+**Response Fields:**
+- `isSolved`: (boolean) Was the answer correct?
+- `awardedStars`, `awardedExp`: Rewards gained (if solved first time).
+- `awardedAchievements`: (Array of Objects) Any new achievements unlocked by this action (e.g., "Первый урок" when completing the last task of a lesson).
 
 ---
 
@@ -86,6 +98,9 @@ Only the topic author can mark a comment as the solution.
 ### Avatar Frames
 When displaying a user's avatar, if `activeFrame` is present, overlay the `activeFrame.image` over the avatar image.
 - **Tip:** Use `position: absolute` for the frame image to place it exactly around the avatar.
+
+### Achievements Popup
+When `awardedAchievements` is not empty in the task submission response, show a congratulatory popup or animation to the user.
 
 ### Error Handling
 All errors follow this format:

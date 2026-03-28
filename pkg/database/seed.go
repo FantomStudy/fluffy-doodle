@@ -133,6 +133,7 @@ func seedAchievements(db *gorm.DB) (map[string]models.Achievement, error) {
 		{Name: "Первые шаги", Description: "Выполнил первое задание", Icon: "boots"},
 		{Name: "Молодец", Description: "Решил несколько простых тестов", Icon: "star"},
 		{Name: "Схема готова", Description: "Справился с блок-схемой", Icon: "diagram"},
+		{Name: "Первый урок", Description: "Полностью прошел первый урок", Icon: "lesson"},
 	}
 
 	result := make(map[string]models.Achievement, len(definitions))

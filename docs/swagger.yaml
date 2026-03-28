@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  presenter.AchievementResponse:
+    properties:
+      description:
+        example: Полностью прошел первый урок
+        type: string
+      icon:
+        example: lesson
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Первый урок
+        type: string
+    type: object
   presenter.AuthSwaggerErrorResponse:
     properties:
       error: {}
@@ -221,6 +236,10 @@ definitions:
     type: object
   presenter.MeResponse:
     properties:
+      achievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
       activeFrame:
         $ref: '#/definitions/presenter.FrameResponse'
       avatar:
@@ -270,6 +289,10 @@ definitions:
   presenter.ParentChildProgressResponse:
     properties:
       achievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
+      achievementsCount:
         example: 4
         type: integer
       activeFrame:
@@ -316,6 +339,38 @@ definitions:
       studentCode:
         type: string
     type: object
+  presenter.SubmitLessonTaskRequest:
+    properties:
+      selectedOptionIds:
+        items:
+          type: string
+        type: array
+      solved:
+        type: boolean
+    type: object
+  presenter.SubmitLessonTaskResponse:
+    properties:
+      awardedAchievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
+      awardedExp:
+        type: integer
+      awardedStars:
+        type: integer
+      currentExp:
+        type: integer
+      currentLevel:
+        type: integer
+      currentStars:
+        type: integer
+      isSolved:
+        type: boolean
+      taskId:
+        type: integer
+      wasSolved:
+        type: boolean
+    type: object
   presenter.SuccessResponse:
     properties:
       data: {}
@@ -337,6 +392,10 @@ definitions:
     type: object
   presenter.UserProfileResponse:
     properties:
+      achievements:
+        items:
+          $ref: '#/definitions/presenter.AchievementResponse'
+        type: array
       activeFrame:
         $ref: '#/definitions/presenter.FrameResponse'
       avatar:
@@ -944,6 +1003,50 @@ paths:
           schema:
             $ref: '#/definitions/presenter.ErrorResponse'
       summary: List course lessons
+      tags:
+      - courses
+  /courses/lessons/{lessonId}/tasks/{taskId}/submit:
+    post:
+      consumes:
+      - application/json
+      description: Submits a task for a lesson and returns progress/rewards
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      - description: Submission payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.SubmitLessonTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SubmitLessonTaskResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Submit lesson task
       tags:
       - courses
   /forum/categories:
