@@ -345,65 +345,57 @@ public static class Level2SceneBuilder
         RectTransform windowRoot = CreatePanel(
             "TerminalWindow",
             parent,
-            new Vector2(0.5f, 0.5f),
-            new Vector2(0.5f, 0.5f),
-            new Color(0.04f, 0.08f, 0.11f, 0.96f),
-            new Vector2(420f, 220f));
+            new Vector2(0.35f, 0.36f),
+            new Vector2(0.65f, 0.64f),
+            new Color(0.97f, 0.96f, 1f, 0.97f));
 
         CanvasGroup canvasGroup = windowRoot.gameObject.AddComponent<CanvasGroup>();
         TerminalUI terminalUI = windowRoot.gameObject.AddComponent<TerminalUI>();
 
-        CreatePanel(
-            "HeaderAccent",
-            windowRoot,
-            new Vector2(0.04f, 0.88f),
-            new Vector2(0.96f, 0.94f),
-            new Color(0.15f, 0.75f, 0.93f, 0.95f));
-
         CreateText(
             "HeaderText",
             windowRoot,
-            new Vector2(0.08f, 0.74f),
-            new Vector2(0.62f, 0.88f),
+            new Vector2(0.1f, 0.7f),
+            new Vector2(0.9f, 0.86f),
             Vector2.zero,
             Vector2.zero,
             "VARIABLE TERMINAL",
             fontAsset,
-            20,
-            new Color(0.64f, 0.96f, 1f, 1f),
+            17,
+            new Color(0.21f, 0.18f, 0.31f, 1f),
             TextAlignmentOptions.MidlineLeft);
 
         TextMeshProUGUI expressionText = CreateText(
             "ExpressionText",
             windowRoot,
-            new Vector2(0.08f, 0.52f),
-            new Vector2(0.62f, 0.74f),
+            new Vector2(0.1f, 0.42f),
+            new Vector2(0.56f, 0.58f),
             Vector2.zero,
             Vector2.zero,
             "bridgeLength =",
             fontAsset,
-            30,
-            new Color(0.76f, 0.95f, 1f, 1f),
+            22,
+            new Color(0.21f, 0.18f, 0.31f, 1f),
             TextAlignmentOptions.MidlineLeft);
 
         Button selectedValueButton = CreateButton(
             "SelectedValueButton",
             windowRoot,
-            new Vector2(0.66f, 0.54f),
-            new Vector2(0.9f, 0.82f),
-            new Color(0.1f, 0.22f, 0.28f, 1f),
+            new Vector2(0.62f, 0.39f),
+            new Vector2(0.88f, 0.6f),
+            new Color(1f, 0.64f, 0.25f, 1f),
             "1",
             fontAsset,
-            30,
-            new Color(0.65f, 0.96f, 1f, 1f),
+            24,
+            new Color(0.21f, 0.18f, 0.31f, 1f),
             out TextMeshProUGUI selectedValueText);
 
         RectTransform optionListRoot = CreatePanel(
             "OptionListRoot",
             windowRoot,
-            new Vector2(0.66f, 0.08f),
-            new Vector2(0.9f, 0.5f),
-            new Color(0.06f, 0.11f, 0.14f, 0.98f));
+            new Vector2(0.62f, 0.12f),
+            new Vector2(0.88f, 0.34f),
+            new Color(0.93f, 0.9f, 0.99f, 0.98f));
         optionListRoot.gameObject.SetActive(false);
 
         Button optionOneButton = CreateButton(
@@ -411,11 +403,11 @@ public static class Level2SceneBuilder
             optionListRoot,
             new Vector2(0.08f, 0.69f),
             new Vector2(0.92f, 0.95f),
-            new Color(0.1f, 0.22f, 0.28f, 1f),
+            new Color(1f, 1f, 1f, 1f),
             "1",
             fontAsset,
             24,
-            new Color(0.65f, 0.96f, 1f, 1f),
+            new Color(0.45f, 0.32f, 0.87f, 1f),
             out _);
 
         Button optionTwoButton = CreateButton(
@@ -423,11 +415,11 @@ public static class Level2SceneBuilder
             optionListRoot,
             new Vector2(0.08f, 0.37f),
             new Vector2(0.92f, 0.63f),
-            new Color(0.1f, 0.22f, 0.28f, 1f),
+            new Color(1f, 1f, 1f, 1f),
             "2",
             fontAsset,
             24,
-            new Color(0.65f, 0.96f, 1f, 1f),
+            new Color(0.45f, 0.32f, 0.87f, 1f),
             out _);
 
         Button optionThreeButton = CreateButton(
@@ -435,11 +427,11 @@ public static class Level2SceneBuilder
             optionListRoot,
             new Vector2(0.08f, 0.05f),
             new Vector2(0.92f, 0.31f),
-            new Color(0.1f, 0.22f, 0.28f, 1f),
+            new Color(1f, 1f, 1f, 1f),
             "3",
             fontAsset,
             24,
-            new Color(0.65f, 0.96f, 1f, 1f),
+            new Color(0.45f, 0.32f, 0.87f, 1f),
             out _);
 
         return new TerminalUiBundle
@@ -463,7 +455,7 @@ public static class Level2SceneBuilder
             parent,
             new Vector2(0.5f, 0.5f),
             new Vector2(0.5f, 0.5f),
-            new Color(0.03f, 0.07f, 0.1f, 0.98f),
+            new Color(0.97f, 0.96f, 1f, 0.97f),
             new Vector2(520f, 300f));
 
         CanvasGroup canvasGroup = popupRoot.gameObject.AddComponent<CanvasGroup>();
@@ -474,7 +466,7 @@ public static class Level2SceneBuilder
             popupRoot,
             new Vector2(0.06f, 0.88f),
             new Vector2(0.94f, 0.94f),
-            new Color(0.15f, 0.75f, 0.93f, 0.95f));
+            new Color(0.93f, 0.9f, 0.99f, 1f));
 
         CreateText(
             "ResultTitle",
@@ -486,7 +478,7 @@ public static class Level2SceneBuilder
             "Variables Synchronized",
             fontAsset,
             34,
-            new Color(0.82f, 0.92f, 0.96f, 1f),
+            new Color(0.21f, 0.18f, 0.31f, 1f),
             TextAlignmentOptions.Center);
 
         CreateText(
@@ -499,7 +491,7 @@ public static class Level2SceneBuilder
             "Bridge, height and angle now match the world.",
             fontAsset,
             22,
-            new Color(0.66f, 0.96f, 1f, 1f),
+            new Color(0.37f, 0.34f, 0.46f, 1f),
             TextAlignmentOptions.Center);
 
         Button restartButton = CreateButton(
@@ -507,11 +499,11 @@ public static class Level2SceneBuilder
             popupRoot,
             new Vector2(0.14f, 0.12f),
             new Vector2(0.44f, 0.3f),
-            new Color(0.11f, 0.24f, 0.3f, 1f),
+            new Color(1f, 0.64f, 0.25f, 1f),
             "Restart",
             fontAsset,
             24,
-            new Color(0.66f, 0.96f, 1f, 1f),
+            new Color(0.21f, 0.18f, 0.31f, 1f),
             out _);
 
         Button backButton = CreateButton(
@@ -519,11 +511,11 @@ public static class Level2SceneBuilder
             popupRoot,
             new Vector2(0.56f, 0.12f),
             new Vector2(0.86f, 0.3f),
-            new Color(0.11f, 0.24f, 0.3f, 1f),
+            new Color(1f, 1f, 1f, 1f),
             "Back",
             fontAsset,
             24,
-            new Color(0.66f, 0.96f, 1f, 1f),
+            new Color(0.45f, 0.32f, 0.87f, 1f),
             out _);
 
         return new ResultPopupBundle

@@ -9,5 +9,9 @@ import (
 )
 
 func UserRoutes(app *fiber.App, service service.UserService, db *gorm.DB) {
-	app.Post("/user/student-invitation", middleware.Protected(), middleware.RequireRole(db, "teacher"), handlers.InviteUser(service))
+	app.Get("/user/parent/child-progress", middleware.Protected(), middleware.RequireRole(db, "parent"), handlers.ParentChildProgress(service))
+	app.Get("/me", middleware.Protected(), handlers.GetMe(service))
+	app.Get("/user/profile", middleware.Protected(), handlers.GetProfile(service))
+	app.Post("/user/avatar", middleware.Protected(), handlers.UploadAvatar(service))
+	app.Post("/game/levels/:levelId/complete", middleware.Protected(), handlers.CompleteGameLevel(service))
 }

@@ -1,16 +1,81 @@
 package repository
 
 import (
-	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
+	"crypto/rand"
+	"encoding/base32"
+	"errors"
+	"strings"
+	"time"
+
 	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	SignUp(req *presenter.SignUpRequest, roleId uint) (*models.User, error)
-	FindRole(role string) (*models.Role, error)
 	GetUser(login string) (*models.User, error)
+	GetUserByID(id uint) (*models.User, error)
+	GetUserByInvitationCode(code string) (*models.User, error)
+	AssignParentToStudent(studentID uint, parentID uint) error
+	GetChildByParentID(parentID uint) (*models.User, error)
+	UpdateUser(user *models.User) (*models.User, error)
 	SetRefresh(token string, id int) (*models.User, error)
+	SetInvitationCode(userID uint, code string) error
+	CompleteGameLevel(userID uint, levelID string) (*models.UserGameLevelProgress, *models.User, int, int, error)
+}
+
+func (r *userRepository) GetUserByID(id uint) (*models.User, error) {
+	var user models.User
+
+	if err := r.db.Preload("Role").Preload("Achievements").Where("id = ?", id).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *userRepository) UpdateUser(user *models.User) (*models.User, error) {
+	updates := map[string]any{
+		"full_name":     user.FullName,
+		"phone_number":  user.PhoneNumber,
+		"avatar":        user.Avatar,
+		"stars":         user.Stars,
+		"exp":           user.Exp,
+		"parent_id":     user.ParentID,
+		"role_id":       user.RoleID,
+		"refresh_token": user.RefreshToken,
+	}
+
+	if err := r.db.Model(&models.User{}).Where("id = ?", user.ID).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (r *userRepository) GetUserByInvitationCode(code string) (*models.User, error) {
+	var user models.User
+	if err := r.db.Preload("Role").Where("invitation_code = ?", code).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *userRepository) AssignParentToStudent(studentID uint, parentID uint) error {
+	if err := r.db.Model(&models.User{}).Where("id = ?", studentID).Update("parent_id", parentID).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *userRepository) GetChildByParentID(parentID uint) (*models.User, error) {
+	var student models.User
+	if err := r.db.Preload("Achievements").Where("parent_id = ?", parentID).First(&student).Error; err != nil {
+		return nil, err
+	}
+
+	return &student, nil
 }
 
 type userRepository struct {
@@ -21,32 +86,6 @@ func NewUserRepo(db *gorm.DB) UserRepository {
 	return &userRepository{
 		db: db,
 	}
-}
-
-func (r *userRepository) SignUp(req *presenter.SignUpRequest, roleId uint) (*models.User, error) {
-
-	user := &models.User{
-		Login:       req.Login,
-		Password:    req.Password,
-		FullName:    req.FullName,
-		PhoneNumber: req.PhoneNumber,
-		RoleID:      uint(roleId),
-	}
-
-	if err := r.db.Create(user).Error; err != nil {
-		return nil, err
-	}
-
-	return user, nil
-}
-
-func (r *userRepository) FindRole(role string) (*models.Role, error) {
-	var defaultRole models.Role
-	if err := r.db.Where("name = ?", role).First(&defaultRole).Error; err != nil {
-		return nil, err
-	}
-
-	return &defaultRole, nil
 }
 
 func (r *userRepository) GetUser(login string) (*models.User, error) {
@@ -66,11 +105,79 @@ func (r *userRepository) SetRefresh(token string, id int) (*models.User, error) 
 		return nil, err
 	}
 
-	user.RefreshToken = token
-
-	if err := r.db.Save(&user).Error; err != nil {
+	if err := r.db.Model(&models.User{}).Where("id = ?", id).Update("refresh_token", token).Error; err != nil {
 		return nil, err
 	}
 
+	user.RefreshToken = token
 	return &user, nil
+}
+
+func (r *userRepository) SetInvitationCode(userID uint, code string) error {
+	return r.db.Model(&models.User{}).Where("id = ?", userID).Update("invitation_code", code).Error
+}
+
+func (r *userRepository) CompleteGameLevel(userID uint, levelID string) (*models.UserGameLevelProgress, *models.User, int, int, error) {
+	var progress models.UserGameLevelProgress
+	var user models.User
+	awardedStars := 0
+	awardedExp := 0
+	levelID = strings.TrimSpace(levelID)
+
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("id = ?", userID).First(&user).Error; err != nil {
+			return err
+		}
+
+		err := tx.Where("user_id = ? AND level_id = ?", userID, levelID).First(&progress).Error
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				return err
+			}
+
+			progress = models.UserGameLevelProgress{
+				UserID:  userID,
+				LevelID: levelID,
+			}
+		}
+
+		now := time.Now()
+		progress.IsCompleted = true
+		if progress.CompletedAt == nil {
+			progress.CompletedAt = &now
+		}
+
+		if !progress.Awarded {
+			progress.Awarded = true
+			awardedStars = models.GameLevelRewardStars
+			awardedExp = models.GameLevelRewardExp
+			user.Stars += awardedStars
+			user.Exp += awardedExp
+
+			if err := tx.Save(&user).Error; err != nil {
+				return err
+			}
+		}
+
+		if progress.ID == 0 {
+			return tx.Create(&progress).Error
+		}
+
+		return tx.Save(&progress).Error
+	})
+	if err != nil {
+		return nil, nil, 0, 0, err
+	}
+
+	return &progress, &user, awardedStars, awardedExp, nil
+}
+
+func GenerateInvitationCode(prefix string) (string, error) {
+	b := make([]byte, 5)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+
+	code := strings.TrimRight(base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(b), "=")
+	return prefix + "-" + code, nil
 }

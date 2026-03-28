@@ -1,3 +1,4 @@
+import type { Task } from "@/api/courses";
 import Editor from "@monaco-editor/react";
 import {
   BookOpen,
@@ -257,7 +258,13 @@ function TheoryPhase({ slides, onFinish }: { slides: TheorySlide[]; onFinish: ()
 
 type TabId = "description" | "theory" | "solutions";
 
-function TaskPhase({ challenge }: { challenge: ChallengeData }) {
+function TaskPhase({
+  challenge,
+  onComplete,
+}: {
+  challenge: ChallengeData;
+  onComplete?: () => void;
+}) {
   const [tab, setTab] = useState<TabId>("description");
   const [code, setCode] = useState(challenge.starterCode);
   const [results, setResults] = useState<TestResult[] | null>(null);
@@ -271,10 +278,13 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
     if (running) return;
     setRunning(true);
     setTimeout(() => {
-      setResults(runTests(code, challenge.testCases));
+      const testResults = runTests(code, challenge.testCases);
+      setResults(testResults);
       setRunning(false);
+      const allTestsPassed = testResults.every((r) => r.passed);
+      if (allTestsPassed) onComplete?.();
     }, 250);
-  }, [code, challenge.testCases, running]);
+  }, [code, challenge.testCases, running, onComplete]);
 
   const handleReset = useCallback(() => {
     setCode(challenge.starterCode);
@@ -458,11 +468,68 @@ function TaskPhase({ challenge }: { challenge: ChallengeData }) {
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
+const buildChallengeFromTask = (task: Task): ChallengeData => {
+  const name = task.title.toLowerCase().replace(/\s+/g, "_");
+  const fnName = name.replace(/[^a-z0-9_]/g, "") || "solve";
+
+  return {
+    id: String(task.id),
+    title: task.title,
+    taskName: fnName,
+    language: "javascript",
+    languageLabel: "JavaScript",
+    difficulty: 1,
+    xp: task.rewardExp,
+    theorySlides: [
+      {
+        icon: "📖",
+        title: "Что нужно сделать",
+        text:
+          task.description ||
+          "В этом задании тебе нужно написать код, который решит задачу. Прочитай условие внимательно!",
+        code: {
+          label: "Подсказка",
+          line: `function ${fnName}() {\n  // Твой код здесь\n}`,
+          result: `→ напиши решение и нажми «Запустить»`,
+        },
+      },
+      {
+        icon: "💡",
+        title: "Как решать",
+        text:
+          task.question ||
+          task.description ||
+          "Прочитай условие задачи. Подумай, какие шаги нужно выполнить. Напиши код шаг за шагом.",
+        code: {
+          label: "Пример вызова",
+          line: `${fnName}()`,
+          result: "→ результат",
+        },
+      },
+      {
+        icon: "🎯",
+        title: "Попробуй сам!",
+        text: `Теперь твоя очередь. Напиши функцию ${fnName}(), которая решает задачу. Когда будешь готов — нажми «Запустить» и отметь как решённое. За это задание ты получишь ⭐ ${task.rewardStars} звёзд и +${task.rewardExp} XP!`,
+      },
+    ],
+    description:
+      (task.question || task.description) +
+      "\n\nНапиши решение в редакторе справа. Когда будешь готов — нажми «Запустить».",
+    examples: [],
+    starterCode: `function ${fnName}() {\n  // Напиши код здесь\n\n}`,
+    testCases: [],
+    solutions: [],
+  };
+};
+
 interface CodingChallengeProps {
+  task?: Task;
   challenge?: ChallengeData;
+  onComplete?: () => void;
 }
 
-export function CodingChallenge({ challenge = DEFAULT_CHALLENGE }: CodingChallengeProps) {
+export function CodingChallenge({ task, challenge, onComplete }: CodingChallengeProps) {
+  const resolvedChallenge = challenge ?? (task ? buildChallengeFromTask(task) : DEFAULT_CHALLENGE);
   const [phase, setPhase] = useState<"theory" | "task">("theory");
 
   useEffect(() => {
@@ -477,8 +544,8 @@ export function CodingChallenge({ challenge = DEFAULT_CHALLENGE }: CodingChallen
   }, []);
 
   return phase === "theory" ? (
-    <TheoryPhase slides={challenge.theorySlides} onFinish={() => setPhase("task")} />
+    <TheoryPhase slides={resolvedChallenge.theorySlides} onFinish={() => setPhase("task")} />
   ) : (
-    <TaskPhase challenge={challenge} />
+    <TaskPhase challenge={resolvedChallenge} onComplete={onComplete} />
   );
 }

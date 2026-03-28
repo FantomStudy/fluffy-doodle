@@ -1,0 +1,43 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+.wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.mascot {
+  position: relative;
+  width: 380px;
+  z-index: 2;
+  margin-bottom: -100px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.card {
+  width: 100%;
+  padding: 40px 32px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 480px) {
+  .mascot {
+    width: 320px;
+    margin-bottom: -82px;
+  }
+
+  .card {
+    padding: 76px 20px 32px;
+    border-radius: 24px;
+  }
+}

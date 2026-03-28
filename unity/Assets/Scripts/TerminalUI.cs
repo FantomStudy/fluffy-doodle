@@ -93,11 +93,6 @@ public class TerminalUI : MonoBehaviour
             fadeRoutine = null;
         }
 
-        if (screenFadePlayerLock != null)
-        {
-            screenFadePlayerLock.SetLockedInstant(visible, 0f);
-        }
-
         activeTerminal?.NotifyTerminalVisibilityChanged(visible);
         SetOptionListVisible(false);
 
@@ -139,6 +134,8 @@ public class TerminalUI : MonoBehaviour
         canvasGroup.alpha = alpha;
         canvasGroup.blocksRaycasts = visible;
         canvasGroup.interactable = visible;
+        Cursor.visible = visible;
+        Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
     private void ToggleOptionList()

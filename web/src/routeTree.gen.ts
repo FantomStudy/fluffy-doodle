@@ -9,118 +9,325 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as KnowledgeRouteImport } from './routes/knowledge'
-import { Route as AlgorithmRouteImport } from './routes/algorithm'
-import { Route as SidebarRouteRouteImport } from './routes/_sidebar/route'
-import { Route as SidebarChallengeRouteImport } from './routes/_sidebar/challenge'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
+import { Route as authRegisterRouteImport } from './routes/(auth)/register'
+import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as ProtectedSidebarRouteRouteImport } from './routes/_protected/_sidebar/route'
+import { Route as ProtectedSidebarIndexRouteImport } from './routes/_protected/_sidebar/index'
+import { Route as ProtectedSidebarProfileRouteImport } from './routes/_protected/_sidebar/profile'
+import { Route as ProtectedSidebarKnowledgeRouteImport } from './routes/_protected/_sidebar/knowledge'
+import { Route as ProtectedSidebarChildRouteImport } from './routes/_protected/_sidebar/child'
+import { Route as ProtectedSidebarChallengeRouteImport } from './routes/_protected/_sidebar/challenge'
+import { Route as ProtectedSidebarAlgorithmRouteImport } from './routes/_protected/_sidebar/algorithm'
+import { Route as ProtectedSidebarCoursesIndexRouteImport } from './routes/_protected/_sidebar/courses/index'
+import { Route as ProtectedSidebarCoursesCourseIdIndexRouteImport } from './routes/_protected/_sidebar/courses/$courseId/index'
+import { Route as ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRouteImport } from './routes/_protected/_sidebar/courses/$courseId/lessons/$lessonId/index'
 
-const KnowledgeRoute = KnowledgeRouteImport.update({
-  id: '/knowledge',
-  path: '/knowledge',
+const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AlgorithmRoute = AlgorithmRouteImport.update({
-  id: '/algorithm',
-  path: '/algorithm',
+const authRegisterRoute = authRegisterRouteImport.update({
+  id: '/(auth)/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SidebarRouteRoute = SidebarRouteRouteImport.update({
+const authLoginRoute = authLoginRouteImport.update({
+  id: '/(auth)/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedSidebarRouteRoute = ProtectedSidebarRouteRouteImport.update({
   id: '/_sidebar',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtectedRouteRoute,
 } as any)
-const SidebarChallengeRoute = SidebarChallengeRouteImport.update({
-  id: '/challenge',
-  path: '/challenge',
-  getParentRoute: () => SidebarRouteRoute,
+const ProtectedSidebarIndexRoute = ProtectedSidebarIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedSidebarRouteRoute,
 } as any)
+const ProtectedSidebarProfileRoute = ProtectedSidebarProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => ProtectedSidebarRouteRoute,
+} as any)
+const ProtectedSidebarKnowledgeRoute =
+  ProtectedSidebarKnowledgeRouteImport.update({
+    id: '/knowledge',
+    path: '/knowledge',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
+const ProtectedSidebarChildRoute = ProtectedSidebarChildRouteImport.update({
+  id: '/child',
+  path: '/child',
+  getParentRoute: () => ProtectedSidebarRouteRoute,
+} as any)
+const ProtectedSidebarChallengeRoute =
+  ProtectedSidebarChallengeRouteImport.update({
+    id: '/challenge',
+    path: '/challenge',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
+const ProtectedSidebarAlgorithmRoute =
+  ProtectedSidebarAlgorithmRouteImport.update({
+    id: '/algorithm',
+    path: '/algorithm',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
+const ProtectedSidebarCoursesIndexRoute =
+  ProtectedSidebarCoursesIndexRouteImport.update({
+    id: '/courses/',
+    path: '/courses/',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
+const ProtectedSidebarCoursesCourseIdIndexRoute =
+  ProtectedSidebarCoursesCourseIdIndexRouteImport.update({
+    id: '/courses/$courseId/',
+    path: '/courses/$courseId/',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
+const ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute =
+  ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRouteImport.update({
+    id: '/courses/$courseId/lessons/$lessonId/',
+    path: '/courses/$courseId/lessons/$lessonId/',
+    getParentRoute: () => ProtectedSidebarRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof SidebarRouteRouteWithChildren
-  '/algorithm': typeof AlgorithmRoute
-  '/knowledge': typeof KnowledgeRoute
-  '/challenge': typeof SidebarChallengeRoute
+  '/': typeof ProtectedSidebarIndexRoute
+  '/login': typeof authLoginRoute
+  '/register': typeof authRegisterRoute
+  '/algorithm': typeof ProtectedSidebarAlgorithmRoute
+  '/challenge': typeof ProtectedSidebarChallengeRoute
+  '/child': typeof ProtectedSidebarChildRoute
+  '/knowledge': typeof ProtectedSidebarKnowledgeRoute
+  '/profile': typeof ProtectedSidebarProfileRoute
+  '/courses/': typeof ProtectedSidebarCoursesIndexRoute
+  '/courses/$courseId/': typeof ProtectedSidebarCoursesCourseIdIndexRoute
+  '/courses/$courseId/lessons/$lessonId/': typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof SidebarRouteRouteWithChildren
-  '/algorithm': typeof AlgorithmRoute
-  '/knowledge': typeof KnowledgeRoute
-  '/challenge': typeof SidebarChallengeRoute
+  '/': typeof ProtectedSidebarIndexRoute
+  '/login': typeof authLoginRoute
+  '/register': typeof authRegisterRoute
+  '/algorithm': typeof ProtectedSidebarAlgorithmRoute
+  '/challenge': typeof ProtectedSidebarChallengeRoute
+  '/child': typeof ProtectedSidebarChildRoute
+  '/knowledge': typeof ProtectedSidebarKnowledgeRoute
+  '/profile': typeof ProtectedSidebarProfileRoute
+  '/courses': typeof ProtectedSidebarCoursesIndexRoute
+  '/courses/$courseId': typeof ProtectedSidebarCoursesCourseIdIndexRoute
+  '/courses/$courseId/lessons/$lessonId': typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_sidebar': typeof SidebarRouteRouteWithChildren
-  '/algorithm': typeof AlgorithmRoute
-  '/knowledge': typeof KnowledgeRoute
-  '/_sidebar/challenge': typeof SidebarChallengeRoute
+  '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/_protected/_sidebar': typeof ProtectedSidebarRouteRouteWithChildren
+  '/(auth)/login': typeof authLoginRoute
+  '/(auth)/register': typeof authRegisterRoute
+  '/_protected/_sidebar/algorithm': typeof ProtectedSidebarAlgorithmRoute
+  '/_protected/_sidebar/challenge': typeof ProtectedSidebarChallengeRoute
+  '/_protected/_sidebar/child': typeof ProtectedSidebarChildRoute
+  '/_protected/_sidebar/knowledge': typeof ProtectedSidebarKnowledgeRoute
+  '/_protected/_sidebar/profile': typeof ProtectedSidebarProfileRoute
+  '/_protected/_sidebar/': typeof ProtectedSidebarIndexRoute
+  '/_protected/_sidebar/courses/': typeof ProtectedSidebarCoursesIndexRoute
+  '/_protected/_sidebar/courses/$courseId/': typeof ProtectedSidebarCoursesCourseIdIndexRoute
+  '/_protected/_sidebar/courses/$courseId/lessons/$lessonId/': typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/algorithm' | '/knowledge' | '/challenge'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/algorithm'
+    | '/challenge'
+    | '/child'
+    | '/knowledge'
+    | '/profile'
+    | '/courses/'
+    | '/courses/$courseId/'
+    | '/courses/$courseId/lessons/$lessonId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/algorithm' | '/knowledge' | '/challenge'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/algorithm'
+    | '/challenge'
+    | '/child'
+    | '/knowledge'
+    | '/profile'
+    | '/courses'
+    | '/courses/$courseId'
+    | '/courses/$courseId/lessons/$lessonId'
   id:
     | '__root__'
-    | '/_sidebar'
-    | '/algorithm'
-    | '/knowledge'
-    | '/_sidebar/challenge'
+    | '/_protected'
+    | '/_protected/_sidebar'
+    | '/(auth)/login'
+    | '/(auth)/register'
+    | '/_protected/_sidebar/algorithm'
+    | '/_protected/_sidebar/challenge'
+    | '/_protected/_sidebar/child'
+    | '/_protected/_sidebar/knowledge'
+    | '/_protected/_sidebar/profile'
+    | '/_protected/_sidebar/'
+    | '/_protected/_sidebar/courses/'
+    | '/_protected/_sidebar/courses/$courseId/'
+    | '/_protected/_sidebar/courses/$courseId/lessons/$lessonId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  SidebarRouteRoute: typeof SidebarRouteRouteWithChildren
-  AlgorithmRoute: typeof AlgorithmRoute
-  KnowledgeRoute: typeof KnowledgeRoute
+  ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
+  authLoginRoute: typeof authLoginRoute
+  authRegisterRoute: typeof authRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/knowledge': {
-      id: '/knowledge'
-      path: '/knowledge'
-      fullPath: '/knowledge'
-      preLoaderRoute: typeof KnowledgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/algorithm': {
-      id: '/algorithm'
-      path: '/algorithm'
-      fullPath: '/algorithm'
-      preLoaderRoute: typeof AlgorithmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_sidebar': {
-      id: '/_sidebar'
+    '/_protected': {
+      id: '/_protected'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof SidebarRouteRouteImport
+      preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_sidebar/challenge': {
-      id: '/_sidebar/challenge'
+    '/(auth)/register': {
+      id: '/(auth)/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof authRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected/_sidebar': {
+      id: '/_protected/_sidebar'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedSidebarRouteRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/_sidebar/': {
+      id: '/_protected/_sidebar/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedSidebarIndexRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/profile': {
+      id: '/_protected/_sidebar/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProtectedSidebarProfileRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/knowledge': {
+      id: '/_protected/_sidebar/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof ProtectedSidebarKnowledgeRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/child': {
+      id: '/_protected/_sidebar/child'
+      path: '/child'
+      fullPath: '/child'
+      preLoaderRoute: typeof ProtectedSidebarChildRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/challenge': {
+      id: '/_protected/_sidebar/challenge'
       path: '/challenge'
       fullPath: '/challenge'
-      preLoaderRoute: typeof SidebarChallengeRouteImport
-      parentRoute: typeof SidebarRouteRoute
+      preLoaderRoute: typeof ProtectedSidebarChallengeRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/algorithm': {
+      id: '/_protected/_sidebar/algorithm'
+      path: '/algorithm'
+      fullPath: '/algorithm'
+      preLoaderRoute: typeof ProtectedSidebarAlgorithmRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/courses/': {
+      id: '/_protected/_sidebar/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof ProtectedSidebarCoursesIndexRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/courses/$courseId/': {
+      id: '/_protected/_sidebar/courses/$courseId/'
+      path: '/courses/$courseId'
+      fullPath: '/courses/$courseId/'
+      preLoaderRoute: typeof ProtectedSidebarCoursesCourseIdIndexRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
+    '/_protected/_sidebar/courses/$courseId/lessons/$lessonId/': {
+      id: '/_protected/_sidebar/courses/$courseId/lessons/$lessonId/'
+      path: '/courses/$courseId/lessons/$lessonId'
+      fullPath: '/courses/$courseId/lessons/$lessonId/'
+      preLoaderRoute: typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
     }
   }
 }
 
-interface SidebarRouteRouteChildren {
-  SidebarChallengeRoute: typeof SidebarChallengeRoute
+interface ProtectedSidebarRouteRouteChildren {
+  ProtectedSidebarAlgorithmRoute: typeof ProtectedSidebarAlgorithmRoute
+  ProtectedSidebarChallengeRoute: typeof ProtectedSidebarChallengeRoute
+  ProtectedSidebarChildRoute: typeof ProtectedSidebarChildRoute
+  ProtectedSidebarKnowledgeRoute: typeof ProtectedSidebarKnowledgeRoute
+  ProtectedSidebarProfileRoute: typeof ProtectedSidebarProfileRoute
+  ProtectedSidebarIndexRoute: typeof ProtectedSidebarIndexRoute
+  ProtectedSidebarCoursesIndexRoute: typeof ProtectedSidebarCoursesIndexRoute
+  ProtectedSidebarCoursesCourseIdIndexRoute: typeof ProtectedSidebarCoursesCourseIdIndexRoute
+  ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute: typeof ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute
 }
 
-const SidebarRouteRouteChildren: SidebarRouteRouteChildren = {
-  SidebarChallengeRoute: SidebarChallengeRoute,
+const ProtectedSidebarRouteRouteChildren: ProtectedSidebarRouteRouteChildren = {
+  ProtectedSidebarAlgorithmRoute: ProtectedSidebarAlgorithmRoute,
+  ProtectedSidebarChallengeRoute: ProtectedSidebarChallengeRoute,
+  ProtectedSidebarChildRoute: ProtectedSidebarChildRoute,
+  ProtectedSidebarKnowledgeRoute: ProtectedSidebarKnowledgeRoute,
+  ProtectedSidebarProfileRoute: ProtectedSidebarProfileRoute,
+  ProtectedSidebarIndexRoute: ProtectedSidebarIndexRoute,
+  ProtectedSidebarCoursesIndexRoute: ProtectedSidebarCoursesIndexRoute,
+  ProtectedSidebarCoursesCourseIdIndexRoute:
+    ProtectedSidebarCoursesCourseIdIndexRoute,
+  ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute:
+    ProtectedSidebarCoursesCourseIdLessonsLessonIdIndexRoute,
 }
 
-const SidebarRouteRouteWithChildren = SidebarRouteRoute._addFileChildren(
-  SidebarRouteRouteChildren,
+const ProtectedSidebarRouteRouteWithChildren =
+  ProtectedSidebarRouteRoute._addFileChildren(
+    ProtectedSidebarRouteRouteChildren,
+  )
+
+interface ProtectedRouteRouteChildren {
+  ProtectedSidebarRouteRoute: typeof ProtectedSidebarRouteRouteWithChildren
+}
+
+const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
+  ProtectedSidebarRouteRoute: ProtectedSidebarRouteRouteWithChildren,
+}
+
+const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
+  ProtectedRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  SidebarRouteRoute: SidebarRouteRouteWithChildren,
-  AlgorithmRoute: AlgorithmRoute,
-  KnowledgeRoute: KnowledgeRoute,
+  ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
+  authLoginRoute: authLoginRoute,
+  authRegisterRoute: authRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

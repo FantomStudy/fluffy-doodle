@@ -1,10 +1,9 @@
 .input {
   width: 100%;
   min-height: 42px;
-  outline: none;
   font-size: 1rem;
-  border: 1px solid var(--foreground);
-  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
   background: none;
   padding: 0.5rem;
   box-sizing: border-box;
@@ -14,9 +13,4 @@
 .input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.input:focus-visible {
-  border: 1px solid var(--muted);
-  box-shadow: 0 0 0 3px color-mix(var(--muted) 20%, transparent);
 }

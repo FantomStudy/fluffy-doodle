@@ -2,85 +2,227 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
+	"path/filepath"
 
 	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
+	"github.com/FantomStudy/fluffy-doodle/internal/models"
 	"github.com/FantomStudy/fluffy-doodle/internal/service"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-// @Summary Invite student
-// @Description Регистрация студента
-// @Accept json
+// @Summary Get user profile
+// @Description Получение профиля текущего пользователя
 // @Produce json
 // @Tags user
-// @Param body body presenter.SignUpRequest true "Данные для регистрации ученика"
-// @Success 201 {object} presenter.AuthSwaggerSuccessResponse
-// @Failure 400 {object} presenter.AuthSwaggerErrorResponse
-// @Failure 404 {object} presenter.AuthSwaggerErrorResponse
+// @Success 200 {object} presenter.UserProfileResponse
 // @Failure 401 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 404 {object} presenter.AuthSwaggerErrorResponse
 // @Failure 500 {object} presenter.AuthSwaggerErrorResponse
-// @Router /user/student-invitation [post]
-func InviteUser(s service.UserService) fiber.Handler {
+// @Router /user/profile [get]
+func GetProfile(s service.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var user presenter.SignUpRequest
+		userID := c.Locals("userId").(uint)
 
-		if err := c.BodyParser(&user); err != nil {
-			return c.Status(400).JSON(presenter.AuthErrorResponse(err))
-		}
-
-		// Валидация
-		if user.Login == "" || len(user.Login) < 3 {
-			return c.Status(400).JSON(presenter.AuthErrorResponse(errors.New("Логин должен содержать минимум 3 символа")))
-		}
-
-		if user.FullName == "" || len(user.FullName) < 5 {
-			return c.Status(400).JSON(presenter.AuthErrorResponse(errors.New("ФИО должно содержать минимум 5 символов")))
-		}
-
-		if user.PhoneNumber == "" {
-			return c.Status(400).JSON(presenter.AuthErrorResponse(errors.New("Номер телефона обязателен для заполнения")))
-		}
-
-		if user.Password == "" || len(user.Password) < 8 {
-			return c.Status(400).JSON(presenter.AuthErrorResponse(errors.New("Пароль должен содержать минимум 8 символов")))
-		}
-		if len(user.Password) > 72 {
-			return c.Status(400).JSON(presenter.AuthErrorResponse(errors.New("Пароль не должен превышать 72 символа")))
-		}
-
-		// Проверка на существование пользователя
-		checkUser, err := s.GetUser(user.Login)
-
-		if err != nil && err != gorm.ErrRecordNotFound {
-			return c.Status(500).JSON(presenter.AuthErrorResponse(err))
-		}
-
-		if checkUser != nil && checkUser.ID != 0 {
-			return c.Status(409).JSON(presenter.AuthErrorResponse(errors.New("Пользователь с таким логином уже существует")))
-		}
-
-		// хеширование пароля
-		hashedPassword, err := hashPassword(user.Password)
-
+		user, err := s.GetUserByID(userID)
 		if err != nil {
-			return c.Status(500).JSON(presenter.AuthErrorResponse(errors.New("Не удалось захешировать пароль")))
+			if err == gorm.ErrRecordNotFound {
+				return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse(errors.New("user not found")))
+			}
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
 		}
 
-		role, err := s.FindRole("student")
+		if user.Role.Name == "parent" {
+			child, childErr := s.GetChildByParentID(user.ID)
+			if childErr == gorm.ErrRecordNotFound {
+				return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse(errors.New("child not linked to this parent")))
+			}
+			if childErr != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(childErr))
+			}
+			user = child
+		}
 
+		user, err = s.EnsureStudentInvitationCode(user)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.UserProfileResponse{
+			ID:             user.ID,
+			Login:          user.Login,
+			FullName:       user.FullName,
+			PhoneNumber:    user.PhoneNumber,
+			Avatar:         user.Avatar,
+			InvitationCode: user.InvitationCode,
+			RoleID:         user.RoleID,
+			Stars:          user.Stars,
+			Exp:            user.Exp,
+			Streak:         user.StreakDays,
+			Level:          models.CalculateLevel(user.Exp),
+			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
+		})
+	}
+}
+
+// @Summary Get current user
+// @Description Returns current authenticated user with role name
+// @Produce json
+// @Tags user
+// @Success 200 {object} presenter.MeResponse
+// @Failure 401 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 404 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /me [get]
+func GetMe(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userID := c.Locals("userId").(uint)
+
+		user, err := s.GetUserByID(userID)
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse(errors.New("user not found")))
+			}
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		user, err = s.EnsureStudentInvitationCode(user)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.MeResponse{
+			ID:             user.ID,
+			Login:          user.Login,
+			FullName:       user.FullName,
+			PhoneNumber:    user.PhoneNumber,
+			Avatar:         user.Avatar,
+			InvitationCode: user.InvitationCode,
+			RoleID:         user.RoleID,
+			RoleName:       user.Role.Name,
+			Stars:          user.Stars,
+			Exp:            user.Exp,
+			Streak:         user.StreakDays,
+			Level:          models.CalculateLevel(user.Exp),
+			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
+		})
+	}
+}
+
+func CompleteGameLevel(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		levelID := c.Params("levelId")
+
+		var req presenter.CompleteGameLevelRequest
+		if err := c.BodyParser(&req); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("invalid request payload")))
+		}
+		if !req.Completed {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("completed must be true")))
+		}
+
+		result, err := s.CompleteGameLevel(c.Locals("userId").(uint), levelID)
+		if err != nil {
+			if err.Error() == "invalid game level id" {
+				return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("levelId is required")))
+			}
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.SuccessResponseWithData("game level completed", presenter.CompleteGameLevelResponse{
+			LevelID:      result.LevelID,
+			IsCompleted:  result.IsCompleted,
+			WasCompleted: result.WasCompleted,
+			AwardedStars: result.AwardedStars,
+			AwardedExp:   result.AwardedExp,
+			CurrentStars: result.CurrentStars,
+			CurrentExp:   result.CurrentExp,
+			CurrentLevel: result.CurrentLevel,
+		}))
+	}
+}
+
+// @Summary Upload avatar
+// @Description Upload user avatar to S3
+// @Accept multipart/form-data
+// @Produce json
+// @Tags user
+// @Param avatar formData file true "Avatar file"
+// @Success 200 {object} presenter.AuthSwaggerSuccessResponse
+// @Failure 400 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /user/avatar [post]
+func UploadAvatar(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userID := c.Locals("userId").(uint)
+
+		file, err := c.FormFile("avatar")
+		if err != nil {
+			fmt.Printf("UploadAvatar Error: %v\n", err)
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("file not found")))
+		}
+
+		src, err := file.Open()
+		if err != nil {
+			fmt.Printf("UploadAvatar File Open Error: %v\n", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(errors.New("failed to open file")))
+		}
+		defer src.Close()
+
+		filename := fmt.Sprintf("avatar_%d%s", userID, filepath.Ext(file.Filename))
+		url, err := s.UploadAvatar(c.Context(), filename, src, file.Size, file.Header.Get("Content-Type"))
+		if err != nil {
+			fmt.Printf("UploadAvatar S3 Upload Error: %v\n", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		user, err := s.GetUserByID(userID)
+		if err != nil {
+			fmt.Printf("UploadAvatar GetUser Error: %v\n", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		user.Avatar = url
+		if _, err = s.UpdateUser(user); err != nil {
+			fmt.Printf("UploadAvatar UpdateUser Error: %v\n", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.AuthSuccessResponse())
+	}
+}
+
+// @Summary Parent child progress
+// @Description Returns current child progress for authenticated parent
+// @Produce json
+// @Tags user
+// @Success 200 {object} presenter.ParentChildProgressResponse
+// @Failure 401 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 404 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /user/parent/child-progress [get]
+func ParentChildProgress(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		parentID := c.Locals("userId").(uint)
+
+		child, err := s.GetChildByParentID(parentID)
 		if err == gorm.ErrRecordNotFound {
-			return c.Status(404).JSON(presenter.AuthErrorResponse(errors.New("Роль не найдена")))
+			return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse(errors.New("child not linked to this parent")))
 		}
-
-		user.Password = hashedPassword
-
-		_, err = s.InviteUser(&user, role.ID)
-
 		if err != nil {
-			return c.Status(500).JSON(presenter.AuthErrorResponse(errors.New("Не удалось создать пользователя")))
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
 		}
 
-		return c.Status(201).JSON(presenter.AuthSuccessResponse())
+		return c.Status(fiber.StatusOK).JSON(presenter.ParentChildProgressResponse{
+			StudentID:      child.ID,
+			StudentName:    child.FullName,
+			StudentLogin:   child.Login,
+			Stars:          child.Stars,
+			Exp:            child.Exp,
+			Level:          models.CalculateLevel(child.Exp),
+			Achievements:   len(child.Achievements),
+			InvitationCode: child.InvitationCode,
+		})
 	}
 }

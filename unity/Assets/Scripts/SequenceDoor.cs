@@ -52,6 +52,11 @@ public class SequenceDoor : MonoBehaviour
         isOpen = true;
         if (isFinalDoor)
         {
+            if (LevelCompletionFlowController.TryStartCurrentLevelCompletion(nextSceneBuildIndex))
+            {
+                return;
+            }
+
             if (screenFadePlayerLock == null)
             {
                 return;

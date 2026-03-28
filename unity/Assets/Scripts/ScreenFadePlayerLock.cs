@@ -39,11 +39,16 @@ public class ScreenFadePlayerLock : MonoBehaviour
         StartFade(1f);
     }
 
-    public void FadeOutAndLockThenLoadScene(int buildIndex)
+    public void FadeOutAndLock(System.Action onComplete)
     {
         CachePlayerComponents();
         SetPlayerLocked(true);
-        StartFade(1f, () => SceneManager.LoadScene(buildIndex));
+        StartFade(1f, onComplete);
+    }
+
+    public void FadeOutAndLockThenLoadScene(int buildIndex)
+    {
+        FadeOutAndLock(() => SceneManager.LoadScene(buildIndex));
     }
 
     public void FadeInAndUnlock()

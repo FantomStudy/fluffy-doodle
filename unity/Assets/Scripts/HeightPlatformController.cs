@@ -20,9 +20,8 @@ public class HeightPlatformController : MonoBehaviour
         }
 
         baseLocalPosition = platformTransform.localPosition;
-        currentHeight = ResolveHeight(1);
+        currentHeight = baseLocalPosition.y;
         targetHeight = currentHeight;
-        ApplyHeight(currentHeight);
     }
 
     private void Update()

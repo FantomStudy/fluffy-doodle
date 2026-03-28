@@ -10,12 +10,20 @@ public class BridgeController : MonoBehaviour
 
     private float currentLength;
     private float targetLength;
+    private Vector3 bridgeStartLocalPosition;
+    private float bridgeStartLength;
 
     private void Awake()
     {
-        currentLength = ResolveLength(1);
+        if (bridgeVisual == null)
+        {
+            return;
+        }
+
+        bridgeStartLocalPosition = bridgeVisual.localPosition;
+        bridgeStartLength = Mathf.Max(0.001f, bridgeVisual.localScale.z);
+        currentLength = bridgeStartLength;
         targetLength = currentLength;
-        ApplyLength(currentLength);
     }
 
     private void Update()
@@ -62,8 +70,8 @@ public class BridgeController : MonoBehaviour
         scale.z = length;
         bridgeVisual.localScale = scale;
 
-        Vector3 localPosition = bridgeVisual.localPosition;
-        localPosition.z = length * 0.5f;
+        Vector3 localPosition = bridgeStartLocalPosition;
+        localPosition.z += (length - bridgeStartLength) * 0.5f;
         bridgeVisual.localPosition = localPosition;
     }
 }

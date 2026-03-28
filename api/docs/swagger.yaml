@@ -1,25 +1,166 @@
 basePath: /
 definitions:
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse:
+  presenter.AuthSwaggerErrorResponse:
     properties:
       error: {}
       status:
         type: boolean
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse:
+  presenter.AuthSwaggerSuccessResponse:
     properties:
       error: {}
       status:
         type: boolean
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest:
+  presenter.CreateLessonRequest:
+    properties:
+      description:
+        example: First lesson of the course
+        type: string
+      estimatedMinutes:
+        example: 25
+        type: integer
+      isFreePreview:
+        example: true
+        type: boolean
+      order:
+        example: 1
+        type: integer
+      tasks:
+        items:
+          $ref: '#/definitions/presenter.CreateLessonTaskRequest'
+        type: array
+      title:
+        example: Intro to Python
+        type: string
+    type: object
+  presenter.CreateLessonTaskRequest:
+    properties:
+      correctOptionIds:
+        items:
+          type: string
+        type: array
+      description:
+        example: Проверьте понимание темы
+        type: string
+      options:
+        items:
+          $ref: '#/definitions/presenter.CreateTaskOptionRequest'
+        type: array
+      question:
+        example: Какие варианты верные?
+        type: string
+      title:
+        example: Базовый тест
+        type: string
+      type:
+        example: quiz
+        type: string
+    type: object
+  presenter.CreateTaskOptionRequest:
+    properties:
+      id:
+        example: a
+        type: string
+      text:
+        example: Ответ A
+        type: string
+    type: object
+  presenter.ErrorResponse:
+    properties:
+      error:
+        example: Описание ошибки
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  presenter.InsertCategoryRequest:
+    properties:
+      name:
+        description: Название категории
+        example: Веб-разработка
+        type: string
+    required:
+    - name
+    type: object
+  presenter.MeResponse:
+    properties:
+      avatar:
+        example: https://minio.local/avatar_1.png
+        type: string
+      exp:
+        example: 45
+        type: integer
+      expToNextLevel:
+        example: 55
+        type: integer
+      fullName:
+        example: Ivan Ivanov
+        type: string
+      id:
+        example: 1
+        type: integer
+      level:
+        example: 1
+        type: integer
+      login:
+        example: teacher01
+        type: string
+      phoneNumber:
+        example: "+79001234567"
+        type: string
+      roleId:
+        example: 2
+        type: integer
+      roleName:
+        example: student
+        type: string
+      stars:
+        example: 10
+        type: integer
+      streak:
+        example: 4
+        type: integer
+      studentCode:
+        example: STU-8A7KQ21M
+        type: string
+    type: object
+  presenter.ParentChildProgressResponse:
+    properties:
+      achievements:
+        example: 4
+        type: integer
+      exp:
+        example: 45
+        type: integer
+      level:
+        example: 1
+        type: integer
+      stars:
+        example: 18
+        type: integer
+      studentCode:
+        example: STU-8A7KQ21M
+        type: string
+      studentId:
+        example: 12
+        type: integer
+      studentLogin:
+        example: petya_ivanov
+        type: string
+      studentName:
+        example: Petya Ivanov
+        type: string
+    type: object
+  presenter.SignInRequest:
     properties:
       login:
         type: string
       password:
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest:
+  presenter.SignUpRequest:
     properties:
       fullName:
         type: string
@@ -28,6 +169,66 @@ definitions:
       password:
         type: string
       phoneNumber:
+        type: string
+      studentCode:
+        type: string
+    type: object
+  presenter.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        example: Операция выполнена успешно
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  presenter.UpdateCategoryRequest:
+    properties:
+      name:
+        description: Новое название категории
+        example: Frontend разработка
+        type: string
+    required:
+    - name
+    type: object
+  presenter.UserProfileResponse:
+    properties:
+      avatar:
+        example: https://minio.local/avatar_1.png
+        type: string
+      exp:
+        example: 45
+        type: integer
+      expToNextLevel:
+        example: 55
+        type: integer
+      fullName:
+        example: Ivan Ivanov
+        type: string
+      id:
+        example: 1
+        type: integer
+      level:
+        example: 1
+        type: integer
+      login:
+        example: teacher01
+        type: string
+      phoneNumber:
+        example: "+79001234567"
+        type: string
+      roleId:
+        example: 2
+        type: integer
+      stars:
+        example: 10
+        type: integer
+      streak:
+        example: 4
+        type: integer
+      studentCode:
+        example: STU-8A7KQ21M
         type: string
     type: object
 host: localhost:3000
@@ -38,18 +239,316 @@ info:
   title: Fluffy Doodle REST API
   version: "1.0"
 paths:
-  /auth/is-admin:
-    get:
+  /admin/categories:
+    post:
       consumes:
       - application/json
-      description: Проверяет пользователя на роль администратора
+      description: Creates a new course category
+      parameters:
+      - description: Category payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.InsertCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create course category
+      tags:
+      - course-categories
+  /admin/categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes category by id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Delete course category
+      tags:
+      - course-categories
+    put:
+      consumes:
+      - application/json
+      description: Updates category by id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Category payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Update course category
+      tags:
+      - course-categories
+  /admin/courses:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creates a new course with image, category and level
+      parameters:
+      - description: Course title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Course description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Course category ID
+        in: formData
+        name: categoryId
+        required: true
+        type: integer
+      - description: 'Course level: beginner|intermediate|advanced'
+        in: formData
+        name: level
+        required: true
+        type: string
+      - description: Course hours
+        in: formData
+        name: hours
+        required: true
+        type: integer
+      - description: Course image
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create course
+      tags:
+      - courses
+  /admin/courses/{id}:
+    delete:
+      description: Deletes course by ID
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Delete course
+      tags:
+      - courses
+    put:
+      consumes:
+      - multipart/form-data
+      description: Updates existing course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Course title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Course description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Course category ID
+        in: formData
+        name: categoryId
+        required: true
+        type: integer
+      - description: 'Course level: beginner|intermediate|advanced'
+        in: formData
+        name: level
+        required: true
+        type: string
+      - description: Course hours
+        in: formData
+        name: hours
+        required: true
+        type: integer
+      - description: Course image
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Update course
+      tags:
+      - courses
+  /admin/courses/{id}/lessons:
+    post:
+      consumes:
+      - application/json
+      description: Creates lesson for selected course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Lesson payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.CreateLessonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create lesson in course
+      tags:
+      - courses
+  /auth/is-admin:
+    get:
+      consumes:
+      - application/json
+      description: Checks role (protected endpoint)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
       summary: Check role
       tags:
       - auth
@@ -57,14 +556,14 @@ paths:
     post:
       consumes:
       - application/json
-      description: Выход пользователя из системы
+      description: Logout
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
       summary: Exit
       tags:
       - auth
@@ -72,30 +571,26 @@ paths:
     post:
       consumes:
       - application/json
-      description: Обновление токенов
+      description: Refresh access and refresh tokens
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Update tokens
       tags:
       - auth
@@ -103,37 +598,37 @@ paths:
     post:
       consumes:
       - application/json
-      description: Авторизация пользователя
+      description: User login
       parameters:
-      - description: Данные для авторизации
+      - description: Credentials
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest'
+          $ref: '#/definitions/presenter.SignInRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Login
       tags:
       - auth
@@ -141,76 +636,273 @@ paths:
     post:
       consumes:
       - application/json
-      description: Регистрация пользователя
+      description: Student signs up without code. Parent signs up with studentCode.
       parameters:
-      - description: Данные для регистрации
+      - description: Sign up payload
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest'
+          $ref: '#/definitions/presenter.SignUpRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Registration
       tags:
       - auth
-  /user/student-invitation:
-    post:
+  /categories:
+    get:
       consumes:
       - application/json
-      description: Регистрация студента
-      parameters:
-      - description: Данные для регистрации ученика
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest'
+      description: Returns all course categories
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
-      summary: Invite student
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: List course categories
+      tags:
+      - course-categories
+  /categories/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns a category by its id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Get course category by id
+      tags:
+      - course-categories
+  /courses:
+    get:
+      description: Returns all courses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: List courses
+      tags:
+      - courses
+  /courses/{id}:
+    get:
+      description: Returns course detail by id
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Get course by ID
+      tags:
+      - courses
+  /courses/{id}/lessons:
+    get:
+      description: Returns ordered lessons for course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: List course lessons
+      tags:
+      - courses
+  /me:
+    get:
+      description: Returns current authenticated user with role name
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.MeResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get current user
+      tags:
+      - user
+  /user/avatar:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload user avatar to S3
+      parameters:
+      - description: Avatar file
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Upload avatar
+      tags:
+      - user
+  /user/parent/child-progress:
+    get:
+      description: Returns current child progress for authenticated parent
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.ParentChildProgressResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Parent child progress
+      tags:
+      - user
+  /user/profile:
+    get:
+      description: Получение профиля текущего пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.UserProfileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get user profile
       tags:
       - user
 swagger: "2.0"

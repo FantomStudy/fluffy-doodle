@@ -37,6 +37,9 @@
   --color-amber-500: #f59e0b;
   --color-amber-900: #92400e;
 
+  /* Color — Orange */
+  --color-orange-500: #ff7d24;
+
   /* Color — Red */
   --color-red-400: #f87171;
 
@@ -56,6 +59,7 @@
   --radius-xl: 12px;
   --radius-2xl: 14px;
   --radius-3xl: 22px;
+  --radius-4xl: 40px;
   --radius-full: 999px;
 }
 
@@ -80,6 +84,9 @@
   --warning-icon: var(--color-amber-500);
   --warning-text: var(--color-amber-900);
 
+  /* Accent (orange) */
+  --accent: var(--color-orange-500);
+
   /* Danger */
   --danger: var(--color-red-400);
 
@@ -88,6 +95,7 @@
   --foreground-strong: var(--color-gray-700);
   --foreground-muted: var(--color-gray-500);
   --foreground-subtle: var(--color-gray-400);
+  --foreground-white: var(--color-white);
 
   /* Background & Surface */
   --background: var(--color-slate-50);
@@ -110,7 +118,7 @@
 
   /* Border-radius — semantic */
   --radius-btn: var(--radius-lg);
-  --radius-card: var(--radius-xl);
+  --radius-card: var(--radius-4xl);
   --radius-input: var(--radius-md);
   --radius-badge: var(--radius-full);
   --radius-icon: var(--radius-3xl);
@@ -124,7 +132,7 @@
 }
 
 body {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-family: "Manrope", "Inter", "Segoe UI", system-ui, sans-serif;
   color: var(--foreground);
   background-color: var(--background);
 }

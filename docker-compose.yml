@@ -4,7 +4,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env
+      - ./api/.env
     volumes:
       - ./uploads:/app/uploads
     restart: unless-stopped
@@ -12,4 +12,6 @@ services:
     build: ./web
     ports:
       - "5173:80"
+    env_file:
+      - ./web/.env
     restart: unless-stopped

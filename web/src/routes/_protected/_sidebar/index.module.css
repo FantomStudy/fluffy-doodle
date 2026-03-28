@@ -1,0 +1,486 @@
+.root {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* -------- HEADER -------- */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.greeting {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--foreground-subtle);
+}
+
+/* -------- LEARNING CARD -------- */
+
+.learningCard {
+  background: var(--surface);
+  border-radius: var(--radius-4xl);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+}
+
+.cardLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--foreground-strong);
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.starCount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.starIcon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.streakBadge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-slate-100);
+  border-radius: var(--radius-xl);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.streakBadge img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* -------- MAP -------- */
+
+.mapSection {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 380px;
+  border-radius: 0;
+}
+
+.mapBg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mapPath {
+  position: absolute;
+  left: 0;
+  top: 2.7%;
+  width: 100%;
+  height: 86.6%;
+  pointer-events: none;
+}
+
+.waypoint {
+  position: absolute;
+  width: 4%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.expandMap {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-white);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.expandMap img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+/* -------- CARD FOOTER -------- */
+
+.cardFooter {
+  display: flex;
+  align-items: flex-start;
+  padding: 28px 28px 36px;
+  gap: 24px;
+}
+
+.currentLesson {
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lessonLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.lessonTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.lessonDesc {
+  font-size: 13px;
+  color: var(--foreground-subtle);
+}
+
+.continueBtn {
+  margin-top: 16px;
+  background: var(--success);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 16px 0;
+  width: 220px;
+  cursor: pointer;
+  transition: background 0.14s;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+}
+
+.continueBtn:hover {
+  background: var(--success-hover);
+}
+
+.progressSection {
+  flex: 0 0 38%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.progressLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.lessonCount {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.progressTrack {
+  height: 8px;
+  background: var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 63%;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+}
+
+.badges {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Badge sprite cropping — badge.png is a sprite sheet */
+
+.badge {
+  position: relative;
+  width: 57px;
+  height: 48px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.badge img {
+  position: absolute;
+  pointer-events: none;
+  max-width: none;
+}
+
+.badgeDone img {
+  height: 230.63%;
+  width: 292.57%;
+  left: -39.43%;
+  top: -64.19%;
+}
+
+.badgeStar img {
+  height: 233.79%;
+  width: 301.77%;
+  left: -162.08%;
+  top: -65.07%;
+}
+
+.characterSection {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.characterImg {
+  width: 340px;
+  object-fit: contain;
+}
+
+/* -------- COURSES SECTION -------- */
+
+.coursesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 32px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.allCoursesBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: var(--radius-xl);
+  transition: background 0.14s;
+}
+
+.allCoursesBtn:hover {
+  background: var(--primary-bg);
+}
+
+.allCoursesBtn img {
+  width: 18px;
+  height: 18px;
+  filter: invert(30%) sepia(80%) saturate(1200%) hue-rotate(250deg) brightness(90%);
+}
+
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ======== RESPONSIVE ======== */
+
+/* Tablet — ≤ 768px */
+@media (max-width: 768px) {
+  .root {
+    padding: 20px 16px;
+    padding-bottom: 80px;
+    gap: 20px;
+  }
+
+  .greeting {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .learningCard {
+    border-radius: 24px;
+  }
+
+  .cardHeader {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 16px 10px;
+  }
+
+  .cardLabel {
+    width: 100%;
+  }
+
+  .mapSection {
+    height: 240px;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    padding: 20px 16px 24px;
+    gap: 20px;
+  }
+
+  .currentLesson {
+    flex: none;
+    width: 100%;
+  }
+
+  .continueBtn {
+    width: 100%;
+  }
+
+  .progressSection {
+    flex: none;
+    width: 100%;
+  }
+
+  .characterSection {
+    display: none;
+  }
+
+  .badges {
+    flex-wrap: wrap;
+  }
+
+  .sectionTitle {
+    font-size: 22px;
+  }
+
+  .courseGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Mobile — ≤ 480px */
+@media (max-width: 480px) {
+  .root {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .greeting {
+    font-size: 18px;
+  }
+
+  .cardHeader {
+    padding: 14px 12px 8px;
+  }
+
+  .cardActions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .streakBadge {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .streakBadge img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .mapSection {
+    height: 180px;
+  }
+
+  .waypoint {
+    width: 7%;
+  }
+
+  .cardFooter {
+    padding: 16px 12px 20px;
+  }
+
+  .lessonTitle {
+    font-size: 16px;
+  }
+
+  .continueBtn {
+    font-size: 14px;
+    padding: 14px 0;
+  }
+
+  .lessonCount {
+    font-size: 16px;
+  }
+
+  .badge {
+    width: 42px;
+    height: 36px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+  }
+
+  .courseGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .courseTitle {
+    font-size: 16px;
+  }
+
+  .allCoursesBtn {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .allCoursesBtn img {
+    width: 16px;
+    height: 16px;
+  }
+}
