@@ -863,6 +863,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/me": {
+            "get": {
+                "description": "Returns current authenticated user with role name",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.MeResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/avatar": {
             "post": {
                 "description": "Upload user avatar to S3",
@@ -1008,7 +1046,7 @@ const docTemplate = `{
             "properties": {
                 "description": {
                     "type": "string",
-                    "example": "Первый урок курса"
+                    "example": "First lesson of the course"
                 },
                 "estimatedMinutes": {
                     "type": "integer",
@@ -1022,9 +1060,61 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.CreateLessonTaskRequest"
+                    }
+                },
                 "title": {
                     "type": "string",
-                    "example": "Знакомство с Python"
+                    "example": "Intro to Python"
+                }
+            }
+        },
+        "presenter.CreateLessonTaskRequest": {
+            "type": "object",
+            "properties": {
+                "correctOptionIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Проверьте понимание темы"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/presenter.CreateTaskOptionRequest"
+                    }
+                },
+                "question": {
+                    "type": "string",
+                    "example": "Какие варианты верные?"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Базовый тест"
+                },
+                "type": {
+                    "type": "string",
+                    "example": "quiz"
+                }
+            }
+        },
+        "presenter.CreateTaskOptionRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "a"
+                },
+                "text": {
+                    "type": "string",
+                    "example": "Ответ A"
                 }
             }
         },
@@ -1054,12 +1144,73 @@ const docTemplate = `{
                 }
             }
         },
+        "presenter.MeResponse": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "https://minio.local/avatar_1.png"
+                },
+                "exp": {
+                    "type": "integer",
+                    "example": 45
+                },
+                "expToNextLevel": {
+                    "type": "integer",
+                    "example": 55
+                },
+                "fullName": {
+                    "type": "string",
+                    "example": "Ivan Ivanov"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "level": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "login": {
+                    "type": "string",
+                    "example": "teacher01"
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "example": "+79001234567"
+                },
+                "roleId": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "roleName": {
+                    "type": "string",
+                    "example": "student"
+                },
+                "stars": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "studentCode": {
+                    "type": "string",
+                    "example": "STU-8A7KQ21M"
+                }
+            }
+        },
         "presenter.ParentChildProgressResponse": {
             "type": "object",
             "properties": {
                 "achievements": {
                     "type": "integer",
                     "example": 4
+                },
+                "exp": {
+                    "type": "integer",
+                    "example": 45
+                },
+                "level": {
+                    "type": "integer",
+                    "example": 1
                 },
                 "stars": {
                     "type": "integer",
@@ -1079,7 +1230,7 @@ const docTemplate = `{
                 },
                 "studentName": {
                     "type": "string",
-                    "example": "Петя Иванов"
+                    "example": "Petya Ivanov"
                 }
             }
         },
@@ -1148,11 +1299,23 @@ const docTemplate = `{
                     "type": "string",
                     "example": "https://minio.local/avatar_1.png"
                 },
+                "exp": {
+                    "type": "integer",
+                    "example": 45
+                },
+                "expToNextLevel": {
+                    "type": "integer",
+                    "example": 55
+                },
                 "fullName": {
                     "type": "string",
-                    "example": "Иван Иванов"
+                    "example": "Ivan Ivanov"
                 },
                 "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "level": {
                     "type": "integer",
                     "example": 1
                 },
@@ -1167,6 +1330,14 @@ const docTemplate = `{
                 "roleId": {
                     "type": "integer",
                     "example": 2
+                },
+                "stars": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "studentCode": {
+                    "type": "string",
+                    "example": "STU-8A7KQ21M"
                 }
             }
         }

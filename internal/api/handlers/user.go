@@ -65,6 +65,49 @@ func GetProfile(s service.UserService) fiber.Handler {
 	}
 }
 
+// @Summary Get current user
+// @Description Returns current authenticated user with role name
+// @Produce json
+// @Tags user
+// @Success 200 {object} presenter.MeResponse
+// @Failure 401 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 404 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /me [get]
+func GetMe(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userID := c.Locals("userId").(uint)
+
+		user, err := s.GetUserByID(userID)
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse(errors.New("user not found")))
+			}
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		user, err = s.EnsureStudentInvitationCode(user)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.MeResponse{
+			ID:             user.ID,
+			Login:          user.Login,
+			FullName:       user.FullName,
+			PhoneNumber:    user.PhoneNumber,
+			Avatar:         user.Avatar,
+			InvitationCode: user.InvitationCode,
+			RoleID:         user.RoleID,
+			RoleName:       user.Role.Name,
+			Stars:          user.Stars,
+			Exp:            user.Exp,
+			Level:          models.CalculateLevel(user.Exp),
+			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
+		})
+	}
+}
+
 func CompleteGameLevel(s service.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		levelID := c.Params("levelId")

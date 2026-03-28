@@ -41,6 +41,21 @@ type UserProfileResponse struct {
 	ExpToNextLevel int    `json:"expToNextLevel" example:"55"`
 }
 
+type MeResponse struct {
+	ID             uint   `json:"id" example:"1"`
+	Login          string `json:"login" example:"teacher01"`
+	FullName       string `json:"fullName" example:"Ivan Ivanov"`
+	PhoneNumber    string `json:"phoneNumber" example:"+79001234567"`
+	Avatar         string `json:"avatar" example:"https://minio.local/avatar_1.png"`
+	InvitationCode string `json:"studentCode,omitempty" example:"STU-8A7KQ21M"`
+	RoleID         uint   `json:"roleId" example:"2"`
+	RoleName       string `json:"roleName" example:"student"`
+	Stars          int    `json:"stars" example:"10"`
+	Exp            int    `json:"exp" example:"45"`
+	Level          int    `json:"level" example:"1"`
+	ExpToNextLevel int    `json:"expToNextLevel" example:"55"`
+}
+
 type ParentChildProgressResponse struct {
 	StudentID      uint   `json:"studentId" example:"12"`
 	StudentName    string `json:"studentName" example:"Petya Ivanov"`

@@ -15,7 +15,7 @@ definitions:
   presenter.CreateLessonRequest:
     properties:
       description:
-        example: Первый урок курса
+        example: First lesson of the course
         type: string
       estimatedMinutes:
         example: 25
@@ -26,8 +26,44 @@ definitions:
       order:
         example: 1
         type: integer
+      tasks:
+        items:
+          $ref: '#/definitions/presenter.CreateLessonTaskRequest'
+        type: array
       title:
-        example: Знакомство с Python
+        example: Intro to Python
+        type: string
+    type: object
+  presenter.CreateLessonTaskRequest:
+    properties:
+      correctOptionIds:
+        items:
+          type: string
+        type: array
+      description:
+        example: Проверьте понимание темы
+        type: string
+      options:
+        items:
+          $ref: '#/definitions/presenter.CreateTaskOptionRequest'
+        type: array
+      question:
+        example: Какие варианты верные?
+        type: string
+      title:
+        example: Базовый тест
+        type: string
+      type:
+        example: quiz
+        type: string
+    type: object
+  presenter.CreateTaskOptionRequest:
+    properties:
+      id:
+        example: a
+        type: string
+      text:
+        example: Ответ A
         type: string
     type: object
   presenter.ErrorResponse:
@@ -48,10 +84,55 @@ definitions:
     required:
     - name
     type: object
+  presenter.MeResponse:
+    properties:
+      avatar:
+        example: https://minio.local/avatar_1.png
+        type: string
+      exp:
+        example: 45
+        type: integer
+      expToNextLevel:
+        example: 55
+        type: integer
+      fullName:
+        example: Ivan Ivanov
+        type: string
+      id:
+        example: 1
+        type: integer
+      level:
+        example: 1
+        type: integer
+      login:
+        example: teacher01
+        type: string
+      phoneNumber:
+        example: "+79001234567"
+        type: string
+      roleId:
+        example: 2
+        type: integer
+      roleName:
+        example: student
+        type: string
+      stars:
+        example: 10
+        type: integer
+      studentCode:
+        example: STU-8A7KQ21M
+        type: string
+    type: object
   presenter.ParentChildProgressResponse:
     properties:
       achievements:
         example: 4
+        type: integer
+      exp:
+        example: 45
+        type: integer
+      level:
+        example: 1
         type: integer
       stars:
         example: 18
@@ -66,7 +147,7 @@ definitions:
         example: petya_ivanov
         type: string
       studentName:
-        example: Петя Иванов
+        example: Petya Ivanov
         type: string
     type: object
   presenter.SignInRequest:
@@ -113,10 +194,19 @@ definitions:
       avatar:
         example: https://minio.local/avatar_1.png
         type: string
+      exp:
+        example: 45
+        type: integer
+      expToNextLevel:
+        example: 55
+        type: integer
       fullName:
-        example: Иван Иванов
+        example: Ivan Ivanov
         type: string
       id:
+        example: 1
+        type: integer
+      level:
         example: 1
         type: integer
       login:
@@ -128,6 +218,12 @@ definitions:
       roleId:
         example: 2
         type: integer
+      stars:
+        example: 10
+        type: integer
+      studentCode:
+        example: STU-8A7KQ21M
+        type: string
     type: object
 host: localhost:3000
 info:
@@ -699,6 +795,31 @@ paths:
       summary: List course lessons
       tags:
       - courses
+  /me:
+    get:
+      description: Returns current authenticated user with role name
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.MeResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get current user
+      tags:
+      - user
   /user/avatar:
     post:
       consumes:
