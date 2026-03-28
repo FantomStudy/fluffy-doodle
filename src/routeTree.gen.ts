@@ -16,6 +16,7 @@ import { Route as ProtectedSidebarRouteRouteImport } from './routes/_protected/_
 import { Route as ProtectedSidebarIndexRouteImport } from './routes/_protected/_sidebar/index'
 import { Route as ProtectedSidebarProfileRouteImport } from './routes/_protected/_sidebar/profile'
 import { Route as ProtectedSidebarKnowledgeRouteImport } from './routes/_protected/_sidebar/knowledge'
+import { Route as ProtectedSidebarChildRouteImport } from './routes/_protected/_sidebar/child'
 import { Route as ProtectedSidebarChallengeRouteImport } from './routes/_protected/_sidebar/challenge'
 import { Route as ProtectedSidebarAlgorithmRouteImport } from './routes/_protected/_sidebar/algorithm'
 import { Route as ProtectedSidebarCoursesIndexRouteImport } from './routes/_protected/_sidebar/courses/index'
@@ -56,6 +57,11 @@ const ProtectedSidebarKnowledgeRoute =
     path: '/knowledge',
     getParentRoute: () => ProtectedSidebarRouteRoute,
   } as any)
+const ProtectedSidebarChildRoute = ProtectedSidebarChildRouteImport.update({
+  id: '/child',
+  path: '/child',
+  getParentRoute: () => ProtectedSidebarRouteRoute,
+} as any)
 const ProtectedSidebarChallengeRoute =
   ProtectedSidebarChallengeRouteImport.update({
     id: '/challenge',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof authRegisterRoute
   '/algorithm': typeof ProtectedSidebarAlgorithmRoute
   '/challenge': typeof ProtectedSidebarChallengeRoute
+  '/child': typeof ProtectedSidebarChildRoute
   '/knowledge': typeof ProtectedSidebarKnowledgeRoute
   '/profile': typeof ProtectedSidebarProfileRoute
   '/courses/': typeof ProtectedSidebarCoursesIndexRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/register': typeof authRegisterRoute
   '/algorithm': typeof ProtectedSidebarAlgorithmRoute
   '/challenge': typeof ProtectedSidebarChallengeRoute
+  '/child': typeof ProtectedSidebarChildRoute
   '/knowledge': typeof ProtectedSidebarKnowledgeRoute
   '/profile': typeof ProtectedSidebarProfileRoute
   '/courses': typeof ProtectedSidebarCoursesIndexRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/(auth)/register': typeof authRegisterRoute
   '/_protected/_sidebar/algorithm': typeof ProtectedSidebarAlgorithmRoute
   '/_protected/_sidebar/challenge': typeof ProtectedSidebarChallengeRoute
+  '/_protected/_sidebar/child': typeof ProtectedSidebarChildRoute
   '/_protected/_sidebar/knowledge': typeof ProtectedSidebarKnowledgeRoute
   '/_protected/_sidebar/profile': typeof ProtectedSidebarProfileRoute
   '/_protected/_sidebar/': typeof ProtectedSidebarIndexRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/algorithm'
     | '/challenge'
+    | '/child'
     | '/knowledge'
     | '/profile'
     | '/courses/'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/algorithm'
     | '/challenge'
+    | '/child'
     | '/knowledge'
     | '/profile'
     | '/courses'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/(auth)/register'
     | '/_protected/_sidebar/algorithm'
     | '/_protected/_sidebar/challenge'
+    | '/_protected/_sidebar/child'
     | '/_protected/_sidebar/knowledge'
     | '/_protected/_sidebar/profile'
     | '/_protected/_sidebar/'
@@ -224,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSidebarKnowledgeRouteImport
       parentRoute: typeof ProtectedSidebarRouteRoute
     }
+    '/_protected/_sidebar/child': {
+      id: '/_protected/_sidebar/child'
+      path: '/child'
+      fullPath: '/child'
+      preLoaderRoute: typeof ProtectedSidebarChildRouteImport
+      parentRoute: typeof ProtectedSidebarRouteRoute
+    }
     '/_protected/_sidebar/challenge': {
       id: '/_protected/_sidebar/challenge'
       path: '/challenge'
@@ -265,6 +284,7 @@ declare module '@tanstack/react-router' {
 interface ProtectedSidebarRouteRouteChildren {
   ProtectedSidebarAlgorithmRoute: typeof ProtectedSidebarAlgorithmRoute
   ProtectedSidebarChallengeRoute: typeof ProtectedSidebarChallengeRoute
+  ProtectedSidebarChildRoute: typeof ProtectedSidebarChildRoute
   ProtectedSidebarKnowledgeRoute: typeof ProtectedSidebarKnowledgeRoute
   ProtectedSidebarProfileRoute: typeof ProtectedSidebarProfileRoute
   ProtectedSidebarIndexRoute: typeof ProtectedSidebarIndexRoute
@@ -276,6 +296,7 @@ interface ProtectedSidebarRouteRouteChildren {
 const ProtectedSidebarRouteRouteChildren: ProtectedSidebarRouteRouteChildren = {
   ProtectedSidebarAlgorithmRoute: ProtectedSidebarAlgorithmRoute,
   ProtectedSidebarChallengeRoute: ProtectedSidebarChallengeRoute,
+  ProtectedSidebarChildRoute: ProtectedSidebarChildRoute,
   ProtectedSidebarKnowledgeRoute: ProtectedSidebarKnowledgeRoute,
   ProtectedSidebarProfileRoute: ProtectedSidebarProfileRoute,
   ProtectedSidebarIndexRoute: ProtectedSidebarIndexRoute,

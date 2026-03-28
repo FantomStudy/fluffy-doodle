@@ -10,6 +10,7 @@ interface SignUpRequest {
   login: string;
   password: string;
   phoneNumber: string;
+  studentCode?: string;
 }
 
 interface AuthResponse {

@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Camera, Download, Loader2, LogOut, Star, Zap } from "lucide-react";
+import { Camera, Download, Flame, Loader2, LogOut, Star, Zap } from "lucide-react";
 import { useRef, useState } from "react";
 import { logout } from "@/api/auth";
 import { uploadAvatar } from "@/api/user";
@@ -124,6 +124,10 @@ const ProfilePage = () => {
           <p className={styles.userName}>{profile.fullName}</p>
           <p className={styles.userLogin}>{profile.login}</p>
           <p className={styles.userPhone}>{profile.phoneNumber}</p>
+          <div className={styles.studentCodeWrap}>
+            <span className={styles.studentCodeLabel}>Личный код студента</span>
+            <span className={styles.studentCode}>{profile.studentCode}</span>
+          </div>
 
           <div className={styles.statsRow}>
             <div className={styles.statCard}>
@@ -138,6 +142,13 @@ const ProfilePage = () => {
               <div className={styles.statData}>
                 <span className={styles.statValue}>{profile.exp}</span>
                 <span className={styles.statLabel}>опыт</span>
+              </div>
+            </div>
+            <div className={styles.statCard}>
+              <Flame size={20} className={styles.statIconStreak} />
+              <div className={styles.statData}>
+                <span className={styles.statValue}>{profile.streak}</span>
+                <span className={styles.statLabel}>серия</span>
               </div>
             </div>
           </div>

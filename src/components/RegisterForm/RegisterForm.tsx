@@ -11,6 +11,8 @@ export const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [isParent, setIsParent] = useState(false);
+  const [studentCode, setStudentCode] = useState("");
 
   const navigate = useNavigate();
 
@@ -26,7 +28,13 @@ export const RegisterForm = () => {
     e.preventDefault();
 
     mutate(
-      { login, password, fullName, phoneNumber: phone },
+      {
+        login,
+        password,
+        fullName,
+        phoneNumber: phone,
+        ...(isParent && studentCode ? { studentCode } : {}),
+      },
       { onSuccess: () => navigate({ to: "/login" }) },
     );
   };
@@ -94,6 +102,31 @@ export const RegisterForm = () => {
           />
         </div>
       </div>
+
+      <label className={styles.checkboxRow}>
+        <input
+          type="checkbox"
+          className={styles.checkbox}
+          checked={isParent}
+          onChange={(e) => setIsParent(e.target.checked)}
+        />
+        <span className={styles.checkboxLabel}>Я родитель</span>
+      </label>
+
+      {isParent && (
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="student-code">
+            Код ребёнка
+          </label>
+          <Input
+            id="student-code"
+            type="text"
+            placeholder="STU-XXXXXXXX"
+            value={studentCode}
+            onChange={(e) => setStudentCode(e.target.value)}
+          />
+        </div>
+      )}
 
       <Button type="submit" className={styles.submitBtn} disabled={isPending}>
         <SparklesIcon size={18} />

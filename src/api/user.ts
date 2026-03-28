@@ -22,15 +22,33 @@ export interface User {
   login: string;
   phoneNumber: string;
   avatar: string;
+  studentCode: string;
   stars: number;
   exp: number;
   level: number;
   expToNextLevel: number;
+  streak: number;
   roleId: number;
   role: Role;
   achievements: Achievement[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Me {
+  id: number;
+  login: string;
+  fullName: string;
+  phoneNumber: string;
+  avatar: string;
+  studentCode?: string;
+  roleId: number;
+  roleName: "admin" | "teacher" | "student" | "parent";
+  stars: number;
+  exp: number;
+  level: number;
+  expToNextLevel: number;
+  streak: number;
 }
 
 interface InviteStudentRequest {
@@ -46,6 +64,8 @@ interface ApiResponse {
 }
 
 export const getProfile = () => api<User>("/user/profile");
+
+export const getMe = () => api<Me>("/me");
 
 export const uploadAvatar = async (file: File) => {
   const formData = new FormData();
@@ -68,3 +88,16 @@ export const uploadAvatar = async (file: File) => {
 
 export const inviteStudent = (body: InviteStudentRequest) =>
   api<ApiResponse>("/user/student-invitation", { method: "POST", body });
+
+export interface ChildProgress {
+  studentId: number;
+  studentName: string;
+  studentLogin: string;
+  stars: number;
+  exp: number;
+  level: number;
+  achievements: number;
+  studentCode: string;
+}
+
+export const getChildProgress = () => api<ChildProgress>("/user/parent/child-progress");
