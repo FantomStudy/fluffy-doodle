@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public sealed class LevelCompletionFlowController : MonoBehaviour
 {
+    private const float AutoRedirectDelaySeconds = 5f;
+    private const string RedirectQueryParameterName = "redirect";
+    private const int DefaultRedirectPort = 5173;
+    private const string DefaultRedirectPath = "/courses";
+
     private static LevelCompletionFlowController instance;
 
     private LevelCompletionApiClient apiClient;
@@ -12,6 +17,7 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
     private ScreenFadePlayerLock screenFadePlayerLock;
     private SceneLevelDescriptor currentSceneLevel;
     private bool isCompleting;
+    private Coroutine redirectRoutine;
 
     public static bool TryStartCurrentLevelCompletion(int nextSceneBuildIndex = -1)
     {
@@ -62,6 +68,7 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
             return;
         }
 
+        StopAutoRedirect();
         SceneManager.sceneLoaded -= HandleSceneLoaded;
         instance = null;
     }
@@ -98,6 +105,7 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
     private void HandleSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         isCompleting = false;
+        StopAutoRedirect();
         RefreshSceneContext();
         popupUI?.HideInstant();
     }
@@ -117,6 +125,7 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
             return false;
         }
 
+        StopAutoRedirect();
         StartCoroutine(CompleteLevelRoutine(nextSceneBuildIndex));
         return true;
     }
@@ -185,9 +194,6 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
             ? $"Вы уже проходили уровень {levelLabel}. Награда больше не выдаётся."
             : $"Вы прошли уровень {levelLabel} и получили +{awardedStars} stars и +{awardedExp} exp.";
 
-        LevelCompletionPopupAction primaryAction = BuildPrimaryAction(nextSceneBuildIndex);
-        LevelCompletionPopupAction secondaryAction = BuildSecondaryAction(nextSceneBuildIndex);
-
         popupUI.Show(new LevelCompletionPopupState
         {
             Title = "Уровень пройден",
@@ -195,19 +201,14 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
             Message = message,
             StarsText = alreadyCompleted ? "+0" : $"+{awardedStars}",
             ExpText = alreadyCompleted ? "+0" : $"+{awardedExp}",
-            Footer = string.Empty,
-            PrimaryButtonText = primaryAction.Label,
-            PrimaryAction = primaryAction.Callback,
-            SecondaryButtonText = secondaryAction.Label,
-            SecondaryAction = secondaryAction.Callback,
+            Footer = BuildAutoRedirectFooter(),
         });
+
+        StartAutoRedirect();
     }
 
     private void ShowFallbackPopup(string error, int nextSceneBuildIndex)
     {
-        LevelCompletionPopupAction primaryAction = BuildPrimaryAction(nextSceneBuildIndex);
-        LevelCompletionPopupAction secondaryAction = BuildSecondaryAction(nextSceneBuildIndex);
-
         popupUI.Show(new LevelCompletionPopupState
         {
             Title = "Уровень пройден",
@@ -215,60 +216,84 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
             Message = BuildFallbackMessage(error),
             StarsText = "--",
             ExpText = "--",
-            Footer = string.Empty,
-            PrimaryButtonText = primaryAction.Label,
-            PrimaryAction = primaryAction.Callback,
-            SecondaryButtonText = secondaryAction.Label,
-            SecondaryAction = secondaryAction.Callback,
+            Footer = BuildAutoRedirectFooter(),
         });
+
+        StartAutoRedirect();
     }
 
-    private LevelCompletionPopupAction BuildPrimaryAction(int nextSceneBuildIndex)
+    private static string BuildAutoRedirectFooter()
     {
-        if (nextSceneBuildIndex >= 0)
-        {
-            return new LevelCompletionPopupAction("Далее", () => LoadScene(nextSceneBuildIndex));
-        }
-
-        return new LevelCompletionPopupAction("Заново", ReloadCurrentScene);
+        return $"Автоматический переход через {Mathf.RoundToInt(AutoRedirectDelaySeconds)} секунд...";
     }
 
-    private LevelCompletionPopupAction BuildSecondaryAction(int nextSceneBuildIndex)
+    private void StartAutoRedirect()
     {
-        if (nextSceneBuildIndex >= 0)
-        {
-            return new LevelCompletionPopupAction("Заново", ReloadCurrentScene);
-        }
-
-        if (currentSceneLevel.HasPreviousScene)
-        {
-            return new LevelCompletionPopupAction("Назад", () => LoadScene(currentSceneLevel.PreviousSceneName));
-        }
-
-        return LevelCompletionPopupAction.None;
+        StopAutoRedirect();
+        redirectRoutine = StartCoroutine(AutoRedirectRoutine());
     }
 
-    private void ReloadCurrentScene()
+    private void StopAutoRedirect()
     {
-        popupUI.HideInstant();
-        SceneManager.LoadScene(currentSceneLevel.SceneName);
-    }
-
-    private void LoadScene(int buildIndex)
-    {
-        popupUI.HideInstant();
-        SceneManager.LoadScene(buildIndex);
-    }
-
-    private void LoadScene(string sceneName)
-    {
-        if (string.IsNullOrWhiteSpace(sceneName))
+        if (redirectRoutine == null)
         {
             return;
         }
 
-        popupUI.HideInstant();
-        SceneManager.LoadScene(sceneName);
+        StopCoroutine(redirectRoutine);
+        redirectRoutine = null;
+    }
+
+    private IEnumerator AutoRedirectRoutine()
+    {
+        yield return new WaitForSecondsRealtime(AutoRedirectDelaySeconds);
+
+        string redirectUrl = ResolveRedirectUrl();
+        redirectRoutine = null;
+
+        if (string.IsNullOrWhiteSpace(redirectUrl))
+        {
+            Debug.LogWarning("Level completion redirect target is not configured yet.");
+            yield break;
+        }
+
+        Application.OpenURL(redirectUrl);
+    }
+
+    private static string ResolveRedirectUrl()
+    {
+        string queryRedirectUrl;
+        if (PracticeLaunchOptions.TryGetQueryParameter(RedirectQueryParameterName, out string redirectValue) &&
+            PracticeLaunchOptions.TryBuildAbsoluteUrl(redirectValue, out queryRedirectUrl))
+        {
+            return queryRedirectUrl;
+        }
+
+        if (TryBuildDefaultRedirectUrl(out string defaultRedirectUrl))
+        {
+            return defaultRedirectUrl;
+        }
+
+        return string.Empty;
+    }
+
+    private static bool TryBuildDefaultRedirectUrl(out string redirectUrl)
+    {
+        redirectUrl = string.Empty;
+        if (string.IsNullOrWhiteSpace(Application.absoluteURL))
+        {
+            return false;
+        }
+
+        if (!Uri.TryCreate(Application.absoluteURL, UriKind.Absolute, out Uri currentUri) ||
+            string.IsNullOrWhiteSpace(currentUri.Host))
+        {
+            return false;
+        }
+
+        UriBuilder builder = new UriBuilder(currentUri.Scheme, currentUri.Host, DefaultRedirectPort, DefaultRedirectPath);
+        redirectUrl = builder.Uri.ToString();
+        return true;
     }
 
     private string ResolveLevelLabel(string responseLevelId)
@@ -320,20 +345,6 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         return $"Не удалось подтвердить награду на сервере.\n{trimmedError}";
     }
 
-    private readonly struct LevelCompletionPopupAction
-    {
-        public static readonly LevelCompletionPopupAction None = new LevelCompletionPopupAction(null, null);
-
-        public LevelCompletionPopupAction(string label, Action callback)
-        {
-            Label = label;
-            Callback = callback;
-        }
-
-        public string Label { get; }
-        public Action Callback { get; }
-    }
-
     private readonly struct SceneLevelDescriptor
     {
         public SceneLevelDescriptor(bool isSupported, string sceneName, int levelNumber, string levelId, string previousSceneName)
@@ -351,7 +362,6 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         public string LevelId { get; }
         public string PreviousSceneName { get; }
         public string LevelLabel => LevelNumber > 0 ? LevelNumber.ToString() : string.Empty;
-        public bool HasPreviousScene => !string.IsNullOrWhiteSpace(PreviousSceneName);
 
         public static SceneLevelDescriptor FromScene(Scene scene)
         {

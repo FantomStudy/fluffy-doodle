@@ -4423,6 +4423,7 @@ MonoBehaviour:
   disableCollidersWhenOpened: 1
   isFinalDoor: 0
   screenFadePlayerLock: {fileID: 0}
+  nextSceneBuildIndex: -1
 --- !u!64 &733100697
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5422,6 +5423,7 @@ MonoBehaviour:
   disableCollidersWhenOpened: 1
   isFinalDoor: 0
   screenFadePlayerLock: {fileID: 0}
+  nextSceneBuildIndex: -1
 --- !u!64 &971797937
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6983,7 +6985,7 @@ MonoBehaviour:
   disableCollidersWhenOpened: 1
   isFinalDoor: 1
   screenFadePlayerLock: {fileID: 1284108821}
-  nextSceneBuildIndex: 1
+  nextSceneBuildIndex: 2
 --- !u!64 &1284108816
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -7369,6 +7371,10 @@ PrefabInstance:
     - target: {fileID: 817283963039527456, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
       propertyPath: Target.CustomLookAtTarget
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3086546279676800976, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4511306410783907255, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
       propertyPath: m_Name
@@ -8843,6 +8849,7 @@ MonoBehaviour:
   disableCollidersWhenOpened: 1
   isFinalDoor: 0
   screenFadePlayerLock: {fileID: 0}
+  nextSceneBuildIndex: -1
 --- !u!1 &1688242913
 GameObject:
   m_ObjectHideFlags: 0
@@ -11392,6 +11399,7 @@ MonoBehaviour:
   disableCollidersWhenOpened: 1
   isFinalDoor: 0
   screenFadePlayerLock: {fileID: 0}
+  nextSceneBuildIndex: -1
 --- !u!64 &2097411477
 MeshCollider:
   m_ObjectHideFlags: 0
