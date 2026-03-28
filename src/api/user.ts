@@ -23,6 +23,9 @@ export interface User {
   phoneNumber: string;
   avatar: string;
   stars: number;
+  exp: number;
+  level: number;
+  expToNextLevel: number;
   roleId: number;
   role: Role;
   achievements: Achievement[];
@@ -37,19 +40,31 @@ interface InviteStudentRequest {
   phoneNumber: string;
 }
 
-interface AuthResponse {
-  status: boolean;
-  error?: unknown;
+interface ApiResponse {
+  success: boolean;
+  error: string | null;
 }
 
 export const getProfile = () => api<User>("/user/profile");
 
-export const uploadAvatar = (file: File) => {
+export const uploadAvatar = async (file: File) => {
   const formData = new FormData();
   formData.append("avatar", file);
 
-  return api<AuthResponse>("/user/avatar", { method: "POST", body: formData });
+  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const res = await fetch(`${baseURL}/user/avatar`, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.error || `Ошибка загрузки: ${res.status}`);
+  }
+
+  return res.json() as Promise<ApiResponse>;
 };
 
 export const inviteStudent = (body: InviteStudentRequest) =>
-  api<AuthResponse>("/user/student-invitation", { method: "POST", body });
+  api<ApiResponse>("/user/student-invitation", { method: "POST", body });

@@ -1,79 +1,20 @@
+import type { Lesson as ApiLesson } from "@/api/courses";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeftIcon, CheckIcon, ClockIcon, LockIcon } from "lucide-react";
+import { useCourse, useCourseLessons } from "@/hooks/useCourses";
 import styles from "./CoursePage.module.css";
 
 type LessonStatus = "completed" | "current" | "locked";
 
-interface Lesson {
+interface LessonDisplay {
+  id: number;
+  courseId: number;
   number: number;
   title: string;
   description: string;
-  image: string;
   status: LessonStatus;
+  tasks: ApiLesson["tasks"];
 }
-
-interface Achievement {
-  title: string;
-  description: string;
-}
-
-const LESSONS: Lesson[] = [
-  {
-    number: 1,
-    title: "Знакомство с Python",
-    description:
-      "Краткое описание курса Краткое описание курсаКраткое описание курсаКраткое описание курса",
-    image: "/assets/course/course-python.png",
-    status: "completed",
-  },
-  {
-    number: 2,
-    title: "Знакомство с Python",
-    description:
-      "Краткое описание курса Краткое описание курсаКраткое описание курсаКраткое описание курса",
-    image: "/assets/course/course-python.png",
-    status: "completed",
-  },
-  {
-    number: 3,
-    title: "Знакомство с Python",
-    description:
-      "Краткое описание курса Краткое описание курсаКраткое описание курсаКраткое описание курса",
-    image: "/assets/course/course-python.png",
-    status: "completed",
-  },
-  {
-    number: 4,
-    title: "Знакомство с Python",
-    description:
-      "Краткое описание курса Краткое описание курсаКраткое описание курсаКраткое описание курса",
-    image: "/assets/course/course-python.png",
-    status: "current",
-  },
-  {
-    number: 5,
-    title: "Знакомство с Python",
-    description:
-      "Краткое описание курса Краткое описание курсаКраткое описание курсаКраткое описание курса",
-    image: "/assets/course/course-python.png",
-    status: "locked",
-  },
-  {
-    number: 6,
-    title: "Знакомство с Python",
-    description:
-      "Краткое описание курса Краткое описание курсаКраткое описание курсаКраткое описание курса",
-    image: "/assets/course/course-python.png",
-    status: "locked",
-  },
-];
-
-const ACHIEVEMENTS: Achievement[] = [
-  { title: "Первая программа", description: "Написал свой первых код" },
-  { title: "Первая программа", description: "Написал свой первых код" },
-  { title: "Первая программа", description: "Написал свой первых код" },
-  { title: "Первая программа", description: "Написал свой первых код" },
-];
 
 const STATUS_CONFIG = {
   completed: {
@@ -96,11 +37,15 @@ const STATUS_CONFIG = {
   },
 } as const;
 
-const LessonCard = ({ number, title, description, image, status }: Lesson) => {
+const LessonCard = ({ id, courseId, number, title, description, status }: LessonDisplay) => {
   const config = STATUS_CONFIG[status];
 
   return (
-    <div className={styles.lessonCard}>
+    <Link
+      to="/course/$courseId/lesson/$lessonId"
+      params={{ courseId: String(courseId), lessonId: String(id) }}
+      className={styles.lessonCard}
+    >
       <div className={`${styles.lessonNumber} ${config.numberClass}`}>{number}</div>
       <div className={styles.lessonContent}>
         <h3 className={styles.lessonTitle}>{title}</h3>
@@ -110,80 +55,110 @@ const LessonCard = ({ number, title, description, image, status }: Lesson) => {
           {config.label}
         </span>
       </div>
-      <div className={styles.lessonImage}>
-        <img src={image} alt={title} />
-      </div>
-    </div>
+    </Link>
   );
 };
 
-const CoursePage = () => (
-  <main className={styles.root}>
-    <Link to="/" className={styles.backLink}>
-      <ArrowLeftIcon size={20} />
-      <span>К списку курсов</span>
-    </Link>
+interface CoursePageProps {
+  courseId: number;
+}
 
-    <div className={styles.layout}>
-      <div className={styles.mainColumn}>
-        <section className={styles.courseHeader}>
-          <div className={styles.courseImage}>
-            <img src="/assets/course/course-python.png" alt="Python для начинающих" />
-          </div>
-          <div className={styles.courseInfo}>
-            <h1 className={styles.courseTitle}>Python для начинающих</h1>
-            <p className={styles.courseDesc}>Краткое описание курса</p>
-            <div className={styles.courseMeta}>
-              <span className={styles.metaBadge}>12 уроков</span>
-              <span className={`${styles.metaBadge} ${styles.metaLevel}`}>Средний уровень</span>
-              <span className={styles.metaTime}>
-                <ClockIcon size={16} />
-                6 часов
-              </span>
+const CoursePage = ({ courseId }: CoursePageProps) => {
+  const { data: course, isLoading: courseLoading } = useCourse(courseId);
+  const { data: lessons, isLoading: lessonsLoading } = useCourseLessons(courseId);
+
+  if (courseLoading || lessonsLoading) {
+    return (
+      <main className={styles.root}>
+        <p>Загрузка...</p>
+      </main>
+    );
+  }
+
+  if (!course) {
+    return (
+      <main className={styles.root}>
+        <p>Курс не найден</p>
+      </main>
+    );
+  }
+
+  const displayLessons: LessonDisplay[] = (lessons ?? [])
+    .sort((a, b) => a.order - b.order)
+    .map((lesson, _i, arr) => {
+      const idx = arr.indexOf(lesson);
+      const allPrevDone = arr.slice(0, idx).every((l) => l.tasks.length === 0);
+      const isCurrent = idx === 0 || allPrevDone;
+
+      return {
+        id: lesson.id,
+        courseId,
+        number: lesson.order,
+        title: lesson.title,
+        description: lesson.description,
+        status: isCurrent ? ("current" as const) : ("locked" as const),
+        tasks: lesson.tasks,
+      };
+    });
+
+  const completedCount = displayLessons.filter((l) => l.status === "completed").length;
+  const totalCount = displayLessons.length;
+  const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
+  return (
+    <main className={styles.root}>
+      <Link to="/" className={styles.backLink}>
+        <ArrowLeftIcon size={20} />
+        <span>К списку курсов</span>
+      </Link>
+
+      <div className={styles.layout}>
+        <div className={styles.mainColumn}>
+          <section className={styles.courseHeader}>
+            <div className={styles.courseImage}>
+              <img src={course.imageUrl || "/assets/course/course-python.png"} alt={course.title} />
             </div>
-          </div>
-        </section>
-
-        <section className={styles.lessonsList}>
-          {LESSONS.map((lesson) => (
-            <LessonCard key={lesson.number} {...lesson} />
-          ))}
-        </section>
-      </div>
-
-      <aside className={styles.sidebar}>
-        <div className={styles.progressCard}>
-          <h2 className={styles.sidebarTitle}>Твой прогресс</h2>
-          <div className={styles.progressRow}>
-            <div className={styles.progressTrack}>
-              <div className={styles.progressFill} />
-            </div>
-            <div className={styles.starCount}>
-              <img src="/assets/course/star-badge.svg" alt="очки" className={styles.starIcon} />
-              <span>18</span>
-            </div>
-          </div>
-          <p className={styles.progressText}>5 из 12 урока</p>
-        </div>
-
-        <div className={styles.achievementsCard}>
-          <h2 className={styles.sidebarTitle}>Достижения курса</h2>
-          <p className={styles.achievementsSubtitle}>Собирай награды за свои успехи!</p>
-          <div className={styles.achievementsList}>
-            {ACHIEVEMENTS.map((a, i) => (
-              <div key={i} className={styles.achievementItem}>
-                <div className={styles.achievementIcon} />
-                <div>
-                  <p className={styles.achievementTitle}>{a.title}</p>
-                  <p className={styles.achievementDesc}>{a.description}</p>
-                </div>
+            <div className={styles.courseInfo}>
+              <h1 className={styles.courseTitle}>{course.title}</h1>
+              <p className={styles.courseDesc}>{course.description}</p>
+              <div className={styles.courseMeta}>
+                <span className={styles.metaBadge}>{course.totalLessons} уроков</span>
+                <span className={`${styles.metaBadge} ${styles.metaLevel}`}>{course.level}</span>
+                <span className={styles.metaTime}>
+                  <ClockIcon size={16} />
+                  {course.hours} ч
+                </span>
               </div>
+            </div>
+          </section>
+
+          <section className={styles.lessonsList}>
+            {displayLessons.map((lesson) => (
+              <LessonCard key={lesson.id} {...lesson} />
             ))}
-          </div>
+          </section>
         </div>
-      </aside>
-    </div>
-  </main>
-);
+
+        <aside className={styles.sidebar}>
+          <div className={styles.progressCard}>
+            <h2 className={styles.sidebarTitle}>Твой прогресс</h2>
+            <div className={styles.progressRow}>
+              <div className={styles.progressTrack}>
+                <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
+              </div>
+              <div className={styles.starCount}>
+                <img src="/assets/course/star-badge.svg" alt="очки" className={styles.starIcon} />
+                <span>{completedCount}</span>
+              </div>
+            </div>
+            <p className={styles.progressText}>
+              {completedCount} из {totalCount} уроков
+            </p>
+          </div>
+        </aside>
+      </div>
+    </main>
+  );
+};
 
 export { CoursePage };

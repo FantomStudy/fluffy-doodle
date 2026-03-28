@@ -1,3 +1,4 @@
+import type { Task } from "@/api/courses";
 import { BookOpen, CheckCheck, ChevronRight, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import s from "./QuizChallenge.module.css";
@@ -291,7 +292,13 @@ function ResultsScreen({
 
 // ─── Quiz Phase ───────────────────────────────────────────────────────────────
 
-function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
+function QuizPhase({
+  onBackToTheory,
+  onComplete,
+}: {
+  onBackToTheory: () => void;
+  onComplete?: () => void;
+}) {
   const [qIdx, setQIdx] = useState(0);
   const [selected, setSelected] = useState<Set<number>>(() => new Set());
   const [checked, setChecked] = useState(false);
@@ -327,6 +334,7 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
   const next = () => {
     if (qIdx === total - 1) {
       setFinished(true);
+      onComplete?.();
     } else {
       setQIdx((i) => i + 1);
       setSelected(new Set());
@@ -436,9 +444,111 @@ function QuizPhase({ onBackToTheory }: { onBackToTheory: () => void }) {
   );
 }
 
+// ─── API Task Quiz ────────────────────────────────────────────────────────────
+
+function ApiQuizPhase({
+  task,
+  onComplete,
+}: {
+  task: Task;
+  onComplete?: (selectedOptionIds: string[]) => void;
+}) {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [submitted, setSubmitted] = useState(false);
+
+  const toggle = (optionId: string) => {
+    if (submitted) return;
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(optionId)) next.delete(optionId);
+      else next.add(optionId);
+      return next;
+    });
+  };
+
+  const handleSubmit = () => {
+    const ids = Array.from(selected);
+    setSubmitted(true);
+    onComplete?.(ids);
+  };
+
+  return (
+    <div className={s.quizShell}>
+      <div className={s.quizHeader}>
+        <span className={s.qCounter}>{task.title}</span>
+        <div className={s.qProgressBar}>
+          <div className={s.qProgressFill} style={{ width: "100%" }} />
+        </div>
+        <span className={s.qScore}>
+          ⭐ {task.rewardStars} | +{task.rewardExp} XP
+        </span>
+      </div>
+
+      <div className={s.quizBody}>
+        <div className={s.qCard}>
+          <div className={s.qTypeBadge}>Выбери правильные ответы</div>
+          <h2 className={s.qText}>{task.question}</h2>
+
+          <div className={s.optionsList}>
+            {task.options?.map((opt) => {
+              const isSelected = selected.has(opt.id);
+              const stateClass = submitted
+                ? isSelected
+                  ? s.option_selected
+                  : s.option_idle
+                : isSelected
+                  ? s.option_selected
+                  : s.option_idle;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`${s.option} ${stateClass}`}
+                  onClick={() => toggle(opt.id)}
+                  disabled={submitted}
+                >
+                  <span className={`${s.optionMarker} ${s.optionMarkerCheck}`}>
+                    {isSelected && "✓"}
+                  </span>
+                  <span className={s.optionText}>{opt.text}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {submitted && (
+            <div className={`${s.explanation} ${s.explanationGood}`}>
+              <span className={s.explanationBadge}>✅ Ответ отправлен!</span>
+              Твой результат обрабатывается
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className={s.quizFooter}>
+        {!submitted && (
+          <button
+            type="button"
+            className={s.btnCheck}
+            onClick={handleSubmit}
+            disabled={selected.size === 0}
+          >
+            <CheckCheck size={15} /> Отправить ответ
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
-export function QuizChallenge() {
+interface QuizChallengeProps {
+  task?: Task;
+  onComplete?: (selectedOptionIds?: string[]) => void;
+}
+
+export function QuizChallenge({ task, onComplete }: QuizChallengeProps = {}) {
   const [phase, setPhase] = useState<"theory" | "quiz">("theory");
 
   useEffect(() => {
@@ -451,12 +561,24 @@ export function QuizChallenge() {
     };
   }, []);
 
+  if (task) {
+    return (
+      <main className={s.main}>
+        {phase === "theory" ? (
+          <TheoryPhase onFinish={() => setPhase("quiz")} />
+        ) : (
+          <ApiQuizPhase task={task} onComplete={onComplete} />
+        )}
+      </main>
+    );
+  }
+
   return (
     <main className={s.main}>
       {phase === "theory" ? (
         <TheoryPhase onFinish={() => setPhase("quiz")} />
       ) : (
-        <QuizPhase onBackToTheory={() => setPhase("theory")} />
+        <QuizPhase onBackToTheory={() => setPhase("theory")} onComplete={onComplete} />
       )}
     </main>
   );

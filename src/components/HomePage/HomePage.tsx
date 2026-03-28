@@ -1,15 +1,8 @@
+import type { Course } from "@/api/courses";
+import { Link } from "@tanstack/react-router";
+import { useCourses } from "@/hooks/useCourses";
+import { useProfile } from "@/hooks/useProfile";
 import styles from "./HomePage.module.css";
-
-type CourseLevel = "Начальный" | "Средний" | "Продвинутый";
-
-interface Course {
-  image: string;
-  category: string;
-  title: string;
-  description: string;
-  level: CourseLevel;
-  lessons: number;
-}
 
 const WAYPOINTS = [
   "/assets/homepage/wp1.svg",
@@ -33,153 +26,134 @@ const WAYPOINT_POSITIONS = [
   { left: 88.3, top: 47.2 },
 ];
 
-const COURSES: Course[] = [
-  {
-    image: "/assets/homepage/course-python.png",
-    category: "Программирование",
-    title: "Изучение Python",
-    description: "Краткое описание про курс",
-    level: "Средний",
-    lessons: 12,
-  },
-  {
-    image: "/assets/homepage/course-js.png",
-    category: "Программирование",
-    title: "Основы JavaScript",
-    description: "Введение в веб-разработку",
-    level: "Начальный",
-    lessons: 10,
-  },
-  {
-    image: "/assets/homepage/course-design.png",
-    category: "Дизайн",
-    title: "Дизайн интерфейсов",
-    description: "Создание удобных интерфейсов",
-    level: "Средний",
-    lessons: 15,
-  },
-];
-
-const LESSON_BADGES: { done: boolean }[] = [
-  { done: true },
-  { done: true },
-  { done: true },
-  { done: false },
-  { done: false },
-];
-
-const CourseCard = ({ image, category, title, description, level, lessons }: Course) => (
-  <div className={styles.courseCard}>
+const CourseCard = ({
+  id,
+  imageUrl,
+  categoryName,
+  title,
+  description,
+  level,
+  totalLessons,
+}: Course) => (
+  <Link to="/course/$courseId" params={{ courseId: String(id) }} className={styles.courseCard}>
     <div className={styles.courseImage}>
-      <img src={image} alt={title} />
+      <img src={imageUrl || "/assets/homepage/course-python.png"} alt={title} />
     </div>
-    <span className={styles.categoryBadge}>{category}</span>
+    <span className={styles.categoryBadge}>{categoryName}</span>
     <h3 className={styles.courseTitle}>{title}</h3>
     <p className={styles.courseDesc}>{description}</p>
     <div className={styles.courseMeta}>
       <img src="/assets/homepage/star.svg" alt="" className={styles.courseStar} />
       <span className={styles.courseLevel}>{level}</span>
       <span className={styles.courseDivider} />
-      <span className={styles.courseLessons}>{lessons} уроков</span>
+      <span className={styles.courseLessons}>{totalLessons} уроков</span>
     </div>
-  </div>
+  </Link>
 );
 
-const HomePage = () => (
-  <main className={styles.root}>
-    <header className={styles.header}>
-      <h1 className={styles.greeting}>Рад твоему возращению, Сергей Дубской</h1>
-      <p className={styles.subtitle}>Твой учебный процесс</p>
-    </header>
+const HomePage = () => {
+  const { data: profile } = useProfile();
+  const { data: courses } = useCourses();
 
-    <section className={styles.learningCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.cardLabel}>Твой учебный процесс</span>
-        <div className={styles.cardActions}>
-          <div className={styles.starCount}>
-            <img src="/assets/homepage/star-badge.svg" alt="очки" className={styles.starIcon} />
-            <span>18</span>
-          </div>
-          <div className={styles.streakBadge}>
-            <img src="/assets/homepage/fire.png" alt="серия" />
-            <span>Серия: 3 дня подряд</span>
+  const greeting = profile?.fullName
+    ? `Рад твоему возращению, ${profile.fullName}`
+    : "Рад твоему возращению!";
+
+  return (
+    <main className={styles.root}>
+      <header className={styles.header}>
+        <h1 className={styles.greeting}>{greeting}</h1>
+        <p className={styles.subtitle}>Твой учебный процесс</p>
+      </header>
+
+      <section className={styles.learningCard}>
+        <div className={styles.cardHeader}>
+          <span className={styles.cardLabel}>Твой учебный процесс</span>
+          <div className={styles.cardActions}>
+            <div className={styles.starCount}>
+              <img src="/assets/homepage/star-badge.svg" alt="очки" className={styles.starIcon} />
+              <span>{profile?.stars ?? 0}</span>
+            </div>
+            <div className={styles.streakBadge}>
+              <img src="/assets/homepage/fire.png" alt="серия" />
+              <span>Серия: 3 дня подряд</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className={styles.mapSection}>
-        <img src="/assets/homepage/map-bg.png" alt="Карта обучения" className={styles.mapBg} />
-        <img src="/assets/homepage/map-path.svg" alt="" className={styles.mapPath} aria-hidden />
-        {WAYPOINTS.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt=""
-            aria-hidden
-            className={styles.waypoint}
-            style={{
-              left: `${WAYPOINT_POSITIONS[i].left}%`,
-              top: `${WAYPOINT_POSITIONS[i].top}%`,
-            }}
-          />
-        ))}
-        <div className={styles.expandMap}>
-          <img src="/assets/homepage/expand.svg" alt="" />
-          <span>Открыть на весь экран</span>
-        </div>
-      </div>
-
-      <div className={styles.cardFooter}>
-        <div className={styles.currentLesson}>
-          <span className={styles.lessonLabel}>Текущий урок</span>
-          <h2 className={styles.lessonTitle}>Цвет и Материалы</h2>
-          <p className={styles.lessonDesc}>Краткое описание урока</p>
-          <button className={styles.continueBtn}>Продолжить</button>
-        </div>
-
-        <div className={styles.progressSection}>
-          <span className={styles.progressLabel}>Твой прогресс</span>
-          <p className={styles.lessonCount}>Урок 4 из 5</p>
-          <div className={styles.progressTrack}>
-            <div className={styles.progressFill} />
+        <div className={styles.mapSection}>
+          <img src="/assets/homepage/map-bg.png" alt="Карта обучения" className={styles.mapBg} />
+          <img src="/assets/homepage/map-path.svg" alt="" className={styles.mapPath} aria-hidden />
+          {WAYPOINTS.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt=""
+              aria-hidden
+              className={styles.waypoint}
+              style={{
+                left: `${WAYPOINT_POSITIONS[i].left}%`,
+                top: `${WAYPOINT_POSITIONS[i].top}%`,
+              }}
+            />
+          ))}
+          <div className={styles.expandMap}>
+            <img src="/assets/homepage/expand.svg" alt="" />
+            <span>Открыть на весь экран</span>
           </div>
-          <div className={styles.badges}>
-            {LESSON_BADGES.map((badge, i) => (
+        </div>
+
+        <div className={styles.cardFooter}>
+          <div className={styles.currentLesson}>
+            <span className={styles.lessonLabel}>Уровень</span>
+            <h2 className={styles.lessonTitle}>Уровень {profile?.level ?? 1}</h2>
+            <p className={styles.lessonDesc}>
+              {profile?.exp ?? 0} / {profile?.expToNextLevel ?? 100} XP
+            </p>
+            <Link to="/courses" className={styles.continueBtn}>
+              Продолжить
+            </Link>
+          </div>
+
+          <div className={styles.progressSection}>
+            <span className={styles.progressLabel}>Твой прогресс</span>
+            <p className={styles.lessonCount}>{courses?.length ?? 0} курсов доступно</p>
+            <div className={styles.progressTrack}>
               <div
-                key={i}
-                className={`${styles.badge} ${badge.done ? styles.badgeDone : styles.badgeStar}`}
-              >
-                <img src="/assets/homepage/badge.png" alt={badge.done ? "Выполнено" : "Задание"} />
-              </div>
-            ))}
+                className={styles.progressFill}
+                style={{
+                  width: `${profile?.expToNextLevel ? (profile.exp / profile.expToNextLevel) * 100 : 0}%`,
+                }}
+              />
+            </div>
+          </div>
+
+          <div className={styles.characterSection}>
+            <img
+              src="/assets/homepage/character.png"
+              alt="Персонаж"
+              className={styles.characterImg}
+            />
           </div>
         </div>
+      </section>
 
-        <div className={styles.characterSection}>
-          <img
-            src="/assets/homepage/character.png"
-            alt="Персонаж"
-            className={styles.characterImg}
-          />
+      <section className={styles.coursesSection}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Другие курсы</h2>
+          <Link to="/courses" className={styles.allCoursesBtn}>
+            <img src="/assets/homepage/expand.svg" alt="" />
+            <span>Все курсы</span>
+          </Link>
         </div>
-      </div>
-    </section>
-
-    <section className={styles.coursesSection}>
-      <div className={styles.sectionHeader}>
-        <h2 className={styles.sectionTitle}>Другие курсы</h2>
-        <button className={styles.allCoursesBtn}>
-          <img src="/assets/homepage/expand.svg" alt="" />
-          <span>Все курсы</span>
-        </button>
-      </div>
-      <div className={styles.courseGrid}>
-        {COURSES.map((course) => (
-          <CourseCard key={course.title} {...course} />
-        ))}
-      </div>
-    </section>
-  </main>
-);
+        <div className={styles.courseGrid}>
+          {courses?.map((course) => (
+            <CourseCard key={course.id} {...course} />
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+};
 
 export { HomePage };

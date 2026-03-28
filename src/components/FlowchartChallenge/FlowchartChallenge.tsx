@@ -1,3 +1,4 @@
+import type { Task } from "@/api/courses";
 import { CheckCheck, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import s from "./FlowchartChallenge.module.css";
@@ -255,7 +256,7 @@ function TheoryPhase({ onFinish }: { onFinish: () => void }) {
 
 // ─── Flowchart Task ───────────────────────────────────────────────────────────
 
-function FlowchartTask() {
+function FlowchartTask({ task, onComplete }: { task?: Task; onComplete?: () => void }) {
   const [workspace, setWorkspace] = useState<FlowBlock[]>([]);
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragFrom, setDragFrom] = useState<"palette" | "workspace" | null>(null);
@@ -341,6 +342,7 @@ function FlowchartTask() {
     }
     const ok = CORRECT_ORDER.every((id, i) => workspace[i].id === id);
     setResult(ok ? "correct" : "wrong");
+    if (ok) onComplete?.();
   };
 
   const reset = () => {
@@ -353,10 +355,12 @@ function FlowchartTask() {
   return (
     <div className={s.taskShell}>
       <div className={s.taskHeader}>
-        <h1 className={s.taskTitle}>📊 Блок-схема: алгоритм умножения числа на 2</h1>
+        <h1 className={s.taskTitle}>
+          📊 {task?.title ?? "Блок-схема: алгоритм умножения числа на 2"}
+        </h1>
         <p className={s.taskDesc}>
-          Перетащи блоки из палитры в рабочую область. Чтобы убрать блок — перетащи обратно в
-          палитру или нажми ×. Когда будешь готов — нажми «Проверить».
+          {task?.description ??
+            "Перетащи блоки из палитры в рабочую область. Чтобы убрать блок — перетащи обратно в палитру или нажми ×. Когда будешь готов — нажми «Проверить»."}
         </p>
       </div>
 
@@ -490,7 +494,12 @@ function FlowchartTask() {
 
 // ─── Root ──────────────────────────────────────────────────────────────────────
 
-export function FlowchartChallenge() {
+interface FlowchartChallengeProps {
+  task?: Task;
+  onComplete?: () => void;
+}
+
+export function FlowchartChallenge({ task, onComplete }: FlowchartChallengeProps = {}) {
   const [phase, setPhase] = useState<"theory" | "task">("theory");
 
   useEffect(() => {
@@ -505,7 +514,11 @@ export function FlowchartChallenge() {
 
   return (
     <main className={s.main}>
-      {phase === "theory" ? <TheoryPhase onFinish={() => setPhase("task")} /> : <FlowchartTask />}
+      {phase === "theory" ? (
+        <TheoryPhase onFinish={() => setPhase("task")} />
+      ) : (
+        <FlowchartTask task={task} onComplete={onComplete} />
+      )}
     </main>
   );
 }

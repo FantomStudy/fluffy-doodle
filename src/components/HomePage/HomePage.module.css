@@ -185,6 +185,9 @@
   width: 220px;
   cursor: pointer;
   transition: background 0.14s;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
 }
 
 .continueBtn:hover {
@@ -265,7 +268,6 @@
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  
 }
 
 .characterImg {
