@@ -1,5 +1,5 @@
-import { LogOut, Star, Trophy, Zap } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import { LogOut, Star, Trophy, Zap } from "lucide-react";
 import { logout } from "@/api/auth";
 import { useChildProgress } from "@/hooks/useChildProgress";
 import styles from "./ChildProgressPage.module.css";
