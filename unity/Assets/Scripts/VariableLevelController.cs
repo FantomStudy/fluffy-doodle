@@ -104,6 +104,11 @@ public class VariableLevelController : MonoBehaviour
 
         levelCompleted = true;
         terminalUI?.ForceClose();
+        if (LevelCompletionFlowController.TryStartCurrentLevelCompletion())
+        {
+            return;
+        }
+
         if (screenFadePlayerLock != null)
         {
             screenFadePlayerLock.FadeOutAndLock();

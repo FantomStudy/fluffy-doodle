@@ -4,7 +4,7 @@ public class ForTerminal : MonoBehaviour, IInteractable
 {
     [SerializeField] private ForBridgeController bridgeController;
     [SerializeField] private TerminalIndicator terminalIndicator;
-    [SerializeField] private string interactionPrompt = "Нажмите E, чтобы выполнить следующую итерацию for";
+    [SerializeField] private string interactionPrompt = "\u041d\u0430\u0436\u043c\u0438\u0442\u0435 E, \u0447\u0442\u043e\u0431\u044b \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0443\u044e \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u044e for";
     [SerializeField] private string sectionTitle = "FOR";
     [SerializeField] private int[] availableCounts = { 1, 2, 3 };
     [SerializeField] private int requiredCount = 2;
@@ -12,7 +12,7 @@ public class ForTerminal : MonoBehaviour, IInteractable
     [SerializeField] private Vector3 triggerLocalPosition = new Vector3(0f, 1.5f, 1.9f);
     [SerializeField] private Vector3 triggerSize = new Vector3(4.2f, 3.4f, 4.2f);
 
-    public string InteractionPrompt => interactionPrompt;
+    public string InteractionPrompt => GetInteractionPrompt();
 
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class ForTerminal : MonoBehaviour, IInteractable
                 TerminalIndicatorState.Error,
                 sectionTitle,
                 "for i in range(?):\n    extend_bridge()",
-                "Мост не подключен");
+                "\u041c\u043e\u0441\u0442 \u043d\u0435 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d");
             return;
         }
 
@@ -41,11 +41,7 @@ public class ForTerminal : MonoBehaviour, IInteractable
 
         if (bridgeController.CurrentBuiltCount >= requiredCount)
         {
-            terminalIndicator?.ApplyState(
-                TerminalIndicatorState.Success,
-                sectionTitle,
-                BuildBodyText(),
-                $"Цикл завершён: {requiredCount} из {requiredCount}");
+            ResetCycle();
             return;
         }
 
@@ -54,7 +50,7 @@ public class ForTerminal : MonoBehaviour, IInteractable
             TerminalIndicatorState.Running,
             sectionTitle,
             BuildBodyText(),
-            $"Итерация {nextIteration} из {requiredCount}");
+            $"\u0418\u0442\u0435\u0440\u0430\u0446\u0438\u044f {nextIteration} \u0438\u0437 {requiredCount}");
 
         bridgeController.ExtendOneSegment(HandleBridgeStepCompleted);
     }
@@ -67,17 +63,20 @@ public class ForTerminal : MonoBehaviour, IInteractable
             sectionTitle,
             BuildBodyText(),
             success
-                ? $"Готово: {builtCount} из {requiredCount}"
-                : $"Прогресс: {builtCount} из {requiredCount}");
+                ? $"\u0413\u043e\u0442\u043e\u0432\u043e: {builtCount} \u0438\u0437 {requiredCount}"
+                : $"\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441: {builtCount} \u0438\u0437 {requiredCount}");
     }
 
     private void RefreshIdleState()
     {
+        int builtCount = bridgeController != null ? bridgeController.CurrentBuiltCount : 0;
         terminalIndicator?.ApplyState(
             TerminalIndicatorState.Idle,
             sectionTitle,
             BuildBodyText(),
-            $"Нужно итераций: {requiredCount}");
+            builtCount > 0
+                ? $"\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441: {builtCount} \u0438\u0437 {requiredCount}"
+                : $"\u041d\u0443\u0436\u043d\u043e \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u0439: {requiredCount}");
     }
 
     private string BuildBodyText()
@@ -103,13 +102,30 @@ public class ForTerminal : MonoBehaviour, IInteractable
 
     private void LocalizeDefaults()
     {
-        if (interactionPrompt == "Press E to advance the for loop"
-            || interactionPrompt.Contains("переключить число")
-            || interactionPrompt.Contains("выбрать длину")
-            || interactionPrompt.Contains("выдвинуть финальный мост"))
+        if (string.IsNullOrWhiteSpace(interactionPrompt) || interactionPrompt.Contains("Press E"))
         {
-            interactionPrompt = "Нажмите E, чтобы выполнить следующую итерацию for";
+            interactionPrompt = "\u041d\u0430\u0436\u043c\u0438\u0442\u0435 E, \u0447\u0442\u043e\u0431\u044b \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0443\u044e \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u044e for";
         }
+    }
+
+    private string GetInteractionPrompt()
+    {
+        if (bridgeController != null && bridgeController.CurrentBuiltCount >= requiredCount)
+        {
+            return "\u041d\u0430\u0436\u043c\u0438\u0442\u0435 E, \u0447\u0442\u043e\u0431\u044b \u0441\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u0446\u0438\u043a\u043b for";
+        }
+
+        return interactionPrompt;
+    }
+
+    private void ResetCycle()
+    {
+        bridgeController?.ResetBridgeInstantly();
+        terminalIndicator?.ApplyState(
+            TerminalIndicatorState.Idle,
+            sectionTitle,
+            BuildBodyText(),
+            "\u0421\u0431\u0440\u043e\u0441 \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d");
     }
 
     private void EnsureInteractionTrigger()
@@ -147,6 +163,6 @@ public class ForTerminal : MonoBehaviour, IInteractable
             triggerZone = existingZone.gameObject.AddComponent<InteractionTriggerZone>();
         }
 
-        triggerZone.SetTarget(this, interactionPrompt);
+        triggerZone.SetTarget(this);
     }
 }

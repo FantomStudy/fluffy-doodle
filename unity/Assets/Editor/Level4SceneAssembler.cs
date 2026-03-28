@@ -9,11 +9,17 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public static class Level4SceneAssembler
+public static partial class Level4SceneAssembler
 {
     private const string ScenePath = "Assets/Scenes/Level4.unity";
     private const string PlayerPrefabPath = "Assets/Prefabs/Player.prefab";
     private const string FontAssetPath = "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset";
+    private const string TemplateFloorModelPath = "Assets/Models/kenney_modular-space-kit_1.0/template-floor.fbx";
+    private const string TemplateWallModelPath = "Assets/Models/kenney_modular-space-kit_1.0/template-wall.fbx";
+    private const string TemplateWallHalfModelPath = "Assets/Models/kenney_modular-space-kit_1.0/template-wall-half.fbx";
+    private const string RoomWideModelPath = "Assets/Models/kenney_modular-space-kit_1.0/room-wide.fbx";
+    private const string TerminalModelPath = "Assets/Models/sci-fi_terminal_low_poly.glb";
+    private const string PedestalModelPath = "Assets/Models/stylized-pedestal/source/Pedestal.fbx";
     private const string MaterialFolder = "Assets/Materials/CyclesLevel";
     private const string StructureMaterialPath = MaterialFolder + "/CyclesStructure.mat";
     private const string PanelMaterialPath = MaterialFolder + "/CyclesPanel.mat";
@@ -112,21 +118,36 @@ public static class Level4SceneAssembler
         GameObject environment = new GameObject("Environment");
         environment.transform.SetParent(parent, false);
 
-        CreateCube("BackdropFloor", environment.transform, new Vector3(0f, -6.5f, 26f), new Vector3(20f, 1f, 76f), materials.DarkBackdrop);
-        CreateCube("BackWall", environment.transform, new Vector3(0f, 2.2f, -9f), new Vector3(9.4f, 4.4f, 0.5f), materials.Structure);
-        CreateCube("EndWall", environment.transform, new Vector3(0f, 3.2f, 61f), new Vector3(9.4f, 6.4f, 0.5f), materials.Structure);
-        CreateCube("LeftWall", environment.transform, new Vector3(-CorridorHalfWidth, 3f, 26f), new Vector3(0.45f, 6f, 70f), materials.Structure);
-        CreateCube("RightWall", environment.transform, new Vector3(CorridorHalfWidth, 3f, 26f), new Vector3(0.45f, 6f, 70f), materials.Structure);
+        CreateFloorBlock("BackdropFloor", environment.transform, new Vector3(0f, -7.5f, 26f), new Vector3(8.6f, 0.45f, 76f), materials.DarkBackdrop);
+        CreateWallBlock("BackWall", environment.transform, new Vector3(0f, 2.2f, -9f), new Vector3(9.4f, 4.4f, 0.5f), materials.Structure, false);
+        CreateWallBlock("EndWall", environment.transform, new Vector3(0f, 3.2f, 61f), new Vector3(9.4f, 6.4f, 0.5f), materials.Structure, false);
+
+        CreateWallBlock("Section1_LeftWall", environment.transform, new Vector3(-CorridorHalfWidth, 2.1f, 0.5f), new Vector3(0.45f, 4.2f, 18f), materials.Structure, false);
+        CreateWallBlock("Section1_RightWall", environment.transform, new Vector3(CorridorHalfWidth, 2.1f, 0.5f), new Vector3(0.45f, 4.2f, 18f), materials.Structure, false);
+        CreateFloorBlock("Section1_Ceiling", environment.transform, new Vector3(0f, 4.25f, 0.5f), new Vector3(8.6f, 0.35f, 18f), materials.Structure);
+
+        CreateWallBlock("Section2_LeftWall", environment.transform, new Vector3(-CorridorHalfWidth, 2.1f, 16f), new Vector3(0.45f, 4.2f, 16f), materials.Structure, false);
+        CreateWallBlock("Section2_RightWall", environment.transform, new Vector3(CorridorHalfWidth, 2.1f, 16f), new Vector3(0.45f, 4.2f, 16f), materials.Structure, false);
+        CreateFloorBlock("Section2_Ceiling", environment.transform, new Vector3(0f, 4.25f, 16f), new Vector3(8.6f, 0.35f, 16f), materials.Structure);
+
+        CreateWallBlock("Section3_LeftWall", environment.transform, new Vector3(-CorridorHalfWidth, 2.3f, 31.5f), new Vector3(0.45f, 4.6f, 18f), materials.Structure, false);
+        CreateWallBlock("Section3_RightWall", environment.transform, new Vector3(CorridorHalfWidth, 2.3f, 31.5f), new Vector3(0.45f, 4.6f, 18f), materials.Structure, false);
+        CreateFloorBlock("Section3_Ceiling", environment.transform, new Vector3(0f, 4.55f, 31.5f), new Vector3(8.6f, 0.35f, 18f), materials.Structure);
+
+        CreateWallBlock("Section4_LeftWall", environment.transform, new Vector3(-CorridorHalfWidth, 4.85f, 51.2f), new Vector3(0.45f, 5.4f, 20f), materials.Structure, false);
+        CreateWallBlock("Section4_RightWall", environment.transform, new Vector3(CorridorHalfWidth, 4.85f, 51.2f), new Vector3(0.45f, 5.4f, 20f), materials.Structure, false);
+        CreateFloorBlock("Section4_Ceiling", environment.transform, new Vector3(0f, 7.35f, 51.2f), new Vector3(8.6f, 0.35f, 20f), materials.Structure);
+
         CreateCube("GlowStripLeft", environment.transform, new Vector3(-3.65f, 0.03f, 26f), new Vector3(0.08f, 0.04f, 64f), materials.Glow);
         CreateCube("GlowStripRight", environment.transform, new Vector3(3.65f, 0.03f, 26f), new Vector3(0.08f, 0.04f, 64f), materials.Glow);
 
         GameObject decorativeRoot = new GameObject("DecorativeTechBlocks");
         decorativeRoot.transform.SetParent(environment.transform, false);
 
-        CreateCube("StartBlockLeft", decorativeRoot.transform, new Vector3(-2.7f, 0.7f, -6.8f), new Vector3(1f, 1.4f, 1f), materials.Structure);
-        CreateCube("StartBlockRight", decorativeRoot.transform, new Vector3(2.7f, 0.7f, -5.2f), new Vector3(1f, 1.4f, 1f), materials.Structure);
-        CreateCube("MidBlockLeft", decorativeRoot.transform, new Vector3(-2.8f, 0.6f, 22f), new Vector3(0.8f, 1.2f, 0.8f), materials.Structure);
-        CreateCube("MidBlockRight", decorativeRoot.transform, new Vector3(2.8f, 0.6f, 37f), new Vector3(0.8f, 1.2f, 0.8f), materials.Structure);
+        CreateDecorModel("StartDecorLeft", RoomWideModelPath, decorativeRoot.transform, new Vector3(-2.9f, 0.55f, -6.8f), Quaternion.identity, new Vector3(1.2f, 1.2f, 1.2f), materials.Structure);
+        CreateDecorModel("StartDecorRight", RoomWideModelPath, decorativeRoot.transform, new Vector3(2.9f, 0.55f, -5.2f), Quaternion.Euler(0f, 180f, 0f), new Vector3(1.2f, 1.2f, 1.2f), materials.Structure);
+        CreateDecorModel("MidDecorLeft", RoomWideModelPath, decorativeRoot.transform, new Vector3(-2.95f, 0.4f, 22f), Quaternion.identity, new Vector3(0.95f, 0.95f, 0.95f), materials.Structure);
+        CreateDecorModel("MidDecorRight", RoomWideModelPath, decorativeRoot.transform, new Vector3(2.95f, 0.4f, 37f), Quaternion.Euler(0f, 180f, 0f), new Vector3(0.95f, 0.95f, 0.95f), materials.Structure);
 
         CreateSectionFrame(environment.transform, new Vector3(0f, 2.35f, -6f), "Урок 4", "Циклы for и while", materials, fontAsset);
         CreateSectionFrame(environment.transform, new Vector3(0f, 2.35f, 11f), "Секция 2", "FOR закрепление", materials, fontAsset);
@@ -136,8 +157,8 @@ public static class Level4SceneAssembler
 
     private static void CreateSection1(Transform parent, MaterialPalette materials, TMP_FontAsset fontAsset)
     {
-        CreateCube("StartPlatform", parent, new Vector3(0f, 0.2f, -4f), new Vector3(6.6f, 0.4f, 8f), materials.Structure);
-        CreateCube("LandingPlatform", parent, new Vector3(0f, 0.2f, 6.4f), new Vector3(6.6f, 0.4f, 7.2f), materials.Structure);
+        CreateFloorBlock("StartPlatform", parent, new Vector3(0f, 0.2f, -4f), new Vector3(6.6f, 0.4f, 8f), materials.Structure);
+        CreateFloorBlock("LandingPlatform", parent, new Vector3(0f, 0.2f, 6.4f), new Vector3(6.6f, 0.4f, 7.2f), materials.Structure);
 
         GameObject gapRoot = new GameObject("Gap_01");
         gapRoot.transform.SetParent(parent, false);
@@ -167,18 +188,18 @@ public static class Level4SceneAssembler
 
         GameObject lowerReturn = new GameObject("LowerReturn_01");
         lowerReturn.transform.SetParent(parent, false);
-        CreateCube("ReturnFloor", lowerReturn.transform, new Vector3(0f, -1.8f, -0.35f), new Vector3(5.8f, 0.4f, 6.3f), materials.Structure);
-        CreateCube("ForwardBlocker", lowerReturn.transform, new Vector3(0f, -0.55f, 3.05f), new Vector3(6f, 2.1f, 0.35f), materials.Structure);
-        CreateCube("ReturnWallLeft", lowerReturn.transform, new Vector3(-2.8f, -0.55f, -0.35f), new Vector3(0.35f, 2.1f, 6.4f), materials.Structure);
-        CreateCube("ReturnWallRight", lowerReturn.transform, new Vector3(2.8f, -0.55f, -0.35f), new Vector3(0.35f, 2.1f, 6.4f), materials.Structure);
+        CreateFloorBlock("ReturnFloor", lowerReturn.transform, new Vector3(0f, -1.8f, -0.35f), new Vector3(5.8f, 0.4f, 8.2f), materials.Panel);
+        CreateWallBlock("ForwardBlocker", lowerReturn.transform, new Vector3(0f, -0.55f, 4f), new Vector3(6f, 2.1f, 0.35f), materials.Structure, true);
+        CreateWallBlock("ReturnWallLeft", lowerReturn.transform, new Vector3(-2.8f, -0.55f, -0.35f), new Vector3(0.35f, 2.1f, 8.2f), materials.Structure, false);
+        CreateWallBlock("ReturnWallRight", lowerReturn.transform, new Vector3(2.8f, -0.55f, -0.35f), new Vector3(0.35f, 2.1f, 8.2f), materials.Structure, false);
         CreateRamp("ReturnRamp", lowerReturn.transform, new Vector3(0f, -0.8f, -5.2f), new Vector3(3.2f, 0.35f, 4.8f), 24f, materials.Panel);
-        CreateCube("RampGuide", lowerReturn.transform, new Vector3(0f, 0.2f, -7.05f), new Vector3(3.2f, 0.4f, 1.1f), materials.Structure);
+        CreateFloorBlock("RampGuide", lowerReturn.transform, new Vector3(0f, 0.2f, -7.05f), new Vector3(3.2f, 0.4f, 1.1f), materials.Structure);
     }
 
     private static void CreateSection2(Transform parent, MaterialPalette materials, TMP_FontAsset fontAsset)
     {
-        CreateCube("ApproachPlatform", parent, new Vector3(0f, 0.2f, 2f), new Vector3(6.6f, 0.4f, 4f), materials.Structure);
-        CreateCube("LandingPlatform", parent, new Vector3(0f, 0.2f, 11.6f), new Vector3(6.6f, 0.4f, 6.8f), materials.Structure);
+        CreateFloorBlock("ApproachPlatform", parent, new Vector3(0f, 0.2f, 2f), new Vector3(6.6f, 0.4f, 4f), materials.Structure);
+        CreateFloorBlock("LandingPlatform", parent, new Vector3(0f, 0.2f, 11.6f), new Vector3(6.6f, 0.4f, 6.8f), materials.Structure);
 
         GameObject gapRoot = new GameObject("Gap_02");
         gapRoot.transform.SetParent(parent, false);
@@ -208,19 +229,19 @@ public static class Level4SceneAssembler
 
         GameObject lowerReturn = new GameObject("LowerReturn_02");
         lowerReturn.transform.SetParent(parent, false);
-        CreateCube("ReturnFloor", lowerReturn.transform, new Vector3(0f, -1.95f, 4.9f), new Vector3(5.8f, 0.4f, 7.4f), materials.Structure);
-        CreateCube("ForwardBlocker", lowerReturn.transform, new Vector3(0f, -0.65f, 8.55f), new Vector3(6f, 2.3f, 0.35f), materials.Structure);
-        CreateCube("ReturnWallLeft", lowerReturn.transform, new Vector3(-2.8f, -0.65f, 4.9f), new Vector3(0.35f, 2.3f, 7.4f), materials.Structure);
-        CreateCube("ReturnWallRight", lowerReturn.transform, new Vector3(2.8f, -0.65f, 4.9f), new Vector3(0.35f, 2.3f, 7.4f), materials.Structure);
+        CreateFloorBlock("ReturnFloor", lowerReturn.transform, new Vector3(0f, -1.95f, 4.9f), new Vector3(5.8f, 0.4f, 9.4f), materials.Panel);
+        CreateWallBlock("ForwardBlocker", lowerReturn.transform, new Vector3(0f, -0.65f, 9.6f), new Vector3(6f, 2.3f, 0.35f), materials.Structure, true);
+        CreateWallBlock("ReturnWallLeft", lowerReturn.transform, new Vector3(-2.8f, -0.65f, 4.9f), new Vector3(0.35f, 2.3f, 9.4f), materials.Structure, false);
+        CreateWallBlock("ReturnWallRight", lowerReturn.transform, new Vector3(2.8f, -0.65f, 4.9f), new Vector3(0.35f, 2.3f, 9.4f), materials.Structure, false);
         CreateRamp("ReturnRamp", lowerReturn.transform, new Vector3(0f, -0.9f, 0.9f), new Vector3(3.2f, 0.35f, 5.2f), 24f, materials.Panel);
-        CreateCube("RampGuide", lowerReturn.transform, new Vector3(0f, 0.2f, -1.2f), new Vector3(3.2f, 0.4f, 1.2f), materials.Structure);
+        CreateFloorBlock("RampGuide", lowerReturn.transform, new Vector3(0f, 0.2f, -1.2f), new Vector3(3.2f, 0.4f, 1.2f), materials.Structure);
     }
 
     private static void CreateSection3(Transform parent, MaterialPalette materials, TMP_FontAsset fontAsset)
     {
-        CreateCube("GroundPlatform", parent, new Vector3(0f, 0.2f, 2f), new Vector3(6.6f, 0.4f, 4f), materials.Structure);
-        CreateCube("LiftBase", parent, new Vector3(0f, 0.2f, 5.3f), new Vector3(3f, 0.4f, 2.4f), materials.Structure);
-        CreateCube("TargetPlatform_01", parent, new Vector3(0f, 2.6f, 12.8f), new Vector3(6.6f, 0.4f, 10.4f), materials.Structure);
+        CreateFloorBlock("GroundPlatform", parent, new Vector3(0f, 0.2f, 2f), new Vector3(6.6f, 0.4f, 4f), materials.Structure);
+        CreateFloorBlock("LiftBase", parent, new Vector3(0f, 0.2f, 5.3f), new Vector3(3f, 0.4f, 2.4f), materials.Structure);
+        CreateFloorBlock("TargetPlatform_01", parent, new Vector3(0f, 2.6f, 12.8f), new Vector3(6.6f, 0.4f, 10.4f), materials.Structure);
         CreateCube("TargetGlow", parent, new Vector3(0f, 2.82f, 12.8f), new Vector3(2.8f, 0.05f, 5.8f), materials.Glow);
         CreateRail(parent, new Vector3(-3.05f, 3.05f, 12.8f), new Vector3(0.15f, 0.9f, 10.2f), materials.Panel);
         CreateRail(parent, new Vector3(3.05f, 3.05f, 12.8f), new Vector3(0.15f, 0.9f, 10.2f), materials.Panel);
@@ -247,11 +268,20 @@ public static class Level4SceneAssembler
             "while высота < цель");
 
         CreateWorldNote(parent, new Vector3(-2.15f, 1.7f, 1.6f), new Vector3(1.9f, 1f, 0.2f), "while height < target:\n    lift_platform()", materials, fontAsset);
+
+        GameObject lowerReturn = new GameObject("LowerReturn_03");
+        lowerReturn.transform.SetParent(parent, false);
+        CreateFloorBlock("ReturnFloor", lowerReturn.transform, new Vector3(0f, -1.95f, 7.3f), new Vector3(5.8f, 0.4f, 16.2f), materials.Panel);
+        CreateWallBlock("ForwardBlocker", lowerReturn.transform, new Vector3(0f, -0.55f, 15.4f), new Vector3(6f, 2.4f, 0.35f), materials.Structure, true);
+        CreateWallBlock("ReturnWallLeft", lowerReturn.transform, new Vector3(-2.8f, -0.55f, 7.3f), new Vector3(0.35f, 2.4f, 16.2f), materials.Structure, false);
+        CreateWallBlock("ReturnWallRight", lowerReturn.transform, new Vector3(2.8f, -0.55f, 7.3f), new Vector3(0.35f, 2.4f, 16.2f), materials.Structure, false);
+        CreateRamp("ReturnRamp", lowerReturn.transform, new Vector3(0f, -0.9f, 0.1f), new Vector3(3.2f, 0.35f, 5.4f), 24f, materials.Panel);
+        CreateFloorBlock("RampGuide", lowerReturn.transform, new Vector3(0f, 0.2f, -2.15f), new Vector3(3.2f, 0.4f, 1.1f), materials.Structure);
     }
 
     private static void CreateSection4(Transform parent, MaterialPalette materials, TMP_FontAsset fontAsset)
     {
-        CreateCube("ForApproach", parent, new Vector3(0f, 0.2f, 1f), new Vector3(6.2f, 0.4f, 2f), materials.Structure);
+        CreateFloorBlock("ForApproach", parent, new Vector3(0f, 0.2f, 1f), new Vector3(6.2f, 0.4f, 2f), materials.Structure);
 
         GameObject bridgeRoot = new GameObject("Bridge_Final");
         bridgeRoot.transform.SetParent(parent, false);
@@ -261,7 +291,7 @@ public static class Level4SceneAssembler
         ConfigureForBridge(bridgeController, segments, 0.2f, 0.12f, new Vector3(0f, -1.15f, 0f));
 
         CreateCube("FinalBridgeGap", parent, new Vector3(0f, -0.9f, 4.1f), new Vector3(5.8f, 2.1f, 4.2f), materials.DarkBackdrop);
-        CreateCube("PostBridgePlatform", parent, new Vector3(0f, 0.2f, 7.9f), new Vector3(6.2f, 0.4f, 3.4f), materials.Structure);
+        CreateFloorBlock("PostBridgePlatform", parent, new Vector3(0f, 0.2f, 7.9f), new Vector3(6.2f, 0.4f, 3.4f), materials.Structure);
 
         GameObject terminalFor = CreateTerminalVisual(parent, "Terminal_For_Final", new Vector3(2.25f, 0f, 0.75f), Quaternion.Euler(0f, -24f, 0f), materials, fontAsset, out TerminalIndicator forIndicator);
         ForTerminal forTerminal = terminalFor.AddComponent<ForTerminal>();
@@ -289,11 +319,11 @@ public static class Level4SceneAssembler
             whileTerminal,
             liftController,
             whileIndicator,
-            "Нажмите E, чтобы завершить while-подъём",
+            "Нажмите E, чтобы запустить while-подъём",
             "WHILE / Финал",
             "while lift < finish");
 
-        CreateCube("FinishPlatform", parent, new Vector3(0f, 2f, 14.4f), new Vector3(6.2f, 0.4f, 5.6f), materials.Panel);
+        CreateFloorBlock("FinishPlatform", parent, new Vector3(0f, 2f, 14.4f), new Vector3(6.2f, 0.4f, 5.6f), materials.Panel);
         CreateCube("FinishGlow", parent, new Vector3(0f, 2.22f, 14.4f), new Vector3(3.2f, 0.05f, 3.2f), materials.Glow);
         CreateRail(parent, new Vector3(-3f, 2.45f, 13.8f), new Vector3(0.12f, 0.9f, 4.4f), materials.Structure);
         CreateRail(parent, new Vector3(3f, 2.45f, 13.8f), new Vector3(0.12f, 0.9f, 4.4f), materials.Structure);
@@ -305,6 +335,15 @@ public static class Level4SceneAssembler
         CreateCube("FinishArchTop", parent, new Vector3(0f, 4.6f, 16.8f), new Vector3(4f, 0.3f, 0.35f), materials.Glow);
 
         CreateWorldNote(parent, new Vector3(0f, 1.75f, 4.15f), new Vector3(1.9f, 1f, 0.2f), "for -> bridge\nwhile -> lift", materials, fontAsset);
+
+        GameObject lowerReturn = new GameObject("LowerReturn_Final");
+        lowerReturn.transform.SetParent(parent, false);
+        CreateFloorBlock("ReturnFloor", lowerReturn.transform, new Vector3(0f, -2.15f, 7.6f), new Vector3(5.8f, 0.4f, 13.2f), materials.Panel);
+        CreateWallBlock("ForwardBlocker", lowerReturn.transform, new Vector3(0f, -0.75f, 14.2f), new Vector3(6f, 2.5f, 0.35f), materials.Structure, true);
+        CreateWallBlock("ReturnWallLeft", lowerReturn.transform, new Vector3(-2.8f, -0.75f, 7.6f), new Vector3(0.35f, 2.5f, 13.2f), materials.Structure, false);
+        CreateWallBlock("ReturnWallRight", lowerReturn.transform, new Vector3(2.8f, -0.75f, 7.6f), new Vector3(0.35f, 2.5f, 13.2f), materials.Structure, false);
+        CreateRamp("ReturnRamp", lowerReturn.transform, new Vector3(0f, -1f, 0f), new Vector3(3.2f, 0.35f, 5.6f), 24f, materials.Panel);
+        CreateFloorBlock("RampGuide", lowerReturn.transform, new Vector3(0f, 0.2f, -2.35f), new Vector3(3.2f, 0.4f, 1.2f), materials.Structure);
     }
 
     private static void CreateFinishTrigger(
@@ -511,22 +550,28 @@ public static class Level4SceneAssembler
         terminalRoot.transform.localPosition = localPosition;
         terminalRoot.transform.localRotation = localRotation;
 
+        BoxCollider terminalCollider = terminalRoot.AddComponent<BoxCollider>();
+        terminalCollider.center = new Vector3(0f, 1f, 0f);
+        terminalCollider.size = new Vector3(1.45f, 2.15f, 1.2f);
+
         indicator = terminalRoot.AddComponent<TerminalIndicator>();
 
-        CreateCube("Base", terminalRoot.transform, new Vector3(0f, 0.18f, 0f), new Vector3(1.15f, 0.36f, 0.92f), materials.Structure);
-        CreateCube("Stand", terminalRoot.transform, new Vector3(0f, 0.92f, 0f), new Vector3(0.24f, 1.42f, 0.24f), materials.Structure);
-        GameObject screen = CreateCube("Screen", terminalRoot.transform, new Vector3(0f, 1.82f, 0.18f), new Vector3(1.5f, 0.94f, 0.12f), materials.ScreenIdle);
-        CreateCube("ScreenHood", terminalRoot.transform, new Vector3(0f, 2.28f, 0.05f), new Vector3(1.1f, 0.14f, 0.45f), materials.Structure);
+        CreateDecorModel("PedestalVisual", PedestalModelPath, terminalRoot.transform, new Vector3(0f, 0f, -0.02f), Quaternion.Euler(0f, 180f, 0f), new Vector3(0.52f, 0.52f, 0.52f), materials.Structure);
+        CreateDecorModel("TerminalVisual", TerminalModelPath, terminalRoot.transform, new Vector3(0f, 0.84f, -0.1f), Quaternion.Euler(0f, 180f, 0f), new Vector3(1.02f, 1.02f, 1.02f), materials.Structure);
 
-        GameObject idleIndicator = CreateCube("IdleIndicator", terminalRoot.transform, new Vector3(-0.36f, 2.48f, 0.14f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenIdle);
-        GameObject runningIndicator = CreateCube("RunningIndicator", terminalRoot.transform, new Vector3(-0.12f, 2.48f, 0.14f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenRunning);
-        GameObject successIndicator = CreateCube("SuccessIndicator", terminalRoot.transform, new Vector3(0.12f, 2.48f, 0.14f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenSuccess);
-        GameObject errorIndicator = CreateCube("ErrorIndicator", terminalRoot.transform, new Vector3(0.36f, 2.48f, 0.14f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenError);
+        CreateCube("ScreenFrame", terminalRoot.transform, new Vector3(0f, 1.96f, 0.34f), new Vector3(1.42f, 0.88f, 0.12f), materials.Structure);
+        GameObject screen = CreateCube("Screen", terminalRoot.transform, new Vector3(0f, 1.96f, 0.39f), new Vector3(1.24f, 0.72f, 0.04f), materials.ScreenIdle);
+        CreateCube("ScreenHood", terminalRoot.transform, new Vector3(0f, 2.39f, 0.22f), new Vector3(1.08f, 0.12f, 0.42f), materials.Structure);
+
+        GameObject idleIndicator = CreateCube("IdleIndicator", terminalRoot.transform, new Vector3(-0.36f, 2.55f, 0.31f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenIdle);
+        GameObject runningIndicator = CreateCube("RunningIndicator", terminalRoot.transform, new Vector3(-0.12f, 2.55f, 0.31f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenRunning);
+        GameObject successIndicator = CreateCube("SuccessIndicator", terminalRoot.transform, new Vector3(0.12f, 2.55f, 0.31f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenSuccess);
+        GameObject errorIndicator = CreateCube("ErrorIndicator", terminalRoot.transform, new Vector3(0.36f, 2.55f, 0.31f), new Vector3(0.18f, 0.11f, 0.11f), materials.ScreenError);
 
         TextMeshPro titleText = CreateWorldText(
             "TitleText",
             terminalRoot.transform,
-            new Vector3(0f, 2.06f, 0.245f),
+            new Vector3(0f, 2.12f, 0.43f),
             "Терминал",
             fontAsset,
             4.8f,
@@ -538,7 +583,7 @@ public static class Level4SceneAssembler
         TextMeshPro bodyText = CreateWorldText(
             "BodyText",
             terminalRoot.transform,
-            new Vector3(0f, 1.78f, 0.245f),
+            new Vector3(0f, 1.9f, 0.43f),
             "for i in range(2)",
             fontAsset,
             3.8f,
@@ -550,7 +595,7 @@ public static class Level4SceneAssembler
         TextMeshPro statusText = CreateWorldText(
             "StatusText",
             terminalRoot.transform,
-            new Vector3(0f, 1.42f, 0.245f),
+            new Vector3(0f, 1.55f, 0.43f),
             "Ожидание",
             fontAsset,
             4f,
@@ -868,6 +913,139 @@ public static class Level4SceneAssembler
     {
         GameObject ramp = CreateCube(name, parent, localPosition, localScale, material);
         ramp.transform.localRotation = Quaternion.Euler(angle, 0f, 0f);
+    }
+
+    private static GameObject CreateFloorBlock(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Material material)
+    {
+        return CreateFittedModelBlock(name, TemplateFloorModelPath, parent, localPosition, localScale, material);
+    }
+
+    private static GameObject CreateWallBlock(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Material material, bool useHalfWall)
+    {
+        string modelPath = useHalfWall ? TemplateWallHalfModelPath : TemplateWallModelPath;
+        return CreateFittedModelBlock(name, modelPath, parent, localPosition, localScale, material);
+    }
+
+    private static GameObject CreateDecorModel(string name, string modelPath, Transform parent, Vector3 localPosition, Quaternion localRotation, Vector3 localScale, Material material)
+    {
+        GameObject root = new GameObject(name);
+        root.transform.SetParent(parent, false);
+        root.transform.localPosition = localPosition;
+        root.transform.localRotation = Quaternion.identity;
+        root.transform.localScale = Vector3.one;
+
+        GameObject visual = InstantiateModelAsset($"{name}_Visual", modelPath, root.transform);
+        RemoveColliders(visual);
+        visual.transform.localPosition = Vector3.zero;
+        visual.transform.localRotation = Quaternion.identity;
+        visual.transform.localScale = localScale;
+        CenterModelInParent(visual.transform);
+
+        root.transform.localRotation = localRotation;
+        return root;
+    }
+
+    private static GameObject CreateFittedModelBlock(string name, string modelPath, Transform parent, Vector3 localPosition, Vector3 localScale, Material material)
+    {
+        GameObject root = new GameObject(name);
+        root.transform.SetParent(parent, false);
+        root.transform.localPosition = localPosition;
+        root.transform.localRotation = Quaternion.identity;
+        root.transform.localScale = Vector3.one;
+
+        BoxCollider collider = root.AddComponent<BoxCollider>();
+        collider.center = Vector3.zero;
+        collider.size = localScale;
+
+        GameObject visual = InstantiateModelAsset($"{name}_Visual", modelPath, root.transform);
+        RemoveColliders(visual);
+        FitModelToSize(visual.transform, localScale);
+        return root;
+    }
+
+    private static GameObject InstantiateModelAsset(string name, string modelPath, Transform parent)
+    {
+        GameObject prefab = LoadRequiredAsset<GameObject>(modelPath);
+        GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+        if (instance == null)
+        {
+            throw new InvalidOperationException($"Model prefab could not be instantiated: {modelPath}");
+        }
+
+        instance.name = name;
+        instance.transform.SetParent(parent, false);
+        instance.transform.localPosition = Vector3.zero;
+        instance.transform.localRotation = Quaternion.identity;
+        instance.transform.localScale = Vector3.one;
+        return instance;
+    }
+
+    private static void FitModelToSize(Transform modelRoot, Vector3 targetSize)
+    {
+        modelRoot.localPosition = Vector3.zero;
+        modelRoot.localRotation = Quaternion.identity;
+        modelRoot.localScale = Vector3.one;
+
+        Bounds bounds = CalculateRendererBounds(modelRoot);
+        Vector3 sourceSize = bounds.size;
+        if (sourceSize.x < 0.001f || sourceSize.y < 0.001f || sourceSize.z < 0.001f)
+        {
+            return;
+        }
+
+        modelRoot.localScale = new Vector3(
+            targetSize.x / sourceSize.x,
+            targetSize.y / sourceSize.y,
+            targetSize.z / sourceSize.z);
+
+        CenterModelInParent(modelRoot);
+    }
+
+    private static void CenterModelInParent(Transform modelRoot)
+    {
+        Bounds bounds = CalculateRendererBounds(modelRoot);
+        modelRoot.localPosition -= bounds.center;
+    }
+
+    private static Bounds CalculateRendererBounds(Transform modelRoot)
+    {
+        Renderer[] renderers = modelRoot.GetComponentsInChildren<Renderer>(true);
+        if (renderers.Length == 0)
+        {
+            return new Bounds(Vector3.zero, Vector3.one);
+        }
+
+        Transform reference = modelRoot.parent != null ? modelRoot.parent : modelRoot;
+        bool hasBounds = false;
+        Bounds combinedBounds = default;
+
+        foreach (Renderer renderer in renderers)
+        {
+            Vector3 min = reference.InverseTransformPoint(renderer.bounds.min);
+            Vector3 max = reference.InverseTransformPoint(renderer.bounds.max);
+            Bounds rendererBounds = new Bounds((min + max) * 0.5f, max - min);
+
+            if (!hasBounds)
+            {
+                combinedBounds = rendererBounds;
+                hasBounds = true;
+                continue;
+            }
+
+            combinedBounds.Encapsulate(rendererBounds.min);
+            combinedBounds.Encapsulate(rendererBounds.max);
+        }
+
+        return combinedBounds;
+    }
+
+    private static void RemoveColliders(GameObject root)
+    {
+        Collider[] colliders = root.GetComponentsInChildren<Collider>(true);
+        foreach (Collider collider in colliders)
+        {
+            UnityEngine.Object.DestroyImmediate(collider);
+        }
     }
 
     private static GameObject CreateCube(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Material material)

@@ -102,6 +102,11 @@ public class SimpleDoor : MonoBehaviour
         }
 
         CacheFadePlayerLock();
+        if (LevelCompletionFlowController.TryStartCurrentLevelCompletion(nextSceneBuildIndex))
+        {
+            yield break;
+        }
+
         if (screenFadePlayerLock == null)
         {
             yield break;
