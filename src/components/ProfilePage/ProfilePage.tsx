@@ -65,9 +65,8 @@ const ProfilePage = () => {
     );
   if (!profile) return null;
 
-  const expPercent = profile.expToNextLevel > 0
-    ? Math.min((profile.exp / profile.expToNextLevel) * 100, 100)
-    : 0;
+  const expPercent =
+    profile.expToNextLevel > 0 ? Math.min((profile.exp / profile.expToNextLevel) * 100, 100) : 0;
   const expRemaining = Math.max(profile.expToNextLevel - profile.exp, 0);
 
   return (
@@ -147,18 +146,13 @@ const ProfilePage = () => {
 
           <div className={styles.expSection}>
             <div className={styles.expHeader}>
-              <span className={styles.expLabel}>
-                До уровня {profile.level + 1}
-              </span>
+              <span className={styles.expLabel}>До уровня {profile.level + 1}</span>
               <span className={styles.expNumbers}>
                 {profile.exp} / {profile.expToNextLevel} XP
               </span>
             </div>
             <div className={styles.expTrack}>
-              <div
-                className={styles.expFill}
-                style={{ width: `${expPercent}%` }}
-              />
+              <div className={styles.expFill} style={{ width: `${expPercent}%` }} />
               <div className={styles.expGlow} style={{ width: `${expPercent}%` }} />
             </div>
             <p className={styles.expHint}>
