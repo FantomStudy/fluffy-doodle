@@ -42,13 +42,22 @@ func (r *authRepository) signUpStudent(req *presenter.SignUpRequest) (*models.Us
 		return nil, errors.New("default student role not found")
 	}
 
+	invitationCode := strings.TrimSpace(req.InvitationCode)
+	if invitationCode == "" {
+		generatedCode, err := generateInvitationCode("STU")
+		if err != nil {
+			return nil, err
+		}
+		invitationCode = generatedCode
+	}
+
 	user := &models.User{
 		Login:          req.Login,
 		Password:       req.Password,
 		FullName:       req.FullName,
 		PhoneNumber:    req.PhoneNumber,
 		RoleID:         studentRole.ID,
-		InvitationCode: req.InvitationCode,
+		InvitationCode: invitationCode,
 	}
 
 	if err := r.db.Create(user).Error; err != nil {

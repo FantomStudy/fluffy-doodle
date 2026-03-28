@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"crypto/rand"
 	"crypto/sha256"
-	"encoding/base32"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -71,13 +69,6 @@ func SignUp(s service.AuthService) fiber.Handler {
 		user.Password = hashedPassword
 
 		isParentSignUp := strings.TrimSpace(user.InvitationCode) != ""
-		if !isParentSignUp {
-			code, codeErr := generateStudentCode()
-			if codeErr != nil {
-				return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(errors.New("failed to generate student code")))
-			}
-			user.InvitationCode = code
-		}
 
 		createdUser, err := s.SignUp(&user)
 		if err != nil {
@@ -271,13 +262,4 @@ func CreateToken(user *models.User, tokenType string) (string, error) {
 	default:
 		return "", errors.New("invalid token type")
 	}
-}
-
-func generateStudentCode() (string, error) {
-	b := make([]byte, 5)
-	if _, err := rand.Read(b); err != nil {
-		return "", err
-	}
-	code := strings.TrimRight(base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(b), "=")
-	return "STU-" + code, nil
 }
