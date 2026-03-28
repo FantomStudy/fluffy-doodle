@@ -1,39 +1,10 @@
-﻿import { createFileRoute, redirect } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { getMe } from "@/api/user";
 import { useCourses } from "@/hooks/useCourses";
+import { useCourseLessons } from "@/hooks/useCourses";
 import { useMe } from "@/hooks/useMe";
 import { CourseCard } from "./-components/CourseCard";
 import styles from "./index.module.css";
-
-const WAYPOINTS = [
-  "/assets/homepage/wp1.svg",
-  "/assets/homepage/wp2.svg",
-  "/assets/homepage/wp3.svg",
-  "/assets/homepage/wp4.svg",
-  "/assets/homepage/wp5.svg",
-  "/assets/homepage/wp6.svg",
-  "/assets/homepage/wp7.svg",
-  "/assets/homepage/wp8.svg",
-];
-
-const WAYPOINT_POSITIONS = [
-  { left: 12.6, top: 83.1 },
-  { left: 22.6, top: 71.7 },
-  { left: 25.7, top: 41.1 },
-  { left: 30.6, top: 3.8 },
-  { left: 45.3, top: 9.6 },
-  { left: 58.0, top: 35.9 },
-  { left: 72.0, top: 61.2 },
-  { left: 88.3, top: 47.2 },
-];
-
-const LESSON_BADGES: { done: boolean }[] = [
-  { done: true },
-  { done: true },
-  { done: true },
-  { done: false },
-  { done: false },
-];
 
 const getDayWord = (n: number) => {
   if (n % 100 >= 11 && n % 100 <= 14) return "дней подряд";
@@ -47,10 +18,25 @@ const RouteComponent = () => {
   const courses = useCourses();
   const { data: me } = useMe();
 
+  const firstCourse = courses.data?.[0];
+  const { data: lessons } = useCourseLessons(firstCourse?.id ?? 0);
+
+  const totalLessons = lessons?.length ?? 0;
+  const completedLessons =
+    lessons?.filter(
+      (l) => l.tasks.length > 0 && l.tasks.every((t) => ("completed" in t ? t.completed : false)),
+    ).length ?? 0;
+  const currentLessonIndex = completedLessons;
+  const currentLesson = lessons?.[currentLessonIndex] ?? lessons?.[0];
+
+  const greeting = me?.fullName
+    ? `Рад твоему возращению, ${me.fullName}`
+    : "Рад твоему возращению!";
+
   return (
     <main className={styles.root}>
       <header className={styles.header}>
-        <h1 className={styles.greeting}>Рад твоему возращению, Сергей Дубской</h1>
+        <h1 className={styles.greeting}>{greeting}</h1>
         <p className={styles.subtitle}>Твой учебный процесс</p>
       </header>
 
@@ -71,55 +57,50 @@ const RouteComponent = () => {
           </div>
         </div>
 
-        <div className={styles.mapSection}>
-          <img src="/assets/homepage/map-bg.png" alt="Карта обучения" className={styles.mapBg} />
-          <img src="/assets/homepage/map-path.svg" alt="" className={styles.mapPath} aria-hidden />
-          {WAYPOINTS.map((src, i) => (
-            <img
-              key={i}
-              src={src}
-              alt=""
-              aria-hidden
-              className={styles.waypoint}
-              style={{
-                left: `${WAYPOINT_POSITIONS[i].left}%`,
-                top: `${WAYPOINT_POSITIONS[i].top}%`,
-              }}
-            />
-          ))}
-          <div className={styles.expandMap}>
-            <img src="/assets/homepage/expand.svg" alt="" />
-            <span>Открыть на весь экран</span>
-          </div>
-        </div>
-
         <div className={styles.cardFooter}>
           <div className={styles.currentLesson}>
             <span className={styles.lessonLabel}>Текущий урок</span>
-            <h2 className={styles.lessonTitle}>Цвет и Материалы</h2>
-            <p className={styles.lessonDesc}>Краткое описание урока</p>
-            <button className={styles.continueBtn}>Продолжить</button>
+            <h2 className={styles.lessonTitle}>{currentLesson?.title ?? "—"}</h2>
+            <p className={styles.lessonDesc}>{currentLesson?.description ?? ""}</p>
+            {firstCourse && currentLesson && (
+              <Link
+                to="/courses/$courseId"
+                params={{ courseId: String(firstCourse.id) }}
+                className={styles.continueBtn}
+              >
+                Продолжить
+              </Link>
+            )}
           </div>
 
           <div className={styles.progressSection}>
             <span className={styles.progressLabel}>Твой прогресс</span>
-            <p className={styles.lessonCount}>Урок 4 из 5</p>
+            <p className={styles.lessonCount}>
+              Урок {Math.min(currentLessonIndex + 1, totalLessons)} из {totalLessons}
+            </p>
             <div className={styles.progressTrack}>
-              <div className={styles.progressFill} />
+              <div
+                className={styles.progressFill}
+                style={{
+                  width: totalLessons > 0 ? `${(currentLessonIndex / totalLessons) * 100}%` : "0%",
+                }}
+              />
             </div>
-            <div className={styles.badges}>
-              {LESSON_BADGES.map((badge, i) => (
-                <div
-                  key={i}
-                  className={`${styles.badge} ${badge.done ? styles.badgeDone : styles.badgeStar}`}
-                >
-                  <img
-                    src="/assets/homepage/badge.png"
-                    alt={badge.done ? "Выполнено" : "Задание"}
-                  />
-                </div>
-              ))}
-            </div>
+            {lessons && (
+              <div className={styles.badges}>
+                {lessons.map((lesson, i) => (
+                  <div
+                    key={lesson.id}
+                    className={`${styles.badge} ${i < completedLessons ? styles.badgeDone : styles.badgeStar}`}
+                  >
+                    <img
+                      src="/assets/homepage/badge.png"
+                      alt={i < completedLessons ? "Выполнено" : "Задание"}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className={styles.characterSection}>
