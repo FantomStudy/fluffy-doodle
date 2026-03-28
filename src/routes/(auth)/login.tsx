@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RegisterForm } from "@/components/RegisterForm";
+import { LoginForm } from "@/components/LoginForm";
 import { Card } from "@/components/ui/Card";
-import styles from "./index.module.css";
+import styles from "./auth.module.css";
 
 const RouteComponent = () => {
   return (
@@ -9,11 +9,13 @@ const RouteComponent = () => {
       <div className={styles.wrapper}>
         <img src="/assets/mascot.png" alt="" className={styles.mascot} aria-hidden />
         <Card className={styles.card}>
-          <RegisterForm />
+          <LoginForm />
         </Card>
       </div>
     </div>
   );
 };
 
-export const Route = createFileRoute("/register/")({ component: RouteComponent });
+export const Route = createFileRoute("/(auth)/login")({
+  component: RouteComponent,
+});

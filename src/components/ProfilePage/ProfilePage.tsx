@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import { logout } from "@/api/auth";
 import { uploadAvatar } from "@/api/user";
 import { useProfile } from "@/hooks/useProfile";
-import { clearAuthenticated } from "@/lib/authSession";
 import styles from "./ProfilePage.module.css";
 
 const ProfilePage = () => {
@@ -44,7 +43,6 @@ const ProfilePage = () => {
     try {
       await logout();
     } finally {
-      clearAuthenticated();
       navigate({ to: "/login" });
     }
   };

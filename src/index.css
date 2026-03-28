@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-
 /* LAYER 1 — DESIGN TOKENS (primitives) */
 :root {
   /* Color — White */
@@ -120,7 +118,7 @@
 
   /* Border-radius — semantic */
   --radius-btn: var(--radius-lg);
-  --radius-card: var(--radius-xl);
+  --radius-card: var(--radius-4xl);
   --radius-input: var(--radius-md);
   --radius-badge: var(--radius-full);
   --radius-icon: var(--radius-3xl);

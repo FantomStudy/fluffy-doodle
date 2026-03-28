@@ -1,13 +1,6 @@
 import type { RegisteredRouter, ValidateLinkOptions } from "@tanstack/react-router";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import {
-  BookOpenIcon,
-  ClipboardListIcon,
-  HomeIcon,
-  MapIcon,
-  TrophyIcon,
-  UserIcon,
-} from "lucide-react";
+import { BookOpenIcon, ClipboardListIcon, HomeIcon, MapIcon, UserIcon } from "lucide-react";
 import styles from "./route.module.css";
 
 interface NavItem {
@@ -21,7 +14,6 @@ const NAV: NavItem[] = [
   { icon: <MapIcon size={16} />, label: "Путь", linkOptions: { to: "/" } },
   { icon: <BookOpenIcon size={16} />, label: "Уроки", linkOptions: { to: "/courses" } },
   { icon: <ClipboardListIcon size={16} />, label: "Задания", linkOptions: { to: "/" } },
-  { icon: <TrophyIcon size={16} />, label: "Достижения", linkOptions: { to: "/" } },
   { icon: <UserIcon size={16} />, label: "Профиль", linkOptions: { to: "/profile" } },
 ];
 

@@ -1,0 +1,56 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+}
+
+.courseImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 309 / 205;
+  overflow: hidden;
+  border-radius: var(--radius-3xl);
+  object-fit: cover;
+}
+.courseTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+.courseDesc {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--foreground-muted);
+}
+.courseMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.star {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  color: var(--color-amber-500);
+}
+
+.courseLevel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground-strong);
+}
+
+.courseDivider {
+  display: inline-block;
+  width: 1px;
+  height: 12px;
+  background: var(--border);
+}
+
+.courseLessons {
+  font-size: 13px;
+  color: var(--foreground-subtle);
+}
