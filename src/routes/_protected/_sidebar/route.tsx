@@ -1,6 +1,6 @@
 import type { RegisteredRouter, ValidateLinkOptions } from "@tanstack/react-router";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { BookOpenIcon, HomeIcon, MessageCircleIcon, UserIcon } from "lucide-react";
+import { BookOpenIcon, HomeIcon, MessageCircleIcon, TrophyIcon, UserIcon } from "lucide-react";
 import { useMe } from "@/hooks/useMe";
 import styles from "./route.module.css";
 
@@ -13,6 +13,7 @@ interface NavItem {
 const STUDENT_NAV: NavItem[] = [
   { icon: <HomeIcon size={16} />, label: "Главная", linkOptions: { to: "/" } },
   { icon: <BookOpenIcon size={16} />, label: "Уроки", linkOptions: { to: "/courses" } },
+  { icon: <TrophyIcon size={16} />, label: "Лидерборд", linkOptions: { to: "/leaderboard" } },
   { icon: <MessageCircleIcon size={16} />, label: "Форум", linkOptions: { to: "/forum" } },
   { icon: <UserIcon size={16} />, label: "Профиль", linkOptions: { to: "/profile" } },
 ];
