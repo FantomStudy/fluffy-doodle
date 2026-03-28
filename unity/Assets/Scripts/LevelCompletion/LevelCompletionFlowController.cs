@@ -126,25 +126,40 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         isCompleting = true;
 
         bool fadeCompleted = false;
-        screenFadePlayerLock.FadeOutAndLock(() => fadeCompleted = true);
-        while (!fadeCompleted)
-        {
-            yield return null;
-        }
-
-        popupUI.ShowLoading(currentSceneLevel.LevelId);
-
+        bool requestCompleted = false;
+        bool loadingShown = false;
         LevelCompletionResponse response = null;
         string error = null;
 
-        yield return apiClient.CompleteLevel(
+        screenFadePlayerLock.FadeOutAndLock(() => fadeCompleted = true);
+
+        StartCoroutine(apiClient.CompleteLevel(
             currentSceneLevel.LevelId,
-            success => response = success,
-            failure => error = failure);
+            success =>
+            {
+                response = success;
+                requestCompleted = true;
+            },
+            failure =>
+            {
+                error = failure;
+                requestCompleted = true;
+            }));
+
+        while (!fadeCompleted || !requestCompleted)
+        {
+            if (fadeCompleted && !requestCompleted && !loadingShown)
+            {
+                popupUI.ShowLoading(currentSceneLevel.LevelId);
+                loadingShown = true;
+            }
+
+            yield return null;
+        }
 
         if (response != null)
         {
-            ShowSuccessPopup(response, nextSceneBuildIndex);
+            ShowCompletionPopup(response, nextSceneBuildIndex);
         }
         else
         {
@@ -154,29 +169,33 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         isCompleting = false;
     }
 
-    private void ShowSuccessPopup(LevelCompletionResponse response, int nextSceneBuildIndex)
+    private void ShowCompletionPopup(LevelCompletionResponse response, int nextSceneBuildIndex)
     {
         LevelCompletionResponseData responseData = response.data;
-        string resolvedLevelId = string.IsNullOrWhiteSpace(responseData.levelId)
-            ? currentSceneLevel.LevelId
-            : responseData.levelId;
+        string levelLabel = ResolveLevelLabel(responseData?.levelId);
+        bool alreadyCompleted = !response.success ||
+            responseData == null ||
+            responseData.wasCompleted ||
+            (responseData.awardedStars <= 0 && responseData.awardedExp <= 0);
 
-        string message = responseData.wasCompleted || (responseData.awardedStars <= 0 && responseData.awardedExp <= 0)
-            ? "Повторное прохождение: награды уже были получены ранее."
-            : "Новые награды добавлены в профиль.";
+        int awardedStars = responseData != null ? Mathf.Max(0, responseData.awardedStars) : 0;
+        int awardedExp = responseData != null ? Mathf.Max(0, responseData.awardedExp) : 0;
 
-        string footer = $"Всего: {responseData.currentStars} stars, {responseData.currentExp} exp";
+        string message = alreadyCompleted
+            ? $"Вы уже проходили уровень {levelLabel}. Награда больше не выдаётся."
+            : $"Вы прошли уровень {levelLabel} и получили +{awardedStars} stars и +{awardedExp} exp.";
+
         LevelCompletionPopupAction primaryAction = BuildPrimaryAction(nextSceneBuildIndex);
         LevelCompletionPopupAction secondaryAction = BuildSecondaryAction(nextSceneBuildIndex);
 
         popupUI.Show(new LevelCompletionPopupState
         {
             Title = "Уровень пройден",
-            LevelId = resolvedLevelId,
+            LevelId = levelLabel,
             Message = message,
-            StarsText = responseData.awardedStars.ToString(),
-            ExpText = responseData.awardedExp.ToString(),
-            Footer = footer,
+            StarsText = alreadyCompleted ? "+0" : $"+{awardedStars}",
+            ExpText = alreadyCompleted ? "+0" : $"+{awardedExp}",
+            Footer = string.Empty,
             PrimaryButtonText = primaryAction.Label,
             PrimaryAction = primaryAction.Callback,
             SecondaryButtonText = secondaryAction.Label,
@@ -192,7 +211,7 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         popupUI.Show(new LevelCompletionPopupState
         {
             Title = "Уровень пройден",
-            LevelId = currentSceneLevel.LevelId,
+            LevelId = currentSceneLevel.LevelLabel,
             Message = BuildFallbackMessage(error),
             StarsText = "--",
             ExpText = "--",
@@ -252,11 +271,44 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    private string ResolveLevelLabel(string responseLevelId)
+    {
+        string normalized = NormalizeLevelLabel(responseLevelId);
+        if (!string.IsNullOrWhiteSpace(normalized))
+        {
+            return normalized;
+        }
+
+        return currentSceneLevel.LevelLabel;
+    }
+
+    private static string NormalizeLevelLabel(string rawValue)
+    {
+        if (string.IsNullOrWhiteSpace(rawValue))
+        {
+            return string.Empty;
+        }
+
+        if (rawValue.StartsWith("level_", StringComparison.OrdinalIgnoreCase) &&
+            int.TryParse(rawValue.Substring("level_".Length), out int backendLevelNumber))
+        {
+            return backendLevelNumber.ToString();
+        }
+
+        if (rawValue.StartsWith("Level", StringComparison.OrdinalIgnoreCase) &&
+            int.TryParse(rawValue.Substring("Level".Length), out int sceneLevelNumber))
+        {
+            return sceneLevelNumber.ToString();
+        }
+
+        return rawValue.Trim();
+    }
+
     private static string BuildFallbackMessage(string error)
     {
         if (string.IsNullOrWhiteSpace(error))
         {
-            return "Уровень пройден, но награды не удалось загрузить.";
+            return "Не удалось получить ответ от сервера. Попробуйте ещё раз.";
         }
 
         string trimmedError = error.Trim();
@@ -265,7 +317,7 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
             trimmedError = trimmedError.Substring(0, 140) + "...";
         }
 
-        return $"Уровень пройден, но награды не удалось загрузить.\n{trimmedError}";
+        return $"Не удалось подтвердить награду на сервере.\n{trimmedError}";
     }
 
     private readonly struct LevelCompletionPopupAction
@@ -284,36 +336,35 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
 
     private readonly struct SceneLevelDescriptor
     {
-        public SceneLevelDescriptor(bool isSupported, string sceneName, string levelId, string previousSceneName)
+        public SceneLevelDescriptor(bool isSupported, string sceneName, int levelNumber, string levelId, string previousSceneName)
         {
             IsSupported = isSupported;
             SceneName = sceneName;
+            LevelNumber = levelNumber;
             LevelId = levelId;
             PreviousSceneName = previousSceneName;
         }
 
         public bool IsSupported { get; }
         public string SceneName { get; }
+        public int LevelNumber { get; }
         public string LevelId { get; }
         public string PreviousSceneName { get; }
+        public string LevelLabel => LevelNumber > 0 ? LevelNumber.ToString() : string.Empty;
         public bool HasPreviousScene => !string.IsNullOrWhiteSpace(PreviousSceneName);
 
         public static SceneLevelDescriptor FromScene(Scene scene)
         {
             if (!TryParseLevelNumber(scene.name, out int levelNumber))
             {
-                return new SceneLevelDescriptor(false, scene.name, string.Empty, string.Empty);
-            }
-
-            if (levelNumber < 1 || levelNumber > 3)
-            {
-                return new SceneLevelDescriptor(false, scene.name, string.Empty, string.Empty);
+                return new SceneLevelDescriptor(false, scene.name, 0, string.Empty, string.Empty);
             }
 
             string previousSceneName = levelNumber > 1 ? $"Level{levelNumber - 1}" : string.Empty;
             return new SceneLevelDescriptor(
                 true,
                 scene.name,
+                levelNumber,
                 $"level_{levelNumber}",
                 previousSceneName);
         }
@@ -326,7 +377,7 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
                 return false;
             }
 
-            return int.TryParse(sceneName.Substring("Level".Length), out levelNumber);
+            return int.TryParse(sceneName.Substring("Level".Length), out levelNumber) && levelNumber > 0;
         }
     }
 }

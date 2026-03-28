@@ -27,7 +27,7 @@ public sealed class LevelCompletionPopupUI : MonoBehaviour
         {
             Title = "Завершение уровня",
             LevelId = levelId,
-            Message = "Отправляем результат на сервер...",
+            Message = "Сохраняем прохождение на сервере...",
             StarsText = "--",
             ExpText = "--",
             Footer = string.Empty,
@@ -67,7 +67,7 @@ public sealed class LevelCompletionPopupUI : MonoBehaviour
             return;
         }
 
-        Font uiFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        Font uiFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
         GameObject canvasObject = CreateUiObject("LevelCompletionPopupCanvas", transform);
         popupCanvas = canvasObject.AddComponent<Canvas>();
@@ -118,7 +118,7 @@ public sealed class LevelCompletionPopupUI : MonoBehaviour
             uiFont,
             "StarsRow",
             new Color(0.96f, 0.8f, 0.18f, 1f),
-            "Stars",
+            "stars",
             new Vector2(0f, -230f),
             out starsValueText);
 
@@ -127,7 +127,7 @@ public sealed class LevelCompletionPopupUI : MonoBehaviour
             uiFont,
             "ExpRow",
             new Color(0.2f, 0.86f, 0.58f, 1f),
-            "Exp",
+            "exp",
             new Vector2(0f, -290f),
             out expValueText);
 
@@ -156,14 +156,16 @@ public sealed class LevelCompletionPopupUI : MonoBehaviour
 
     private void ApplyState(LevelCompletionPopupState popupState)
     {
-        string safeLevelId = string.IsNullOrWhiteSpace(popupState.LevelId)
-            ? "unknown"
-            : popupState.LevelId;
+        string levelLabel = FormatLevelLabel(popupState.LevelId);
 
         titleText.text = string.IsNullOrWhiteSpace(popupState.Title)
             ? "Уровень пройден"
             : popupState.Title;
-        levelText.text = $"Уровень {safeLevelId} пройден";
+
+        bool showLevel = !string.IsNullOrWhiteSpace(levelLabel);
+        levelText.gameObject.SetActive(showLevel);
+        levelText.text = showLevel ? $"Уровень {levelLabel} пройден" : string.Empty;
+
         messageText.text = popupState.Message ?? string.Empty;
         starsValueText.text = popupState.StarsText ?? "--";
         expValueText.text = popupState.ExpText ?? "--";
@@ -174,6 +176,29 @@ public sealed class LevelCompletionPopupUI : MonoBehaviour
 
         ConfigureButton(primaryButton, primaryButtonText, popupState.PrimaryButtonText, popupState.PrimaryAction);
         ConfigureButton(secondaryButton, secondaryButtonText, popupState.SecondaryButtonText, popupState.SecondaryAction);
+    }
+
+    private static string FormatLevelLabel(string rawValue)
+    {
+        if (string.IsNullOrWhiteSpace(rawValue))
+        {
+            return string.Empty;
+        }
+
+        string trimmed = rawValue.Trim();
+        if (trimmed.StartsWith("level_", StringComparison.OrdinalIgnoreCase) &&
+            int.TryParse(trimmed.Substring("level_".Length), out int backendLevelNumber))
+        {
+            return backendLevelNumber.ToString();
+        }
+
+        if (trimmed.StartsWith("Level", StringComparison.OrdinalIgnoreCase) &&
+            int.TryParse(trimmed.Substring("Level".Length), out int sceneLevelNumber))
+        {
+            return sceneLevelNumber.ToString();
+        }
+
+        return trimmed;
     }
 
     private void SetVisible(bool visible)

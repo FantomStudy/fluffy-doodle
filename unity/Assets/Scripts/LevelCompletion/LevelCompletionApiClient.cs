@@ -218,14 +218,6 @@ public sealed class LevelCompletionApiClient : MonoBehaviour
             return false;
         }
 
-        if (!response.success || response.data == null)
-        {
-            error = string.IsNullOrWhiteSpace(response.message)
-                ? "Backend reported an unsuccessful level completion."
-                : response.message;
-            return false;
-        }
-
         return true;
     }
 
