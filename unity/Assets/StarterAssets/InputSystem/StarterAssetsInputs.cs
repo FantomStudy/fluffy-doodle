@@ -8,6 +8,7 @@ namespace StarterAssets
 	public class StarterAssetsInputs : MonoBehaviour
 	{
 		[SerializeField] private GameObject mobileControlsRoot;
+		[SerializeField] private bool forceMobileControlsInEditor;
 
 		[Header("Character Input Values")]
 		public Vector2 move;
@@ -23,6 +24,11 @@ namespace StarterAssets
 		public bool cursorInputForLook = true;
 
 		private void Start()
+		{
+			ConfigureLaunchMode();
+		}
+
+		private void OnEnable()
 		{
 			ConfigureLaunchMode();
 		}
@@ -75,7 +81,14 @@ namespace StarterAssets
 
 		private void ConfigureLaunchMode()
 		{
-			bool isMobileLaunch = global::PracticeLaunchOptions.IsMobileLaunch();
+			bool isMobileLaunch = global::PracticeLaunchOptions.IsMobileLaunch() || Application.isMobilePlatform;
+
+#if UNITY_EDITOR
+			if (forceMobileControlsInEditor)
+			{
+				isMobileLaunch = true;
+			}
+#endif
 
 			if (mobileControlsRoot == null)
 			{

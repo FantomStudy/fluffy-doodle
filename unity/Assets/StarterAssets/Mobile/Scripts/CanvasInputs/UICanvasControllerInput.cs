@@ -141,7 +141,7 @@ namespace StarterAssets
             labelText.fontSize = interactButtonFontSize;
             labelText.fontStyle = FontStyle.Bold;
             labelText.alignment = TextAnchor.MiddleCenter;
-            labelText.color = Color.white;
+            labelText.color = Color.black;
             labelText.supportRichText = false;
             labelText.text = interactButtonLabel;
         }

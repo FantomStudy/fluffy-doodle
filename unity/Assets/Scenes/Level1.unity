@@ -2228,6 +2228,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4439600512617312073, guid: a93a200b8bccc7b4eb5cd634ef6cafb8, type: 3}
+--- !u!1 &336964998 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3086546279676800976, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+  m_PrefabInstance: {fileID: 1440586204}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &355383888
 GameObject:
   m_ObjectHideFlags: 0
@@ -7438,6 +7443,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5184572035404815069, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
       propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024340925101731669, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: mobileControlsRoot
+      value: 
+      objectReference: {fileID: 336964998}
+    - target: {fileID: 7024340925101731669, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: forceMobileControlsInEditor
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8095725308869832677, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}

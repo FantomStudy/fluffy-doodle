@@ -7,8 +7,10 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
 {
     private const float AutoRedirectDelaySeconds = 5f;
     private const string RedirectQueryParameterName = "redirect";
-    private const int DefaultRedirectPort = 5173;
     private const string DefaultRedirectPath = "/courses";
+    private const int DesktopFrontendPort = 5173;
+    private const int MobileFrontendPort = 8080;
+    private static readonly string[] FrontendQueryParameters = { "frontend", "frontendBase", "app", "appBase" };
 
     private static LevelCompletionFlowController instance;
 
@@ -126,11 +128,11 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         }
 
         StopAutoRedirect();
-        StartCoroutine(CompleteLevelRoutine(nextSceneBuildIndex));
+        StartCoroutine(CompleteLevelRoutine());
         return true;
     }
 
-    private IEnumerator CompleteLevelRoutine(int nextSceneBuildIndex)
+    private IEnumerator CompleteLevelRoutine()
     {
         isCompleting = true;
 
@@ -168,52 +170,50 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
 
         if (response != null)
         {
-            ShowCompletionPopup(response, nextSceneBuildIndex);
+            ShowCompletionPopup(response);
         }
         else
         {
-            ShowFallbackPopup(error, nextSceneBuildIndex);
+            ShowErrorPopup();
         }
 
         isCompleting = false;
     }
 
-    private void ShowCompletionPopup(LevelCompletionResponse response, int nextSceneBuildIndex)
+    private void ShowCompletionPopup(LevelCompletionResponse response)
     {
         LevelCompletionResponseData responseData = response.data;
         string levelLabel = ResolveLevelLabel(responseData?.levelId);
-        bool alreadyCompleted = !response.success ||
-            responseData == null ||
-            responseData.wasCompleted ||
-            (responseData.awardedStars <= 0 && responseData.awardedExp <= 0);
+        bool isServerSuccess = response.success;
+        bool alreadyCompleted = !isServerSuccess;
 
-        int awardedStars = responseData != null ? Mathf.Max(0, responseData.awardedStars) : 0;
-        int awardedExp = responseData != null ? Mathf.Max(0, responseData.awardedExp) : 0;
+        int awardedStars = alreadyCompleted || responseData == null ? 0 : Mathf.Max(0, responseData.awardedStars);
+        int awardedExp = alreadyCompleted || responseData == null ? 0 : Mathf.Max(0, responseData.awardedExp);
 
         string message = alreadyCompleted
-            ? $"Вы уже проходили уровень {levelLabel}. Награда больше не выдаётся."
-            : $"Вы прошли уровень {levelLabel} и получили +{awardedStars} stars и +{awardedExp} exp.";
+            ? "Уже пройден."
+            : "Пройдено.";
 
         popupUI.Show(new LevelCompletionPopupState
         {
-            Title = "Уровень пройден",
-            LevelId = levelLabel,
+            Title = $"Уровень {levelLabel}",
+            LevelId = string.Empty,
             Message = message,
-            StarsText = alreadyCompleted ? "+0" : $"+{awardedStars}",
-            ExpText = alreadyCompleted ? "+0" : $"+{awardedExp}",
+            StarsText = $"+{awardedStars}",
+            ExpText = $"+{awardedExp}",
             Footer = BuildAutoRedirectFooter(),
         });
 
         StartAutoRedirect();
     }
 
-    private void ShowFallbackPopup(string error, int nextSceneBuildIndex)
+    private void ShowErrorPopup()
     {
         popupUI.Show(new LevelCompletionPopupState
         {
-            Title = "Уровень пройден",
-            LevelId = currentSceneLevel.LevelLabel,
-            Message = BuildFallbackMessage(error),
+            Title = $"Уровень {currentSceneLevel.LevelLabel}",
+            LevelId = string.Empty,
+            Message = "Ошибка сервера.",
             StarsText = "--",
             ExpText = "--",
             Footer = BuildAutoRedirectFooter(),
@@ -280,20 +280,42 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
     private static bool TryBuildDefaultRedirectUrl(out string redirectUrl)
     {
         redirectUrl = string.Empty;
-        if (string.IsNullOrWhiteSpace(Application.absoluteURL))
+        if (TryGetFrontendBaseUrlFromQuery(out string frontendBaseUrl))
         {
-            return false;
+            redirectUrl = frontendBaseUrl.TrimEnd('/') + DefaultRedirectPath;
+            return true;
         }
 
-        if (!Uri.TryCreate(Application.absoluteURL, UriKind.Absolute, out Uri currentUri) ||
-            string.IsNullOrWhiteSpace(currentUri.Host))
+        if (PracticeLaunchOptions.TryGetAbsoluteUrlOrigin(out string currentOrigin))
         {
-            return false;
+            if (Uri.TryCreate(currentOrigin, UriKind.Absolute, out Uri originUri))
+            {
+                int targetPort = PracticeLaunchOptions.IsMobileLaunch() ? MobileFrontendPort : DesktopFrontendPort;
+                UriBuilder builder = new UriBuilder(originUri.Scheme, originUri.Host, targetPort, DefaultRedirectPath);
+                redirectUrl = builder.Uri.ToString();
+                return true;
+            }
         }
 
-        UriBuilder builder = new UriBuilder(currentUri.Scheme, currentUri.Host, DefaultRedirectPort, DefaultRedirectPath);
-        redirectUrl = builder.Uri.ToString();
+        int fallbackPort = PracticeLaunchOptions.IsMobileLaunch() ? MobileFrontendPort : DesktopFrontendPort;
+        redirectUrl = $"http://localhost:{fallbackPort}{DefaultRedirectPath}";
         return true;
+    }
+
+    private static bool TryGetFrontendBaseUrlFromQuery(out string frontendBaseUrl)
+    {
+        frontendBaseUrl = string.Empty;
+        foreach (string parameterName in FrontendQueryParameters)
+        {
+            if (PracticeLaunchOptions.TryGetQueryParameter(parameterName, out string rawValue) &&
+                PracticeLaunchOptions.TryBuildAbsoluteUrl(rawValue, out string absoluteUrl))
+            {
+                frontendBaseUrl = absoluteUrl;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private string ResolveLevelLabel(string responseLevelId)
@@ -329,54 +351,34 @@ public sealed class LevelCompletionFlowController : MonoBehaviour
         return rawValue.Trim();
     }
 
-    private static string BuildFallbackMessage(string error)
-    {
-        if (string.IsNullOrWhiteSpace(error))
-        {
-            return "Не удалось получить ответ от сервера. Попробуйте ещё раз.";
-        }
-
-        string trimmedError = error.Trim();
-        if (trimmedError.Length > 140)
-        {
-            trimmedError = trimmedError.Substring(0, 140) + "...";
-        }
-
-        return $"Не удалось подтвердить награду на сервере.\n{trimmedError}";
-    }
-
     private readonly struct SceneLevelDescriptor
     {
-        public SceneLevelDescriptor(bool isSupported, string sceneName, int levelNumber, string levelId, string previousSceneName)
+        public SceneLevelDescriptor(bool isSupported, string sceneName, int levelNumber, string levelId)
         {
             IsSupported = isSupported;
             SceneName = sceneName;
             LevelNumber = levelNumber;
             LevelId = levelId;
-            PreviousSceneName = previousSceneName;
         }
 
         public bool IsSupported { get; }
         public string SceneName { get; }
         public int LevelNumber { get; }
         public string LevelId { get; }
-        public string PreviousSceneName { get; }
         public string LevelLabel => LevelNumber > 0 ? LevelNumber.ToString() : string.Empty;
 
         public static SceneLevelDescriptor FromScene(Scene scene)
         {
             if (!TryParseLevelNumber(scene.name, out int levelNumber))
             {
-                return new SceneLevelDescriptor(false, scene.name, 0, string.Empty, string.Empty);
+                return new SceneLevelDescriptor(false, scene.name, 0, string.Empty);
             }
 
-            string previousSceneName = levelNumber > 1 ? $"Level{levelNumber - 1}" : string.Empty;
             return new SceneLevelDescriptor(
                 true,
                 scene.name,
                 levelNumber,
-                $"level_{levelNumber}",
-                previousSceneName);
+                $"level_{levelNumber}");
         }
 
         private static bool TryParseLevelNumber(string sceneName, out int levelNumber)
