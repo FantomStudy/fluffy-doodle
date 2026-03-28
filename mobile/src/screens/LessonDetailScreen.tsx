@@ -1,14 +1,13 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { Task } from "../api/courses";
 import type { RootStackParamList } from "../navigation/types";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CodingChallenge } from "../components/CodingChallenge";
-import { FlowchartChallenge } from "../components/FlowchartChallenge";
 import { QuizChallenge } from "../components/QuizChallenge";
+import { UnityRedirectScreen } from "../components/UnityRedirectScreen";
 import { useCourseLessons, useSubmitTask } from "../hooks/useCourses";
 import { colors, radii, semantic } from "../theme/tokens";
 
@@ -66,7 +65,6 @@ const VictoryScreen = ({
 
 export const LessonDetailScreen = () => {
   const route = useRoute<Props["route"]>();
-  const navigation = useNavigation<Props["navigation"]>();
   const { courseId, lessonId } = route.params;
 
   const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
@@ -104,13 +102,6 @@ export const LessonDetailScreen = () => {
     );
   };
 
-  const handleSolvedComplete = (task: Task) => {
-    submitMutation.mutate(
-      { lessonId, taskId: task.id, body: { solved: true } },
-      { onSuccess: () => setCompletedTask({ taskId: task.id }) },
-    );
-  };
-
   if (completedTaskData) {
     return (
       <VictoryScreen
@@ -137,14 +128,8 @@ export const LessonDetailScreen = () => {
         />
       );
     }
-    if (activeTask.type === "flowchart") {
-      return (
-        <FlowchartChallenge task={activeTask} onComplete={() => handleSolvedComplete(activeTask)} />
-      );
-    }
-    return (
-      <CodingChallenge task={activeTask} onComplete={() => handleSolvedComplete(activeTask)} />
-    );
+
+    return <UnityRedirectScreen onBack={() => setActiveTaskId(null)} />;
   }
 
   return (

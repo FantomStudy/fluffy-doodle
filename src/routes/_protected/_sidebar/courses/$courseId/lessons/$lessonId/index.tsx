@@ -8,6 +8,26 @@ import { QuizChallenge } from "@/components/QuizChallenge";
 import { useCourseLessons, useSubmitTask } from "@/hooks/useCourses";
 import styles from "./index.module.css";
 
+const UNITY_SCENES = ["if", "variables", "level3", "cycles"] as const;
+
+const getRandomUnityScene = () => {
+  const randomIndex = Math.floor(Math.random() * UNITY_SCENES.length);
+
+  return UNITY_SCENES[randomIndex];
+};
+
+const buildUnityWebglUrl = () => {
+  const unityHost = import.meta.env.VITE_UNITY_HOST?.trim();
+
+  if (!unityHost) return null;
+
+  const unityUrl = new URL("/", unityHost);
+  unityUrl.searchParams.set("scene", getRandomUnityScene());
+  unityUrl.searchParams.set("frontend", window.location.origin);
+
+  return unityUrl.toString();
+};
+
 const TASK_ICONS: Record<Task["type"], { emoji: string; className: string }> = {
   quiz: { emoji: "📝", className: styles.taskIconQuiz },
   flowchart: { emoji: "🔷", className: styles.taskIconFlowchart },
@@ -22,12 +42,13 @@ const TASK_LABELS: Record<Task["type"], string> = {
 
 interface CompletedTaskState {
   taskId: number;
+  unityWebglUrl: string | null;
 }
 
 interface VictoryScreenProps {
   task: Task;
   hasNextTask: boolean;
-  unityWebglUrl: string;
+  unityWebglUrl: string | null;
   onBack: () => void;
   onNext: () => void;
 }
@@ -63,14 +84,17 @@ const VictoryScreen = ({
         </div>
 
         <div className={styles.victoryActions}>
-          <a
-            href={unityWebglUrl}
-            target="_blank"
-            rel="noreferrer"
-            className={styles.victoryLinkBtn}
-          >
-            Дополнительное задание
-          </a>
+          {unityWebglUrl && (
+            <button
+              type="button"
+              className={styles.victoryLinkBtn}
+              onClick={() => {
+                window.location.assign(unityWebglUrl);
+              }}
+            >
+              Дополнительное задание
+            </button>
+          )}
           <button type="button" className={styles.victorySecondaryBtn} onClick={onBack}>
             К заданиям
           </button>
@@ -121,16 +145,16 @@ const RouteComponent = () => {
     ? lesson.tasks.findIndex((task) => task.id === activeTask.id)
     : -1;
   const nextTask = activeTaskIndex >= 0 ? lesson.tasks[activeTaskIndex + 1] : undefined;
-  const unityWebglUrl =
-    import.meta.env.VITE_UNITY_WEBGL_URL ??
-    `/unity-webgl?courseId=${courseId}&lessonId=${lessonId}&taskId=${completedTask?.taskId ?? ""}`;
 
   const handleQuizComplete = (task: Task, selectedOptionIds: string[] = []) => {
     submitMutation.mutate(
       { lessonId, taskId: task.id, body: { selectedOptionIds } },
       {
         onSuccess: () => {
-          setCompletedTask({ taskId: task.id });
+          setCompletedTask({
+            taskId: task.id,
+            unityWebglUrl: buildUnityWebglUrl(),
+          });
         },
       },
     );
@@ -141,7 +165,10 @@ const RouteComponent = () => {
       { lessonId, taskId: task.id, body: { solved: true } },
       {
         onSuccess: () => {
-          setCompletedTask({ taskId: task.id });
+          setCompletedTask({
+            taskId: task.id,
+            unityWebglUrl: buildUnityWebglUrl(),
+          });
         },
       },
     );
@@ -152,7 +179,7 @@ const RouteComponent = () => {
       <VictoryScreen
         task={completedTaskData}
         hasNextTask={Boolean(nextTask)}
-        unityWebglUrl={unityWebglUrl}
+        unityWebglUrl={completedTask?.unityWebglUrl ?? null}
         onBack={() => {
           setCompletedTask(null);
           setActiveTaskId(null);
