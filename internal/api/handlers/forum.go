@@ -28,6 +28,38 @@ func GetForumCategories(s service.ForumService) fiber.Handler {
 	}
 }
 
+// @Summary Create forum category
+// @Description Creates a new forum category
+// @Accept json
+// @Produce json
+// @Tags forum
+// @Param body body presenter.CreateForumCategoryRequest true "Category data"
+// @Success 201 {object} presenter.ForumCategoryResponse
+// @Failure 400 {object} presenter.ErrorResponse
+// @Failure 401 {object} presenter.ErrorResponse
+// @Router /forum/categories [post]
+func CreateForumCategory(s service.ForumService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		var req presenter.CreateForumCategoryRequest
+		if err := c.BodyParser(&req); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse{
+				Success: false,
+				Error:   err.Error(),
+			})
+		}
+
+		category, err := s.CreateCategory(req)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse{
+				Success: false,
+				Error:   err.Error(),
+			})
+		}
+
+		return c.Status(fiber.StatusCreated).JSON(category)
+	}
+}
+
 // @Summary Get forum topics
 // @Description Returns a list of forum topics. Can be filtered by categoryId.
 // @Produce json

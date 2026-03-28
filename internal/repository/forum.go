@@ -8,6 +8,7 @@ import (
 type ForumRepository interface {
 	GetCategories() ([]models.ForumCategory, error)
 	GetCategoryByID(id uint) (*models.ForumCategory, error)
+	CreateCategory(category *models.ForumCategory) (*models.ForumCategory, error)
 	CreateTopic(topic *models.ForumTopic) (*models.ForumTopic, error)
 	GetTopics(categoryID uint) ([]models.ForumTopic, error)
 	GetTopicByID(id uint) (*models.ForumTopic, error)
@@ -35,6 +36,11 @@ func (r *forumRepository) GetCategoryByID(id uint) (*models.ForumCategory, error
 	var category models.ForumCategory
 	err := r.db.First(&category, id).Error
 	return &category, err
+}
+
+func (r *forumRepository) CreateCategory(category *models.ForumCategory) (*models.ForumCategory, error) {
+	err := r.db.Create(category).Error
+	return category, err
 }
 
 func (r *forumRepository) CreateTopic(topic *models.ForumTopic) (*models.ForumTopic, error) {

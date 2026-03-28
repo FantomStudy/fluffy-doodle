@@ -47,6 +47,10 @@ func SeedTestData(db *gorm.DB, courseImageURL string) error {
 		return err
 	}
 
+	if _, err := seedFrames(db); err != nil {
+		return err
+	}
+
 	users, err := seedUsers(db, roles)
 	if err != nil {
 		return err
@@ -181,6 +185,41 @@ func seedCategories(db *gorm.DB) (map[string]models.CourseCategory, error) {
 		}
 
 		result[definition.Name] = category
+	}
+
+	return result, nil
+}
+
+func seedFrames(db *gorm.DB) (map[string]models.Frame, error) {
+	definitions := []models.Frame{
+		{Name: "Обычная рамка", Price: 0, Image: "frame_common.png"},
+		{Name: "Бронзовая рамка", Price: 50, Image: "frame_bronze.png"},
+		{Name: "Серебряная рамка", Price: 150, Image: "frame_silver.png"},
+		{Name: "Золотая рамка", Price: 500, Image: "frame_gold.png"},
+	}
+
+	result := make(map[string]models.Frame, len(definitions))
+	for _, definition := range definitions {
+		frame := models.Frame{}
+		err := db.Where("name = ?", definition.Name).First(&frame).Error
+		if err != nil {
+			if err != gorm.ErrRecordNotFound {
+				return nil, err
+			}
+
+			frame = definition
+			if err := db.Create(&frame).Error; err != nil {
+				return nil, err
+			}
+		} else {
+			frame.Price = definition.Price
+			frame.Image = definition.Image
+			if err := db.Save(&frame).Error; err != nil {
+				return nil, err
+			}
+		}
+
+		result[frame.Name] = frame
 	}
 
 	return result, nil

@@ -11,6 +11,7 @@ import (
 
 type ForumService interface {
 	GetCategories() ([]presenter.ForumCategoryResponse, error)
+	CreateCategory(req presenter.CreateForumCategoryRequest) (*presenter.ForumCategoryResponse, error)
 	GetTopics(categoryID uint) ([]presenter.ForumTopicResponse, error)
 	GetTopicDetail(topicID uint) (*presenter.ForumTopicDetailResponse, error)
 	CreateTopic(userID uint, req presenter.CreateForumTopicRequest) (*presenter.ForumTopicResponse, error)
@@ -56,6 +57,30 @@ func (s *forumService) GetCategories() ([]presenter.ForumCategoryResponse, error
 		})
 	}
 	return res, nil
+}
+
+func (s *forumService) CreateCategory(req presenter.CreateForumCategoryRequest) (*presenter.ForumCategoryResponse, error) {
+	if req.Name == "" {
+		return nil, errors.New("name is required")
+	}
+
+	category := &models.ForumCategory{
+		Name:        req.Name,
+		Description: req.Description,
+		Order:       req.Order,
+	}
+
+	created, err := s.repo.CreateCategory(category)
+	if err != nil {
+		return nil, err
+	}
+
+	return &presenter.ForumCategoryResponse{
+		ID:          created.ID,
+		Name:        created.Name,
+		Description: created.Description,
+		TopicsCount: 0,
+	}, nil
 }
 
 func (s *forumService) GetTopics(categoryID uint) ([]presenter.ForumTopicResponse, error) {

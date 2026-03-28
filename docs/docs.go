@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.InsertCategoryRequest"
+                            "$ref": "#/definitions/presenter.InsertCategoryRequest"
                         }
                     }
                 ],
@@ -44,25 +44,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -95,7 +95,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UpdateCategoryRequest"
+                            "$ref": "#/definitions/presenter.UpdateCategoryRequest"
                         }
                     }
                 ],
@@ -103,31 +103,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -157,25 +157,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -242,25 +242,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -333,25 +333,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -378,25 +378,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -429,7 +429,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonRequest"
+                            "$ref": "#/definitions/presenter.CreateLessonRequest"
                         }
                     }
                 ],
@@ -437,25 +437,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -478,7 +478,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
                         }
                     }
                 }
@@ -501,7 +501,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
                         }
                     }
                 }
@@ -524,25 +524,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -568,7 +568,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest"
+                            "$ref": "#/definitions/presenter.SignInRequest"
                         }
                     }
                 ],
@@ -576,31 +576,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -626,7 +626,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest"
+                            "$ref": "#/definitions/presenter.SignUpRequest"
                         }
                     }
                 ],
@@ -634,31 +634,31 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -681,13 +681,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -719,25 +719,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -757,13 +757,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -792,25 +792,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -839,25 +839,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -879,14 +879,58 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCategoryResponse"
+                                "$ref": "#/definitions/presenter.ForumCategoryResponse"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new forum category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forum"
+                ],
+                "summary": "Create forum category",
+                "parameters": [
+                    {
+                        "description": "Category data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/presenter.CreateForumCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ForumCategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -922,19 +966,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse"
+                            "$ref": "#/definitions/presenter.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -964,14 +1008,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse"
+                                "$ref": "#/definitions/presenter.ForumTopicResponse"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -995,7 +1039,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumTopicRequest"
+                            "$ref": "#/definitions/presenter.CreateForumTopicRequest"
                         }
                     }
                 ],
@@ -1003,19 +1047,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse"
+                            "$ref": "#/definitions/presenter.ForumTopicResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -1044,13 +1088,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicDetailResponse"
+                            "$ref": "#/definitions/presenter.ForumTopicDetailResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -1083,7 +1127,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumCommentRequest"
+                            "$ref": "#/definitions/presenter.CreateForumCommentRequest"
                         }
                     }
                 ],
@@ -1091,19 +1135,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCommentResponse"
+                            "$ref": "#/definitions/presenter.ForumCommentResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse"
+                            "$ref": "#/definitions/presenter.ErrorResponse"
                         }
                     }
                 }
@@ -1123,25 +1167,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.MeResponse"
+                            "$ref": "#/definitions/presenter.MeResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -1173,19 +1217,185 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/frames": {
+            "get": {
+                "description": "Returns all available frames and marks owned ones",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get available frames",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/presenter.FrameResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/frames/{frameId}/active": {
+            "post": {
+                "description": "Sets a frame as active for the user. Set frameId to 0 to remove frame.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Set active frame",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Frame ID",
+                        "name": "frameId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/frames/{frameId}/buy": {
+            "post": {
+                "description": "Allows user to buy a frame using stars",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Buy a frame",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Frame ID",
+                        "name": "frameId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/leaderboard/stars": {
+            "get": {
+                "description": "Returns users sorted by stars",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get stars leaderboard",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/presenter.LeaderboardResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -1205,25 +1415,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ParentChildProgressResponse"
+                            "$ref": "#/definitions/presenter.ParentChildProgressResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -1243,25 +1453,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UserProfileResponse"
+                            "$ref": "#/definitions/presenter.UserProfileResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse"
+                            "$ref": "#/definitions/presenter.AuthSwaggerErrorResponse"
                         }
                     }
                 }
@@ -1269,7 +1479,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse": {
+        "presenter.AuthSwaggerErrorResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -1278,7 +1488,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse": {
+        "presenter.AuthSwaggerSuccessResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -1287,7 +1497,24 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumCommentRequest": {
+        "presenter.CreateForumCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Обсуждение языка программирования Go"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Вопросы по Go"
+                },
+                "order": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "presenter.CreateForumCommentRequest": {
             "type": "object",
             "properties": {
                 "content": {
@@ -1296,7 +1523,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumTopicRequest": {
+        "presenter.CreateForumTopicRequest": {
             "type": "object",
             "properties": {
                 "categoryId": {
@@ -1313,7 +1540,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonRequest": {
+        "presenter.CreateLessonRequest": {
             "type": "object",
             "properties": {
                 "description": {
@@ -1335,7 +1562,7 @@ const docTemplate = `{
                 "tasks": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonTaskRequest"
+                        "$ref": "#/definitions/presenter.CreateLessonTaskRequest"
                     }
                 },
                 "title": {
@@ -1344,7 +1571,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonTaskRequest": {
+        "presenter.CreateLessonTaskRequest": {
             "type": "object",
             "properties": {
                 "correctOptionIds": {
@@ -1360,7 +1587,7 @@ const docTemplate = `{
                 "options": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateTaskOptionRequest"
+                        "$ref": "#/definitions/presenter.CreateTaskOptionRequest"
                     }
                 },
                 "question": {
@@ -1377,7 +1604,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateTaskOptionRequest": {
+        "presenter.CreateTaskOptionRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1390,7 +1617,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse": {
+        "presenter.ErrorResponse": {
             "type": "object",
             "properties": {
                 "error": {
@@ -1403,7 +1630,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumAuthor": {
+        "presenter.ForumAuthor": {
             "type": "object",
             "properties": {
                 "avatar": {
@@ -1423,7 +1650,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCategoryResponse": {
+        "presenter.ForumCategoryResponse": {
             "type": "object",
             "properties": {
                 "description": {
@@ -1440,11 +1667,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCommentResponse": {
+        "presenter.ForumCommentResponse": {
             "type": "object",
             "properties": {
                 "author": {
-                    "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumAuthor"
+                    "$ref": "#/definitions/presenter.ForumAuthor"
                 },
                 "content": {
                     "type": "string"
@@ -1460,25 +1687,25 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicDetailResponse": {
+        "presenter.ForumTopicDetailResponse": {
             "type": "object",
             "properties": {
                 "comments": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCommentResponse"
+                        "$ref": "#/definitions/presenter.ForumCommentResponse"
                     }
                 },
                 "topic": {
-                    "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse"
+                    "$ref": "#/definitions/presenter.ForumTopicResponse"
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse": {
+        "presenter.ForumTopicResponse": {
             "type": "object",
             "properties": {
                 "author": {
-                    "$ref": "#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumAuthor"
+                    "$ref": "#/definitions/presenter.ForumAuthor"
                 },
                 "categoryId": {
                     "type": "integer"
@@ -1506,7 +1733,32 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.InsertCategoryRequest": {
+        "presenter.FrameResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://minio.local/frame_1.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Gold Frame"
+                },
+                "owned": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 100
+                }
+            }
+        },
+        "presenter.InsertCategoryRequest": {
             "type": "object",
             "required": [
                 "name"
@@ -1519,9 +1771,40 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.MeResponse": {
+        "presenter.LeaderboardResponse": {
             "type": "object",
             "properties": {
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
+                },
+                "avatar": {
+                    "type": "string",
+                    "example": "https://minio.local/avatar_1.png"
+                },
+                "fullName": {
+                    "type": "string",
+                    "example": "Ivan Ivanov"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "level": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "stars": {
+                    "type": "integer",
+                    "example": 150
+                }
+            }
+        },
+        "presenter.MeResponse": {
+            "type": "object",
+            "properties": {
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
+                },
                 "avatar": {
                     "type": "string",
                     "example": "https://minio.local/avatar_1.png"
@@ -1550,6 +1833,12 @@ const docTemplate = `{
                     "type": "string",
                     "example": "teacher01"
                 },
+                "ownedFrames": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "phoneNumber": {
                     "type": "string",
                     "example": "+79001234567"
@@ -1576,12 +1865,15 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ParentChildProgressResponse": {
+        "presenter.ParentChildProgressResponse": {
             "type": "object",
             "properties": {
                 "achievements": {
                     "type": "integer",
                     "example": 4
+                },
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
                 },
                 "exp": {
                     "type": "integer",
@@ -1613,7 +1905,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest": {
+        "presenter.SignInRequest": {
             "type": "object",
             "properties": {
                 "login": {
@@ -1624,7 +1916,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest": {
+        "presenter.SignUpRequest": {
             "type": "object",
             "properties": {
                 "fullName": {
@@ -1644,7 +1936,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse": {
+        "presenter.SuccessResponse": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -1658,7 +1950,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UpdateCategoryRequest": {
+        "presenter.UpdateCategoryRequest": {
             "type": "object",
             "required": [
                 "name"
@@ -1671,9 +1963,12 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UserProfileResponse": {
+        "presenter.UserProfileResponse": {
             "type": "object",
             "properties": {
+                "activeFrame": {
+                    "$ref": "#/definitions/presenter.FrameResponse"
+                },
                 "avatar": {
                     "type": "string",
                     "example": "https://minio.local/avatar_1.png"

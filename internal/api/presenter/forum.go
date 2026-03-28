@@ -50,6 +50,12 @@ type CreateForumTopicRequest struct {
 	CategoryID uint   `json:"categoryId" example:"1"`
 }
 
+type CreateForumCategoryRequest struct {
+	Name        string `json:"name" example:"Вопросы по Go"`
+	Description string `json:"description" example:"Обсуждение языка программирования Go"`
+	Order       int    `json:"order" example:"1"`
+}
+
 type CreateForumCommentRequest struct {
 	Content string `json:"content" example:"Вот решение вашей проблемы..."`
 }

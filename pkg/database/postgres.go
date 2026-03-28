@@ -64,6 +64,7 @@ func AutoMigrate(connection *gorm.DB) {
 		&models.ForumCategory{},
 		&models.ForumTopic{},
 		&models.ForumComment{},
+		&models.Frame{},
 	)
 
 	// createDefaultRoles(connection)

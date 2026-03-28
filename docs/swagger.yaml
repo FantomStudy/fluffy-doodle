@@ -1,24 +1,36 @@
 basePath: /
 definitions:
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse:
+  presenter.AuthSwaggerErrorResponse:
     properties:
       error: {}
       status:
         type: boolean
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse:
+  presenter.AuthSwaggerSuccessResponse:
     properties:
       error: {}
       status:
         type: boolean
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumCommentRequest:
+  presenter.CreateForumCategoryRequest:
+    properties:
+      description:
+        example: Обсуждение языка программирования Go
+        type: string
+      name:
+        example: Вопросы по Go
+        type: string
+      order:
+        example: 1
+        type: integer
+    type: object
+  presenter.CreateForumCommentRequest:
     properties:
       content:
         example: Вот решение вашей проблемы...
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumTopicRequest:
+  presenter.CreateForumTopicRequest:
     properties:
       categoryId:
         example: 1
@@ -30,7 +42,7 @@ definitions:
         example: Как использовать GORM?
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonRequest:
+  presenter.CreateLessonRequest:
     properties:
       description:
         example: First lesson of the course
@@ -46,13 +58,13 @@ definitions:
         type: integer
       tasks:
         items:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonTaskRequest'
+          $ref: '#/definitions/presenter.CreateLessonTaskRequest'
         type: array
       title:
         example: Intro to Python
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonTaskRequest:
+  presenter.CreateLessonTaskRequest:
     properties:
       correctOptionIds:
         items:
@@ -63,7 +75,7 @@ definitions:
         type: string
       options:
         items:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateTaskOptionRequest'
+          $ref: '#/definitions/presenter.CreateTaskOptionRequest'
         type: array
       question:
         example: Какие варианты верные?
@@ -75,7 +87,7 @@ definitions:
         example: quiz
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateTaskOptionRequest:
+  presenter.CreateTaskOptionRequest:
     properties:
       id:
         example: a
@@ -84,7 +96,7 @@ definitions:
         example: Ответ A
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse:
+  presenter.ErrorResponse:
     properties:
       error:
         example: Описание ошибки
@@ -93,7 +105,7 @@ definitions:
         example: false
         type: boolean
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumAuthor:
+  presenter.ForumAuthor:
     properties:
       avatar:
         type: string
@@ -106,7 +118,7 @@ definitions:
       stars:
         type: integer
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCategoryResponse:
+  presenter.ForumCategoryResponse:
     properties:
       description:
         type: string
@@ -117,10 +129,10 @@ definitions:
       topicsCount:
         type: integer
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCommentResponse:
+  presenter.ForumCommentResponse:
     properties:
       author:
-        $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumAuthor'
+        $ref: '#/definitions/presenter.ForumAuthor'
       content:
         type: string
       createdAt:
@@ -130,19 +142,19 @@ definitions:
       isSolution:
         type: boolean
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicDetailResponse:
+  presenter.ForumTopicDetailResponse:
     properties:
       comments:
         items:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCommentResponse'
+          $ref: '#/definitions/presenter.ForumCommentResponse'
         type: array
       topic:
-        $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse'
+        $ref: '#/definitions/presenter.ForumTopicResponse'
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse:
+  presenter.ForumTopicResponse:
     properties:
       author:
-        $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumAuthor'
+        $ref: '#/definitions/presenter.ForumAuthor'
       categoryId:
         type: integer
       content:
@@ -160,7 +172,25 @@ definitions:
       views:
         type: integer
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.InsertCategoryRequest:
+  presenter.FrameResponse:
+    properties:
+      id:
+        example: 1
+        type: integer
+      image:
+        example: https://minio.local/frame_1.png
+        type: string
+      name:
+        example: Gold Frame
+        type: string
+      owned:
+        example: true
+        type: boolean
+      price:
+        example: 100
+        type: integer
+    type: object
+  presenter.InsertCategoryRequest:
     properties:
       name:
         description: Название категории
@@ -169,8 +199,30 @@ definitions:
     required:
     - name
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.MeResponse:
+  presenter.LeaderboardResponse:
     properties:
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
+      avatar:
+        example: https://minio.local/avatar_1.png
+        type: string
+      fullName:
+        example: Ivan Ivanov
+        type: string
+      id:
+        example: 1
+        type: integer
+      level:
+        example: 5
+        type: integer
+      stars:
+        example: 150
+        type: integer
+    type: object
+  presenter.MeResponse:
+    properties:
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
       avatar:
         example: https://minio.local/avatar_1.png
         type: string
@@ -192,6 +244,10 @@ definitions:
       login:
         example: teacher01
         type: string
+      ownedFrames:
+        items:
+          type: integer
+        type: array
       phoneNumber:
         example: "+79001234567"
         type: string
@@ -211,11 +267,13 @@ definitions:
         example: STU-8A7KQ21M
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ParentChildProgressResponse:
+  presenter.ParentChildProgressResponse:
     properties:
       achievements:
         example: 4
         type: integer
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
       exp:
         example: 45
         type: integer
@@ -238,14 +296,14 @@ definitions:
         example: Petya Ivanov
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest:
+  presenter.SignInRequest:
     properties:
       login:
         type: string
       password:
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest:
+  presenter.SignUpRequest:
     properties:
       fullName:
         type: string
@@ -258,7 +316,7 @@ definitions:
       studentCode:
         type: string
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse:
+  presenter.SuccessResponse:
     properties:
       data: {}
       message:
@@ -268,7 +326,7 @@ definitions:
         example: true
         type: boolean
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UpdateCategoryRequest:
+  presenter.UpdateCategoryRequest:
     properties:
       name:
         description: Новое название категории
@@ -277,8 +335,10 @@ definitions:
     required:
     - name
     type: object
-  github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UserProfileResponse:
+  presenter.UserProfileResponse:
     properties:
+      activeFrame:
+        $ref: '#/definitions/presenter.FrameResponse'
       avatar:
         example: https://minio.local/avatar_1.png
         type: string
@@ -335,26 +395,26 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.InsertCategoryRequest'
+          $ref: '#/definitions/presenter.InsertCategoryRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Create course category
       tags:
       - course-categories
@@ -375,19 +435,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Delete course category
       tags:
       - course-categories
@@ -406,30 +466,30 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UpdateCategoryRequest'
+          $ref: '#/definitions/presenter.UpdateCategoryRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Update course category
       tags:
       - course-categories
@@ -475,19 +535,19 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Create course
       tags:
       - courses
@@ -506,19 +566,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Delete course
       tags:
       - courses
@@ -567,19 +627,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Update course
       tags:
       - courses
@@ -599,26 +659,26 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateLessonRequest'
+          $ref: '#/definitions/presenter.CreateLessonRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Create lesson in course
       tags:
       - courses
@@ -633,7 +693,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
       summary: Check role
       tags:
       - auth
@@ -648,7 +708,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
       summary: Exit
       tags:
       - auth
@@ -663,19 +723,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Update tokens
       tags:
       - auth
@@ -690,30 +750,30 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignInRequest'
+          $ref: '#/definitions/presenter.SignInRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Login
       tags:
       - auth
@@ -728,30 +788,30 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SignUpRequest'
+          $ref: '#/definitions/presenter.SignUpRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Registration
       tags:
       - auth
@@ -766,11 +826,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: List course categories
       tags:
       - course-categories
@@ -791,19 +851,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Get course category by id
       tags:
       - course-categories
@@ -816,11 +876,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: List courses
       tags:
       - courses
@@ -839,19 +899,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Get course by ID
       tags:
       - courses
@@ -870,19 +930,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: List course lessons
       tags:
       - courses
@@ -896,13 +956,42 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCategoryResponse'
+              $ref: '#/definitions/presenter.ForumCategoryResponse'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Get forum categories
+      tags:
+      - forum
+    post:
+      consumes:
+      - application/json
+      description: Creates a new forum category
+      parameters:
+      - description: Category data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/presenter.CreateForumCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/presenter.ForumCategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponse'
+      summary: Create forum category
       tags:
       - forum
   /forum/comments/{id}/solution:
@@ -926,15 +1015,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.SuccessResponse'
+            $ref: '#/definitions/presenter.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Mark comment as solution
       tags:
       - forum
@@ -953,12 +1042,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse'
+              $ref: '#/definitions/presenter.ForumTopicResponse'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Get forum topics
       tags:
       - forum
@@ -972,22 +1061,22 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumTopicRequest'
+          $ref: '#/definitions/presenter.CreateForumTopicRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicResponse'
+            $ref: '#/definitions/presenter.ForumTopicResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Create topic
       tags:
       - forum
@@ -1006,11 +1095,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumTopicDetailResponse'
+            $ref: '#/definitions/presenter.ForumTopicDetailResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Get topic details
       tags:
       - forum
@@ -1030,22 +1119,22 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.CreateForumCommentRequest'
+          $ref: '#/definitions/presenter.CreateForumCommentRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ForumCommentResponse'
+            $ref: '#/definitions/presenter.ForumCommentResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ErrorResponse'
+            $ref: '#/definitions/presenter.ErrorResponse'
       summary: Create comment
       tags:
       - forum
@@ -1058,19 +1147,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.MeResponse'
+            $ref: '#/definitions/presenter.MeResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Get current user
       tags:
       - user
@@ -1091,16 +1180,126 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerSuccessResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Upload avatar
+      tags:
+      - user
+  /user/frames:
+    get:
+      description: Returns all available frames and marks owned ones
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/presenter.FrameResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get available frames
+      tags:
+      - user
+  /user/frames/{frameId}/active:
+    post:
+      description: Sets a frame as active for the user. Set frameId to 0 to remove
+        frame.
+      parameters:
+      - description: Frame ID
+        in: path
+        name: frameId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Set active frame
+      tags:
+      - user
+  /user/frames/{frameId}/buy:
+    post:
+      description: Allows user to buy a frame using stars
+      parameters:
+      - description: Frame ID
+        in: path
+        name: frameId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Buy a frame
+      tags:
+      - user
+  /user/leaderboard/stars:
+    get:
+      description: Returns users sorted by stars
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/presenter.LeaderboardResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
+      summary: Get stars leaderboard
       tags:
       - user
   /user/parent/child-progress:
@@ -1112,19 +1311,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.ParentChildProgressResponse'
+            $ref: '#/definitions/presenter.ParentChildProgressResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Parent child progress
       tags:
       - user
@@ -1137,19 +1336,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.UserProfileResponse'
+            $ref: '#/definitions/presenter.UserProfileResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_FantomStudy_fluffy-doodle_internal_api_presenter.AuthSwaggerErrorResponse'
+            $ref: '#/definitions/presenter.AuthSwaggerErrorResponse'
       summary: Get user profile
       tags:
       - user

@@ -16,6 +16,7 @@ func ForumRoutes(app *fiber.App, forumService service.ForumService) {
 	forumGroup.Use(middleware.Protected())
 
 	forumGroup.Get("/categories", handlers.GetForumCategories(forumService))
+	forumGroup.Post("/categories", handlers.CreateForumCategory(forumService))
 	forumGroup.Get("/topics", handlers.GetForumTopics(forumService))
 	forumGroup.Get("/topics/:id", handlers.GetForumTopicDetail(forumService))
 	forumGroup.Post("/topics", handlers.CreateForumTopic(forumService))

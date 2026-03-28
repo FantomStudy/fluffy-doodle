@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"strconv"
 
 	"github.com/FantomStudy/fluffy-doodle/internal/api/presenter"
 	"github.com/FantomStudy/fluffy-doodle/internal/models"
@@ -62,6 +63,7 @@ func GetProfile(s service.UserService) fiber.Handler {
 			Streak:         user.StreakDays,
 			Level:          models.CalculateLevel(user.Exp),
 			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
+			ActiveFrame:    presenter.MapFrame(user.ActiveFrame),
 		})
 	}
 }
@@ -92,6 +94,11 @@ func GetMe(s service.UserService) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
 		}
 
+		ownedFrameIDs := make([]uint, 0, len(user.Frames))
+		for _, f := range user.Frames {
+			ownedFrameIDs = append(ownedFrameIDs, f.ID)
+		}
+
 		return c.Status(fiber.StatusOK).JSON(presenter.MeResponse{
 			ID:             user.ID,
 			Login:          user.Login,
@@ -106,6 +113,8 @@ func GetMe(s service.UserService) fiber.Handler {
 			Streak:         user.StreakDays,
 			Level:          models.CalculateLevel(user.Exp),
 			ExpToNextLevel: models.ExpToNextLevel(user.Exp),
+			ActiveFrame:    presenter.MapFrame(user.ActiveFrame),
+			OwnedFrames:    ownedFrameIDs,
 		})
 	}
 }
@@ -223,6 +232,132 @@ func ParentChildProgress(s service.UserService) fiber.Handler {
 			Level:          models.CalculateLevel(child.Exp),
 			Achievements:   len(child.Achievements),
 			InvitationCode: child.InvitationCode,
+			ActiveFrame:    presenter.MapFrame(child.ActiveFrame),
 		})
+	}
+}
+
+// @Summary Get stars leaderboard
+// @Description Returns users sorted by stars
+// @Produce json
+// @Tags user
+// @Param limit query int false "Limit"
+// @Success 200 {array} presenter.LeaderboardResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /user/leaderboard/stars [get]
+func GetLeaderboard(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		limit, _ := strconv.Atoi(c.Query("limit", "10"))
+		users, err := s.GetLeaderboard(limit)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		response := make([]presenter.LeaderboardResponse, 0, len(users))
+		for _, u := range users {
+			response = append(response, presenter.LeaderboardResponse{
+				ID:          u.ID,
+				FullName:    u.FullName,
+				Avatar:      u.Avatar,
+				Stars:       u.Stars,
+				Level:       models.CalculateLevel(u.Exp),
+				ActiveFrame: presenter.MapFrame(u.ActiveFrame),
+			})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(response)
+	}
+}
+
+// @Summary Get available frames
+// @Description Returns all available frames and marks owned ones
+// @Produce json
+// @Tags user
+// @Success 200 {array} presenter.FrameResponse
+// @Failure 401 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /user/frames [get]
+func GetFrames(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userID := c.Locals("userId").(uint)
+		user, err := s.GetUserByID(userID)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		frames, err := s.GetFrames()
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		ownedFrames := make(map[uint]bool)
+		for _, f := range user.Frames {
+			ownedFrames[f.ID] = true
+		}
+
+		response := make([]presenter.FrameResponse, 0, len(frames))
+		for _, f := range frames {
+			response = append(response, presenter.FrameResponse{
+				ID:    f.ID,
+				Name:  f.Name,
+				Price: f.Price,
+				Image: f.Image,
+				Owned: ownedFrames[f.ID],
+			})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(response)
+	}
+}
+
+// @Summary Buy a frame
+// @Description Allows user to buy a frame using stars
+// @Produce json
+// @Tags user
+// @Param frameId path int true "Frame ID"
+// @Success 200 {object} presenter.AuthSwaggerSuccessResponse
+// @Failure 400 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 401 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /user/frames/{frameId}/buy [post]
+func BuyFrame(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userID := c.Locals("userId").(uint)
+		frameID, err := strconv.ParseUint(c.Params("frameId"), 10, 32)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("invalid frame id")))
+		}
+
+		if err := s.BuyFrame(userID, uint(frameID)); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.AuthSuccessResponse())
+	}
+}
+
+// @Summary Set active frame
+// @Description Sets a frame as active for the user. Set frameId to 0 to remove frame.
+// @Produce json
+// @Tags user
+// @Param frameId path int true "Frame ID"
+// @Success 200 {object} presenter.AuthSwaggerSuccessResponse
+// @Failure 400 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 401 {object} presenter.AuthSwaggerErrorResponse
+// @Failure 500 {object} presenter.AuthSwaggerErrorResponse
+// @Router /user/frames/{frameId}/active [post]
+func SetActiveFrame(s service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userID := c.Locals("userId").(uint)
+		frameID, err := strconv.ParseUint(c.Params("frameId"), 10, 32)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(errors.New("invalid frame id")))
+		}
+
+		if err := s.SetActiveFrame(userID, uint(frameID)); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse(err))
+		}
+
+		return c.Status(fiber.StatusOK).JSON(presenter.AuthSuccessResponse())
 	}
 }
