@@ -37,9 +37,9 @@ public class PlayerInteractor : MonoBehaviour
         ResolveCamera();
         UpdateCurrentInteractable();
 
-        if (currentInteractable != null && WasInteractPressed())
+        if (WasInteractPressed())
         {
-            currentInteractable.Interact(this);
+            TryInteract();
         }
     }
 
@@ -260,6 +260,20 @@ public class PlayerInteractor : MonoBehaviour
         {
             nearbyZones.Remove(zone);
         }
+    }
+
+    public bool TryInteract()
+    {
+        ResolveCamera();
+        UpdateCurrentInteractable();
+
+        if (currentInteractable == null)
+        {
+            return false;
+        }
+
+        currentInteractable.Interact(this);
+        return true;
     }
 
     private void RegisterZoneFromCollider(Collider other)

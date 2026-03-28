@@ -2513,6 +2513,7 @@ GameObject:
   - component: {fileID: 567697473}
   - component: {fileID: 567697472}
   - component: {fileID: 567697471}
+  - component: {fileID: 567697474}
   m_Layer: 0
   m_Name: ExitWalkway
   m_TagString: Untagged
@@ -2613,6 +2614,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 567697469}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &567697474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567697469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f6e8c2c5db74254ab87bbd57155a7f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExitZone
+  levelController: {fileID: 1574896110}
 --- !u!1001 &647442045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6044,6 +6058,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7024340925101731669, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+      propertyPath: mobileControlsRoot
+      value: 
+      objectReference: {fileID: 1440586207}
     - target: {fileID: 8095725308869832677, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
       propertyPath: AvoidObstacles.Enabled
       value: 1
@@ -6103,6 +6121,11 @@ Transform:
 --- !u!1 &1440586206 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6761354353614500649, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
+  m_PrefabInstance: {fileID: 1440586204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1440586207 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3086546279676800976, guid: 41e203689d3be9543bf050bd010d0be2, type: 3}
   m_PrefabInstance: {fileID: 1440586204}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1441044905
@@ -6641,8 +6664,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22
-  m_fontSizeBase: 22
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

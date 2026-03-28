@@ -7,7 +7,8 @@ using UnityEngine.Networking;
 
 public sealed class LevelCompletionApiClient : MonoBehaviour
 {
-    private const string DefaultLocalhostBaseUrl = "http://localhost";
+    private const int DefaultBackendPort = 3000;
+    private static readonly string[] BackendQueryParameters = { "api", "apiBase", "backend", "backendBase" };
 
     [SerializeField] private string overrideBaseUrl = string.Empty;
     [SerializeField] private int timeoutSeconds = 5;
@@ -75,34 +76,37 @@ public sealed class LevelCompletionApiClient : MonoBehaviour
             return overrideBaseUrl.TrimEnd('/');
         }
 
-        if (TryGetAbsoluteUrlOrigin(out string origin))
+        if (TryGetBackendBaseUrlFromQuery(out string configuredBaseUrl))
         {
-            return origin;
+            return configuredBaseUrl;
         }
 
-        return DefaultLocalhostBaseUrl;
+        if (PracticeLaunchOptions.TryGetAbsoluteUrlOrigin(out string origin))
+        {
+            if (Uri.TryCreate(origin, UriKind.Absolute, out Uri originUri))
+            {
+                UriBuilder builder = new UriBuilder(originUri.Scheme, originUri.Host, DefaultBackendPort);
+                return builder.Uri.GetLeftPart(UriPartial.Authority);
+            }
+        }
+
+        return $"http://localhost:{DefaultBackendPort}";
     }
 
-    private static bool TryGetAbsoluteUrlOrigin(out string origin)
+    private static bool TryGetBackendBaseUrlFromQuery(out string baseUrl)
     {
-        origin = null;
-        if (string.IsNullOrWhiteSpace(Application.absoluteURL))
+        baseUrl = string.Empty;
+        foreach (string parameterName in BackendQueryParameters)
         {
-            return false;
+            if (PracticeLaunchOptions.TryGetQueryParameter(parameterName, out string rawValue) &&
+                PracticeLaunchOptions.TryBuildAbsoluteUrl(rawValue, out string absoluteUrl))
+            {
+                baseUrl = absoluteUrl.TrimEnd('/');
+                return true;
+            }
         }
 
-        if (!Uri.TryCreate(Application.absoluteURL, UriKind.Absolute, out Uri absoluteUri))
-        {
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(absoluteUri.Host))
-        {
-            return false;
-        }
-
-        origin = absoluteUri.GetLeftPart(UriPartial.Authority);
-        return true;
+        return false;
     }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -215,14 +219,6 @@ public sealed class LevelCompletionApiClient : MonoBehaviour
         if (response == null)
         {
             error = "Backend returned an unreadable response.";
-            return false;
-        }
-
-        if (!response.success || response.data == null)
-        {
-            error = string.IsNullOrWhiteSpace(response.message)
-                ? "Backend reported an unsuccessful level completion."
-                : response.message;
             return false;
         }
 
