@@ -19,6 +19,7 @@ public class VariableLevelController : MonoBehaviour
     [SerializeField] private RotationPlatformController rotationPlatformController;
     [SerializeField] private TerminalUI terminalUI;
     [SerializeField] private ResultPopupUI resultPopupUI;
+    [SerializeField] private ScreenFadePlayerLock screenFadePlayerLock;
     [SerializeField] [Range(1, 3)] private int defaultBridgeLength = 1;
     [SerializeField] [Range(1, 3)] private int defaultPlatformHeight = 1;
     [SerializeField] [Range(0, 90)] private int defaultPlatformAngle;
@@ -103,6 +104,12 @@ public class VariableLevelController : MonoBehaviour
 
         levelCompleted = true;
         terminalUI?.ForceClose();
+        if (screenFadePlayerLock != null)
+        {
+            screenFadePlayerLock.FadeOutAndLock();
+            return;
+        }
+
         resultPopupUI?.Show();
     }
 

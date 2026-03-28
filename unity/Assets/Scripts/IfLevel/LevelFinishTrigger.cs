@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class LevelFinishTrigger : MonoBehaviour
@@ -8,6 +9,7 @@ public class LevelFinishTrigger : MonoBehaviour
     [SerializeField] private float overlayAlphaWhenComplete = 0.12f;
 
     private bool isCompleted;
+    private Coroutine finishRoutine;
 
     private void Awake()
     {
@@ -27,9 +29,22 @@ public class LevelFinishTrigger : MonoBehaviour
         }
 
         isCompleted = true;
+        finishRoutine = StartCoroutine(FinishRoutine());
+    }
+
+    private IEnumerator FinishRoutine()
+    {
+        ApplyState(1f, true);
+
+        if (fadeDuration > 0f)
+        {
+            yield return new WaitForSeconds(fadeDuration);
+        }
 
         if (screenFadePlayerLock != null)
         {
+            screenFadePlayerLock.SetLockedInstant(true, overlayAlphaWhenComplete);
+            yield return null;
             screenFadePlayerLock.FadeOutAndLock();
         }
     }

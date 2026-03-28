@@ -7290,6 +7290,7 @@ MonoBehaviour:
   rotationPlatformController: {fileID: 1628333003}
   terminalUI: {fileID: 1598392040}
   resultPopupUI: {fileID: 1604538402}
+  screenFadePlayerLock: {fileID: 2000001005}
   defaultBridgeLength: 1
   defaultPlatformHeight: 1
   defaultPlatformAngle: 0
