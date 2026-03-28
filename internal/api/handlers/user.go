@@ -33,6 +33,17 @@ func GetProfile(s service.UserService) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
 		}
 
+		if user.Role.Name == "parent" {
+			child, childErr := s.GetChildByParentID(user.ID)
+			if childErr == gorm.ErrRecordNotFound {
+				return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse(errors.New("child not linked to this parent")))
+			}
+			if childErr != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(childErr))
+			}
+			user = child
+		}
+
 		user, err = s.EnsureStudentInvitationCode(user)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse(err))
