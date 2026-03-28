@@ -35,7 +35,7 @@ const CourseCard = ({
   level,
   totalLessons,
 }: Course) => (
-  <Link to="/course/$courseId" params={{ courseId: String(id) }} className={styles.courseCard}>
+  <Link to="/courses/$courseId" params={{ courseId: String(id) }} className={styles.courseCard}>
     <div className={styles.courseImage}>
       <img src={imageUrl || "/assets/homepage/course-python.png"} alt={title} />
     </div>
