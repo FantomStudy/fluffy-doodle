@@ -1,12 +1,12 @@
 import type { Task } from "@/api/courses";
-import { Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { ArrowLeftIcon, ChevronRightIcon, ClockIcon } from "lucide-react";
 import { useState } from "react";
 import { CodingChallenge } from "@/components/CodingChallenge";
 import { FlowchartChallenge } from "@/components/FlowchartChallenge";
 import { QuizChallenge } from "@/components/QuizChallenge";
 import { useCourseLessons, useSubmitTask } from "@/hooks/useCourses";
-import styles from "./LessonPage.module.css";
+import styles from "./index.module.css";
 
 const TASK_ICONS: Record<Task["type"], { emoji: string; className: string }> = {
   quiz: { emoji: "📝", className: styles.taskIconQuiz },
@@ -20,15 +20,82 @@ const TASK_LABELS: Record<Task["type"], string> = {
   algorithm: "Алгоритм",
 };
 
-interface LessonPageProps {
-  courseId: number;
-  lessonId: number;
+interface CompletedTaskState {
+  taskId: number;
 }
 
-const LessonPage = ({ courseId, lessonId }: LessonPageProps) => {
+interface VictoryScreenProps {
+  task: Task;
+  hasNextTask: boolean;
+  unityWebglUrl: string;
+  onBack: () => void;
+  onNext: () => void;
+}
+
+const VictoryScreen = ({
+  task,
+  hasNextTask,
+  unityWebglUrl,
+  onBack,
+  onNext,
+}: VictoryScreenProps) => {
+  return (
+    <main className={styles.victoryRoot}>
+      <div className={styles.victoryCard}>
+        <div className={styles.victoryBadge}>Готово</div>
+        <p className={styles.victoryEyebrow}>Ты справился</p>
+        <h1 className={styles.victoryTitle}>{task.title}</h1>
+        <p className={styles.victoryDescription}>Отличная работа! Попробуешь ещё одно?</p>
+
+        <div className={styles.victoryRewards}>
+          {task.rewardStars > 0 && (
+            <div className={styles.victoryRewardCard}>
+              <span className={styles.victoryRewardValue}>⭐ {task.rewardStars}</span>
+              <span className={styles.victoryRewardLabel}>звёзд</span>
+            </div>
+          )}
+          {task.rewardExp > 0 && (
+            <div className={styles.victoryRewardCard}>
+              <span className={styles.victoryRewardValue}>+{task.rewardExp} XP</span>
+              <span className={styles.victoryRewardLabel}>опыта</span>
+            </div>
+          )}
+        </div>
+
+        <div className={styles.victoryActions}>
+          <a
+            href={unityWebglUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.victoryLinkBtn}
+          >
+            Дополнительное задание
+          </a>
+          <button type="button" className={styles.victorySecondaryBtn} onClick={onBack}>
+            К заданиям
+          </button>
+          <button type="button" className={styles.victoryPrimaryBtn} onClick={onNext}>
+            {hasNextTask ? "Дальше" : "Продолжить"}
+          </button>
+        </div>
+      </div>
+    </main>
+  );
+};
+
+const RouteComponent = () => {
+  const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
+  const [completedTask, setCompletedTask] = useState<CompletedTaskState | null>(null);
+
+  const params = useParams({
+    from: "/_protected/_sidebar/courses/$courseId/lessons/$lessonId/",
+  });
+
+  const courseId = Number(params.courseId);
+  const lessonId = Number(params.lessonId);
+
   const { data: lessons, isLoading } = useCourseLessons(courseId);
   const submitMutation = useSubmitTask(courseId);
-  const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
 
   if (isLoading) {
     return (
@@ -38,7 +105,7 @@ const LessonPage = ({ courseId, lessonId }: LessonPageProps) => {
     );
   }
 
-  const lesson = lessons?.find((l) => l.id === lessonId);
+  const lesson = lessons?.find((item) => item.id === lessonId);
 
   if (!lesson) {
     return (
@@ -48,15 +115,55 @@ const LessonPage = ({ courseId, lessonId }: LessonPageProps) => {
     );
   }
 
-  const activeTask = lesson.tasks.find((t) => t.id === activeTaskId);
+  const activeTask = lesson.tasks.find((task) => task.id === activeTaskId);
+  const completedTaskData = lesson.tasks.find((task) => task.id === completedTask?.taskId) ?? null;
+  const activeTaskIndex = activeTask
+    ? lesson.tasks.findIndex((task) => task.id === activeTask.id)
+    : -1;
+  const nextTask = activeTaskIndex >= 0 ? lesson.tasks[activeTaskIndex + 1] : undefined;
+  const unityWebglUrl =
+    import.meta.env.VITE_UNITY_WEBGL_URL ??
+    `/unity-webgl?courseId=${courseId}&lessonId=${lessonId}&taskId=${completedTask?.taskId ?? ""}`;
 
   const handleQuizComplete = (task: Task, selectedOptionIds: string[] = []) => {
-    submitMutation.mutate({ lessonId, taskId: task.id, body: { selectedOptionIds } });
+    submitMutation.mutate(
+      { lessonId, taskId: task.id, body: { selectedOptionIds } },
+      {
+        onSuccess: () => {
+          setCompletedTask({ taskId: task.id });
+        },
+      },
+    );
   };
 
   const handleSolvedComplete = (task: Task) => {
-    submitMutation.mutate({ lessonId, taskId: task.id, body: { solved: true } });
+    submitMutation.mutate(
+      { lessonId, taskId: task.id, body: { solved: true } },
+      {
+        onSuccess: () => {
+          setCompletedTask({ taskId: task.id });
+        },
+      },
+    );
   };
+
+  if (completedTaskData) {
+    return (
+      <VictoryScreen
+        task={completedTaskData}
+        hasNextTask={Boolean(nextTask)}
+        unityWebglUrl={unityWebglUrl}
+        onBack={() => {
+          setCompletedTask(null);
+          setActiveTaskId(null);
+        }}
+        onNext={() => {
+          setCompletedTask(null);
+          setActiveTaskId(nextTask?.id ?? null);
+        }}
+      />
+    );
+  }
 
   if (activeTask) {
     return (
@@ -83,7 +190,7 @@ const LessonPage = ({ courseId, lessonId }: LessonPageProps) => {
   return (
     <main className={styles.root}>
       <Link
-        to="/course/$courseId"
+        to="/courses/$courseId"
         params={{ courseId: String(courseId) }}
         className={styles.backLink}
       >
@@ -112,6 +219,7 @@ const LessonPage = ({ courseId, lessonId }: LessonPageProps) => {
         <h2 className={styles.tasksTitle}>Задания ({lesson.tasks.length})</h2>
         {lesson.tasks.map((task) => {
           const icon = TASK_ICONS[task.type];
+
           return (
             <div
               key={task.id}
@@ -119,15 +227,17 @@ const LessonPage = ({ courseId, lessonId }: LessonPageProps) => {
               onClick={() => setActiveTaskId(task.id)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") setActiveTaskId(task.id);
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  setActiveTaskId(task.id);
+                }
               }}
             >
               <div className={`${styles.taskIcon} ${icon.className}`}>{icon.emoji}</div>
               <div className={styles.taskContent}>
                 <h3 className={styles.taskTitle}>{task.title}</h3>
                 <p className={styles.taskDesc}>
-                  {TASK_LABELS[task.type]} — {task.description}
+                  {TASK_LABELS[task.type]} - {task.description}
                 </p>
               </div>
               <div className={styles.taskReward}>
@@ -151,4 +261,6 @@ const LessonPage = ({ courseId, lessonId }: LessonPageProps) => {
   );
 };
 
-export { LessonPage };
+export const Route = createFileRoute("/_protected/_sidebar/courses/$courseId/lessons/$lessonId/")({
+  component: RouteComponent,
+});

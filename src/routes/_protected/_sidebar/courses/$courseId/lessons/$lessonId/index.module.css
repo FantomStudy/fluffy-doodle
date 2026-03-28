@@ -344,6 +344,152 @@
   color: var(--danger);
 }
 
+/* -------- VICTORY SCREEN -------- */
+
+.victoryRoot {
+  flex: 1;
+  min-height: 100%;
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top, var(--primary-bg), transparent 38%),
+    linear-gradient(180deg, var(--background) 0%, var(--surface-muted) 100%);
+}
+
+.victoryCard {
+  width: min(100%, 720px);
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(17, 24, 39, 0.08);
+}
+
+.victoryBadge {
+  padding: 8px 14px;
+  border-radius: var(--radius-badge);
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.victoryEyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground-muted);
+}
+
+.victoryTitle {
+  font-size: 36px;
+  line-height: 1.1;
+  color: var(--foreground);
+}
+
+.victoryDescription {
+  max-width: 520px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--foreground-muted);
+}
+
+.victoryRewards {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.victoryRewardCard {
+  background: var(--surface-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.victoryRewardValue {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--foreground);
+}
+
+.victoryRewardLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground-muted);
+}
+
+.victoryActions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.victoryPrimaryBtn,
+.victorySecondaryBtn,
+.victoryLinkBtn {
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: var(--radius-btn);
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.14s,
+    color 0.14s,
+    border-color 0.14s,
+    transform 0.14s;
+}
+
+.victoryLinkBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--success);
+  color: var(--foreground-white);
+}
+
+.victoryLinkBtn:hover {
+  background: var(--success-hover);
+  transform: translateY(-1px);
+}
+
+.victoryPrimaryBtn {
+  background: var(--primary);
+  color: var(--foreground-white);
+}
+
+.victoryPrimaryBtn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.victorySecondaryBtn {
+  background: var(--surface);
+  color: var(--foreground-strong);
+  border: 1px solid var(--border);
+}
+
+.victorySecondaryBtn:hover {
+  background: var(--surface-muted);
+}
+
 /* -------- SOLVED TASK (flowchart/algorithm) -------- */
 
 .solvedActions {
@@ -388,6 +534,22 @@
 @media (max-width: 768px) {
   .root {
     padding: 20px 16px;
+  }
+
+  .victoryRoot {
+    padding: 20px 16px;
+  }
+
+  .victoryCard {
+    padding: 28px 20px;
+  }
+
+  .victoryTitle {
+    font-size: 28px;
+  }
+
+  .victoryActions {
+    flex-direction: column;
   }
 
   .header {

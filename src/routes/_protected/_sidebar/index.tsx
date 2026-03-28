@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { COURSES } from "@/mock/courses";
+import { useCourses } from "@/hooks/useCourses";
 import { CourseCard } from "./-components/CourseCard";
 import styles from "./index.module.css";
 
@@ -33,102 +33,109 @@ const LESSON_BADGES: { done: boolean }[] = [
   { done: false },
 ];
 
-const RouteComponent = () => (
-  <main className={styles.root}>
-    <header className={styles.header}>
-      <h1 className={styles.greeting}>Рад твоему возращению, Сергей Дубской</h1>
-      <p className={styles.subtitle}>Твой учебный процесс</p>
-    </header>
+const RouteComponent = () => {
+  const courses = useCourses();
 
-    <section className={styles.learningCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.cardLabel}>Твой учебный процесс</span>
-        <div className={styles.cardActions}>
-          <div className={styles.starCount}>
-            <img src="/assets/homepage/star-badge.svg" alt="очки" className={styles.starIcon} />
-            <span>18</span>
-          </div>
-          <div className={styles.streakBadge}>
-            <img src="/assets/homepage/fire.png" alt="серия" />
-            <span>Серия: 3 дня подряд</span>
-          </div>
-        </div>
-      </div>
+  return (
+    <main className={styles.root}>
+      <header className={styles.header}>
+        <h1 className={styles.greeting}>Рад твоему возращению, Сергей Дубской</h1>
+        <p className={styles.subtitle}>Твой учебный процесс</p>
+      </header>
 
-      <div className={styles.mapSection}>
-        <img src="/assets/homepage/map-bg.png" alt="Карта обучения" className={styles.mapBg} />
-        <img src="/assets/homepage/map-path.svg" alt="" className={styles.mapPath} aria-hidden />
-        {WAYPOINTS.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt=""
-            aria-hidden
-            className={styles.waypoint}
-            style={{
-              left: `${WAYPOINT_POSITIONS[i].left}%`,
-              top: `${WAYPOINT_POSITIONS[i].top}%`,
-            }}
-          />
-        ))}
-        <div className={styles.expandMap}>
-          <img src="/assets/homepage/expand.svg" alt="" />
-          <span>Открыть на весь экран</span>
-        </div>
-      </div>
-
-      <div className={styles.cardFooter}>
-        <div className={styles.currentLesson}>
-          <span className={styles.lessonLabel}>Текущий урок</span>
-          <h2 className={styles.lessonTitle}>Цвет и Материалы</h2>
-          <p className={styles.lessonDesc}>Краткое описание урока</p>
-          <button className={styles.continueBtn}>Продолжить</button>
-        </div>
-
-        <div className={styles.progressSection}>
-          <span className={styles.progressLabel}>Твой прогресс</span>
-          <p className={styles.lessonCount}>Урок 4 из 5</p>
-          <div className={styles.progressTrack}>
-            <div className={styles.progressFill} />
-          </div>
-          <div className={styles.badges}>
-            {LESSON_BADGES.map((badge, i) => (
-              <div
-                key={i}
-                className={`${styles.badge} ${badge.done ? styles.badgeDone : styles.badgeStar}`}
-              >
-                <img src="/assets/homepage/badge.png" alt={badge.done ? "Выполнено" : "Задание"} />
-              </div>
-            ))}
+      <section className={styles.learningCard}>
+        <div className={styles.cardHeader}>
+          <span className={styles.cardLabel}>Твой учебный процесс</span>
+          <div className={styles.cardActions}>
+            <div className={styles.starCount}>
+              <img src="/assets/homepage/star-badge.svg" alt="очки" className={styles.starIcon} />
+              <span>18</span>
+            </div>
+            <div className={styles.streakBadge}>
+              <img src="/assets/homepage/fire.png" alt="серия" />
+              <span>Серия: 3 дня подряд</span>
+            </div>
           </div>
         </div>
 
-        <div className={styles.characterSection}>
-          <img
-            src="/assets/homepage/character.png"
-            alt="Персонаж"
-            className={styles.characterImg}
-          />
+        <div className={styles.mapSection}>
+          <img src="/assets/homepage/map-bg.png" alt="Карта обучения" className={styles.mapBg} />
+          <img src="/assets/homepage/map-path.svg" alt="" className={styles.mapPath} aria-hidden />
+          {WAYPOINTS.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt=""
+              aria-hidden
+              className={styles.waypoint}
+              style={{
+                left: `${WAYPOINT_POSITIONS[i].left}%`,
+                top: `${WAYPOINT_POSITIONS[i].top}%`,
+              }}
+            />
+          ))}
+          <div className={styles.expandMap}>
+            <img src="/assets/homepage/expand.svg" alt="" />
+            <span>Открыть на весь экран</span>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <section className={styles.coursesSection}>
-      <div className={styles.sectionHeader}>
-        <h2 className={styles.sectionTitle}>Другие курсы</h2>
-        <button className={styles.allCoursesBtn}>
-          <img src="/assets/homepage/expand.svg" alt="" />
-          <span>Все курсы</span>
-        </button>
-      </div>
-      <div className={styles.courseGrid}>
-        {COURSES.map((course) => (
-          <CourseCard key={course.title} {...course} />
-        ))}
-      </div>
-    </section>
-  </main>
-);
+        <div className={styles.cardFooter}>
+          <div className={styles.currentLesson}>
+            <span className={styles.lessonLabel}>Текущий урок</span>
+            <h2 className={styles.lessonTitle}>Цвет и Материалы</h2>
+            <p className={styles.lessonDesc}>Краткое описание урока</p>
+            <button className={styles.continueBtn}>Продолжить</button>
+          </div>
+
+          <div className={styles.progressSection}>
+            <span className={styles.progressLabel}>Твой прогресс</span>
+            <p className={styles.lessonCount}>Урок 4 из 5</p>
+            <div className={styles.progressTrack}>
+              <div className={styles.progressFill} />
+            </div>
+            <div className={styles.badges}>
+              {LESSON_BADGES.map((badge, i) => (
+                <div
+                  key={i}
+                  className={`${styles.badge} ${badge.done ? styles.badgeDone : styles.badgeStar}`}
+                >
+                  <img
+                    src="/assets/homepage/badge.png"
+                    alt={badge.done ? "Выполнено" : "Задание"}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.characterSection}>
+            <img
+              src="/assets/homepage/character.png"
+              alt="Персонаж"
+              className={styles.characterImg}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.coursesSection}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Другие курсы</h2>
+          <button className={styles.allCoursesBtn}>
+            <img src="/assets/homepage/expand.svg" alt="" />
+            <span>Все курсы</span>
+          </button>
+        </div>
+        <div className={styles.courseGrid}>
+          {courses.data?.map((course) => (
+            <CourseCard key={course.title} course={course} />
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+};
 
 export const Route = createFileRoute("/_protected/_sidebar/")({
   component: RouteComponent,
