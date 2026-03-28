@@ -9,7 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog";
-import { useCreateCategory, useCreateTopic, useForumCategories, useForumTopics } from "@/hooks/useForum";
+import {
+  useCreateCategory,
+  useCreateTopic,
+  useForumCategories,
+  useForumTopics,
+} from "@/hooks/useForum";
 import styles from "./index.module.css";
 
 const formatDate = (iso: string) => {
@@ -55,7 +60,11 @@ const CreateTopicDialog = ({ categories }: { categories: ForumCategory[] | null 
     if (!newCatName.trim()) return;
 
     createCategory.mutate(
-      { name: newCatName.trim(), description: newCatDesc.trim(), order: (categories?.length ?? 0) + 1 },
+      {
+        name: newCatName.trim(),
+        description: newCatDesc.trim(),
+        order: (categories?.length ?? 0) + 1,
+      },
       {
         onSuccess: (cat) => {
           setCategoryId(cat.id);
