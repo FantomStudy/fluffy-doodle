@@ -1,0 +1,290 @@
+.root {
+  padding: 24px 32px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+/* -------- TOPIC HEADER -------- */
+
+.topicCard {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topicTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topicTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.solvedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-badge);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  flex-shrink: 0;
+}
+
+.topicContent {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--foreground-strong);
+  white-space: pre-wrap;
+}
+
+.topicFooter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.authorRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatarMd {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--color-slate-200);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.authorName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.authorRole {
+  font-size: 11px;
+  color: var(--foreground-subtle);
+  text-transform: capitalize;
+}
+
+.topicMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--foreground-subtle);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.metaItem svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* -------- COMMENTS -------- */
+
+.commentsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commentsTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.commentCard {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.solutionCard {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.solutionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.commentContent {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--foreground-strong);
+  white-space: pre-wrap;
+}
+
+.commentFooter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.commentDate {
+  font-size: 12px;
+  color: var(--foreground-subtle);
+  margin-left: auto;
+}
+
+.markSolutionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-btn);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--success);
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-left: auto;
+  transition:
+    background 0.14s,
+    border-color 0.14s;
+}
+
+.markSolutionBtn:hover {
+  background: var(--success-bg);
+  border-color: var(--success);
+}
+
+/* -------- REPLY FORM -------- */
+
+.replyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  padding: 20px;
+}
+
+.replyLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.replyTextarea {
+  width: 100%;
+  min-height: 100px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  padding: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--foreground);
+  background: var(--surface-muted);
+  resize: vertical;
+  transition: border-color 0.14s;
+}
+
+.replyTextarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.replyActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: background 0.14s;
+}
+
+.submitBtn:hover {
+  background: var(--primary-hover);
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.emptyComments {
+  text-align: center;
+  color: var(--foreground-muted);
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .root {
+    padding: 16px;
+  }
+
+  .topicTitle {
+    font-size: 18px;
+  }
+}
